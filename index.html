@@ -1248,4 +1248,40 @@ const _mo18=morning;morning=function(){_mo18();wealthHook()};
 const _v18=view;view=function(){if(G.pr&&['wealth','hub'].includes(tab)&&tab=='hub')return prisonBlock();if(tab=='wealth')return wealthV();if(tab=='hub')return hubV();if(tab=='edu')return eduV2();return _v18()};
 
 if(!load())G=null;render();
-</script><script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})})}</script></body></html>
+</script><style id="lcx">
+html:root,html:root:not([data-theme="x"]){--bg:#0a0f1e;--cd:#121a2e;--tx:#eef1f8;--mu:#97a2bb;--ac:#d4b46a;--bad:#ff7a7a;--bd:#243049}
+body{background:radial-gradient(120% 60% at 50% -10%,#1b2a4d 0,#0a0f1e 60%) fixed,#0a0f1e}
+.c{border-radius:18px;box-shadow:0 6px 24px #0006}
+h2,h3{font-family:Georgia,'Times New Roman',serif}
+button{color:#0a0f1e;font-weight:600;min-height:40px;transition:transform .12s,filter .12s}button:active{transform:scale(.97);filter:brightness(.92)}
+button.s{color:var(--tx)}nav button{color:var(--mu)}nav button.on{color:var(--ac)}.ok{color:#3ddc9a}.bar i{background:linear-gradient(90deg,#3ddc9a,#d4b46a)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+.lcth{width:64px;height:48px;border-radius:10px;object-fit:cover;flex:none;margin-right:10px}.r.lcr{align-items:center}.r.lcr>span:nth-child(2){flex:1}
+#lcintro{position:fixed;inset:0;z-index:99999;background:radial-gradient(90% 60% at 50% 100%,#1b2a4d,#060a15 70%);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;transition:opacity .6s;overflow:hidden}
+#lcintro.out{opacity:0;pointer-events:none}
+#lcintro svg.sk{position:absolute;bottom:0;left:0;width:100%;height:30%;opacity:.35}
+.lcw{font:700 clamp(38px,12vw,76px)/1 Georgia,serif;letter-spacing:.18em;background:linear-gradient(100deg,#8a6d2f 20%,#f5e2a8 40%,#d4b46a 50%,#8a6d2f 70%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:lcin 1.2s ease-out both,lcsw 1.8s .5s ease-in-out both}
+.lct{color:#97a2bb;margin-top:16px;letter-spacing:.08em;font-size:14px;animation:lcf 1s 1.3s both}
+.lcsk{position:absolute;top:calc(14px + env(safe-area-inset-top,0px));right:14px;background:transparent;color:#97a2bb;border:1px solid #243049}
+.lcp{position:absolute;width:3px;height:3px;border-radius:50%;background:#d4b46a;opacity:.5;animation:lcfl 5s linear infinite}
+@keyframes lcin{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:none}}@keyframes lcsw{from{background-position:120% 0}to{background-position:-20% 0}}
+@keyframes lcf{from{opacity:0}to{opacity:1}}@keyframes lcfl{from{transform:translateY(0);opacity:0}20%{opacity:.6}to{transform:translateY(-90vh);opacity:0}}
+@media(prefers-reduced-motion:reduce){#lcintro *{animation:none!important}#lcintro{transition:none}}
+.lch{padding:28px 6px 8px;text-align:center}.lch .lcw{animation:none;font-size:clamp(30px,9vw,48px)}.lch p{color:var(--mu);margin:8px 0 0}
+.lcgo{width:100%;font-size:17px;padding:14px;margin:12px 0 2px;background:linear-gradient(135deg,#f0d78c,#c9a24f)}
+.lcf label{display:block;color:var(--mu);font-size:13px;margin-top:10px}
+</style>
+<script>
+(function(){
+const GL={clothes:'M40 30l20-8c4 8 16 8 20 0l20 8 12 22-14 6v36H42V58l-14-6z',shoes:'M30 74c12 0 18-14 22-30l12 6c6 8 22 10 34 14 8 3 8 12 0 12H34c-6 0-8-2-4-2z',bags:'M44 50h72l8 42H36zM58 50c0-22 44-22 44 0',phones:'M62 22h36a6 6 0 0 1 6 6v64a6 6 0 0 1-6 6H62a6 6 0 0 1-6-6V28a6 6 0 0 1 6-6zM74 30h12',laptops:'M48 36h64v44H48zM34 86h92l-8 8H42z',watches:'M66 18h28l4 20H62zM66 102h28l4-20H62zM80 38a22 22 0 1 1 0 44 22 22 0 0 1 0-44zM80 50v12l9 5'},TC=[['#2a3552','#47557d'],['#14463f','#2c8f7c'],['#2b2a6b','#5a58c9'],['#6b5420','#e0c068']];
+window.ART=function(c,t){const k=GL[c]?c:'bags',g=TC[t%4||0],s='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="'+g[0]+'"/><stop offset="1" stop-color="'+g[1]+'"/></linearGradient></defs><rect width="160" height="120" fill="url(#g)"/><path d="'+GL[k]+'" fill="#ffffff22" stroke="#fff" stroke-opacity=".85" stroke-width="3" stroke-linejoin="round"/></svg>';return'data:image/svg+xml,'+encodeURIComponent(s)};
+function decor(){if(typeof tab=='undefined'||tab!='shop'||typeof SHC=='undefined'||!SHC[SCAT])return;const c=SHC[SCAT],cd=[...document.querySelectorAll('#app .c')].find(x=>{const h=x.querySelector('h3');return h&&h.textContent==c.n});if(!cd)return;
+cd.querySelectorAll('.r').forEach((r,t)=>{if(r.querySelector('.lcth'))return;const i=document.createElement('img');i.className='lcth';i.loading='lazy';i.alt=(c.t&&c.t[t]||c.n)+' illustration';i.src=ART(SCAT,t);i.onerror=()=>i.remove();r.classList.add('lcr');r.insertBefore(i,r.firstChild)})}
+const _r=render;render=function(){_r.apply(this,arguments);try{decor()}catch(e){}};
+create=function(){let ct=false;try{ct=!!localStorage.getItem(SK)}catch(e){}
+return`<div class="lch"><div class="lcw">LIFECRAFT</div><p><b>Your life. Your choices. Your legacy.</b></p><p>Start with nothing. Build the life you want.</p></div><div class="c lcf"><h3>Create your character</h3><label for="nm">Name</label><input id="nm" value="Alex" maxlength="30"><div class="g"><div><label for="ag">Age (18–30)</label><input id="ag" type="number" min="18" max="30" value="18"></div><div><label for="yr">Starting year</label><input id="yr" type="number" value="2026"></div></div><label for="ed">Education</label><select id="ed">${Object.keys(EDU).map(e=>`<option>${e}</option>`).join('')}</select><label for="sc">Scenario</label><select id="sc"><option value="rel">Staying with a relative (£120/mo board)</option><option value="host">Hostel (£210/mo)</option></select><label for="df">Difficulty</label><select id="df"><option value="easy">Easy</option><option value="normal" selected>Normal</option><option value="hard">Hard</option></select><button class="lcgo" onclick="start()">Begin Your Life</button>${ct?'<button class="s" style="width:100%" onclick="load();render()">Continue saved game</button>':''}</div>`};
+try{if(typeof G!='undefined'&&!G&&!sessionStorage.getItem('lci')){sessionStorage.setItem('lci','1');const d=document.createElement('div');d.id='lcintro';d.innerHTML='<button class="lcsk">Skip Intro</button><svg class="sk" viewBox="0 0 400 100" preserveAspectRatio="none"><path fill="#1b2a4d" d="M0 100V60h20V40h18v25h14V30h22v40h16V50h20v20h18V35h24v35h14V55h20v15h22V25h20v45h16V48h24v22h20V60h22v40z"/></svg>'+[10,25,40,55,70,85].map((x,i)=>'<i class="lcp" style="left:'+x+'%;bottom:'+(8+i*5)+'%;animation-delay:'+i*.7+'s"></i>').join('')+'<div class="lcw">LIFECRAFT</div><div class="lct">Your life. Your choices. Your legacy.</div>';document.body.appendChild(d);const rm=matchMedia('(prefers-reduced-motion:reduce)').matches;let done=0;const end=()=>{if(done)return;done=1;d.classList.add('out');setTimeout(()=>d.remove(),700)};d.querySelector('button').onclick=end;setTimeout(end,rm?1200:3600)}}catch(e){}
+try{if(!G)render()}catch(e){}
+})();
+</script>
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})})}</script></body></html>
