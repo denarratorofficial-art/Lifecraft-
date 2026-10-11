@@ -1279,9 +1279,63 @@ function decor(){if(typeof tab=='undefined'||tab!='shop'||typeof SHC=='undefined
 cd.querySelectorAll('.r').forEach((r,t)=>{if(r.querySelector('.lcth'))return;const i=document.createElement('img');i.className='lcth';i.loading='lazy';i.alt=(c.t&&c.t[t]||c.n)+' illustration';i.src=ART(SCAT,t);i.onerror=()=>i.remove();r.classList.add('lcr');r.insertBefore(i,r.firstChild)})}
 const _r=render;render=function(){_r.apply(this,arguments);try{decor()}catch(e){}};
 create=function(){let ct=false;try{ct=!!localStorage.getItem(SK)}catch(e){}
-return`<div class="lch"><div class="lcw">LIFECRAFT</div><p><b>Your life. Your choices. Your legacy.</b></p><p>Start with nothing. Build the life you want.</p></div><div class="c lcf"><h3>Create your character</h3><label for="nm">Name</label><input id="nm" value="Alex" maxlength="30"><div class="g"><div><label for="ag">Age (18–30)</label><input id="ag" type="number" min="18" max="30" value="18"></div><div><label for="yr">Starting year</label><input id="yr" type="number" value="2026"></div></div><label for="ed">Education</label><select id="ed">${Object.keys(EDU).map(e=>`<option>${e}</option>`).join('')}</select><label for="sc">Scenario</label><select id="sc"><option value="rel">Staying with a relative (£120/mo board)</option><option value="host">Hostel (£210/mo)</option></select><label for="df">Difficulty</label><select id="df"><option value="easy">Easy</option><option value="normal" selected>Normal</option><option value="hard">Hard</option></select><button class="lcgo" onclick="start()">Begin Your Life</button>${ct?'<button class="s" style="width:100%" onclick="load();render()">Continue saved game</button>':''}</div>`};
+return`<div class="lch"><div class="lcw">LIFECRAFT</div><p><b>Your life. Your choices. Your legacy.</b></p><p>Start with nothing. Build the life you want.</p></div><div class="c lcf"><h3>Create your character</h3><label for="nm">Name</label><input id="nm" value="Alex" maxlength="30"><div class="g"><div><label for="ag">Age (18–30)</label><input id="ag" type="number" min="18" max="30" value="18"></div><div><label for="yr">Starting year</label><input id="yr" type="number" value="2026"></div></div><label for="ed">Education</label><select id="ed">${Object.keys(EDU).map(e=>`<option>${e}</option>`).join('')}</select><label for="sc">Scenario</label><select id="sc"><option value="rel">Staying with a relative (£120/mo board)</option><option value="host">Hostel (£210/mo)</option></select><label for="ct">Where do you live?</label><select id="ct"><option value="UK">United Kingdom (GBP £)</option><option value="US">United States (USD $)</option><option value="NG">Nigeria (NGN ₦)</option><option value="IE">Ireland (EUR €)</option><option value="DE">Germany (EUR €)</option><option value="CA">Canada (CAD)</option><option value="AU">Australia (AUD)</option><option value="AE">UAE (AED)</option><option value="JP">Japan (JPY ¥)</option></select><label for="sm">Starting money</label><select id="sm"><option value="0" selected>Penniless</option><option value="50000">A little savings</option><option value="200000">Some savings</option><option value="500000">Comfortable savings</option></select><label for="df">Difficulty</label><select id="df"><option value="easy">Easy</option><option value="normal" selected>Normal</option><option value="hard">Hard</option></select><button class="lcgo" onclick="start()">Begin Your Life</button>${ct?'<button class="s" style="width:100%" onclick="load();render()">Continue saved game</button>':''}</div>`};
 try{if(typeof G!='undefined'&&!G&&!sessionStorage.getItem('lci')){sessionStorage.setItem('lci','1');const d=document.createElement('div');d.id='lcintro';d.innerHTML='<button class="lcsk">Skip Intro</button><svg class="sk" viewBox="0 0 400 100" preserveAspectRatio="none"><path fill="#1b2a4d" d="M0 100V60h20V40h18v25h14V30h22v40h16V50h20v20h18V35h24v35h14V55h20v15h22V25h20v45h16V48h24v22h20V60h22v40z"/></svg>'+[10,25,40,55,70,85].map((x,i)=>'<i class="lcp" style="left:'+x+'%;bottom:'+(8+i*5)+'%;animation-delay:'+i*.7+'s"></i>').join('')+'<div class="lcw">LIFECRAFT</div><div class="lct">Your life. Your choices. Your legacy.</div>';document.body.appendChild(d);const rm=matchMedia('(prefers-reduced-motion:reduce)').matches;let done=0;const end=()=>{if(done)return;done=1;d.classList.add('out');setTimeout(()=>d.remove(),700)};d.querySelector('button').onclick=end;setTimeout(end,rm?1200:3600)}}catch(e){}
 try{if(!G)render()}catch(e){}
+})();
+</script>
+<script>
+(function(){
+var SND=false;try{SND=localStorage.getItem('lc_snd')=='1'}catch(e){}
+function beep(f,d){window.lcFx&&window.lcFx(f>=500?'win':'lose')}
+var T=[[1/45e6,500000000,'JACKPOT'],[1/50000,100000,'Match 5'],[1/1000,10000,'Match 4'],[1/100,2000,'Match 3'],[1/10,400,'Match 2']],P=200,LAST='';
+window.lotto=function(n){if(!G)return;var won=0,bought=0,best='';for(var i=0;i<n;i++){if(!spend(P,'Lottery ticket','Lottery')){break}bought++;var r=Math.random(),acc=0;for(var j=0;j<T.length;j++){acc+=T[j][0];if(r<acc){won+=T[j][1];if(!best||T[j][1]>best)best=T[j][1];break}}}
+if(won>0){led('bank',won,'Lottery win','Lottery','deposit','National Lottery');beep(880,.25);if(won>=500000000)log('You won the lottery jackpot: '+M(won)+'!',1)}else if(bought)beep(200,.15);
+LAST=bought?(won>0?'Won '+M(won)+' from '+bought+' ticket'+(bought>1?'s':'')+'.':'No win from '+bought+' ticket'+(bought>1?'s':'')+'. Better luck next time.'):'Not enough money for a ticket.';render()};
+function card(){return '<div class="c" id="lcl"><h3>National Lottery</h3><div class="m">Tickets cost '+M(P)+'. Prize tiers from '+M(400)+' up to a '+M(500000000)+' jackpot (about 1 in 45 million). Play responsibly: most tickets lose.</div>'+(LAST?'<div style="margin:8px 0"><b>'+LAST+'</b></div>':'')+'<button onclick="lotto(1)">Buy 1 ticket</button> <button class="s" onclick="lotto(5)">Buy 5</button></div>'}
+var _r2=render;render=function(){_r2.apply(this,arguments);try{if(G&&tab=='shop'){var a=document.getElementById('app');if(a&&!document.getElementById('lcl'))a.insertAdjacentHTML('afterbegin',card())}}catch(e){}};
+})();
+</script>
+<script>(function(){var _s=start;start=function(){var e=document.getElementById('sm'),v=e?+e.value:0;_s();try{if(G&&v>0){led('bank',v,'Starting savings','Income','deposit','Family');render()}}catch(x){}}})();</script>
+<script>
+(function(){
+var CU={GBP:['£',1,2,'en-GB','United Kingdom'],USD:['$',1.3,2,'en-US','US dollar'],NGN:['₦',2000,0,'en-NG','Nigerian naira'],EUR:['€',1.17,2,'de-DE','Euro'],CAD:['C$',1.73,2,'en-CA','Canadian dollar'],AUD:['A$',1.95,2,'en-AU','Australian dollar'],AED:['AED ',4.65,2,'en-AE','UAE dirham'],JPY:['¥',190,0,'ja-JP','Japanese yen']};
+var CN={UK:'GBP',US:'USD',NG:'NGN',IE:'EUR',DE:'EUR',CA:'CAD',AU:'AUD',AE:'AED',JPY:'JPY',JP:'JPY'};
+function code(){var c=typeof G!='undefined'&&G&&G.dc;return CU[c]?c:'GBP'}
+function C(){return CU[code()]}
+function fm(n){var c=C(),v=n*c[1];return c[0]+v.toLocaleString(c[3],{minimumFractionDigits:c[2],maximumFractionDigits:c[2]})}
+var d=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value');
+Object.defineProperty(HTMLInputElement.prototype,'value',{get:function(){var v=d.get.call(this);if(this.dataset&&this.dataset.lcm&&v!==''){var n=parseFloat(v);if(!isNaN(n))return String(Math.round(n/C()[1]*100)/100)}return v},set:function(x){d.set.call(this,x)},configurable:true});
+function conv(){if(code()=='GBP')return;var a=document.getElementById('app'),c=C();if(!a)return;
+var w=document.createTreeWalker(a,NodeFilter.SHOW_TEXT),n,L=[];while(n=w.nextNode())if(n.nodeValue.indexOf('£')>-1)L.push(n);
+L.forEach(function(t){t.nodeValue=t.nodeValue.replace(/£\s?(\d[\d,]*(?:\.\d+)?)/g,function(m,x){return fm(parseFloat(x.replace(/,/g,'')))}).replace(/£/g,c[0].trim())});
+a.querySelectorAll('input').forEach(function(i){var p=i.getAttribute('placeholder')||'';if(p.indexOf('£')>-1){i.dataset.lcm='1';i.setAttribute('placeholder',p.replace(/£/g,c[0].trim()));var v=d.get.call(i);if(v!==''&&!isNaN(+v))d.set.call(i,String(Math.round(+v*c[1]*100)/100))}});
+a.querySelectorAll('button,option,label').forEach(function(e){if(e.childElementCount==0&&e.textContent.indexOf('£')>-1)e.textContent=e.textContent.replace(/£\s?(\d[\d,]*(?:\.\d+)?)/g,function(m,x){return fm(parseFloat(x.replace(/,/g,'')))})})}
+window.lcCur=function(v){if(G){G.dc=v;render()}};
+function card(){var o=Object.keys(CU).map(function(k){return'<option value="'+k+'"'+(k==code()?' selected':'')+'>'+k+' – '+CU[k][4]+'</option>'}).join('');return'<div class="c" id="lcc"><h3>Display currency</h3><div class="m">Amounts are shown at fixed approximate exchange rates. Your balances and the game rules stay the same.</div><select onchange="lcCur(this.value)" aria-label="Display currency">'+o+'</select></div>'}
+var _r3=render;render=function(){_r3.apply(this,arguments);try{if(G&&tab=='more'){var a=document.getElementById('app');if(a&&!document.getElementById('lcc'))a.insertAdjacentHTML('afterbegin',card())}conv()}catch(e){}};
+var _s3=start;start=function(){var e=document.getElementById('ct'),c=e?e.value:'UK';_s3();try{if(G){G.dc=CN[c]||'GBP';render()}}catch(x){}};
+})();
+</script>
+<script>
+(function(){
+var S={fx:false,mu:false};try{var j=JSON.parse(localStorage.getItem('lc_snd2')||'{}');S.fx=!!j.fx;S.mu=!!j.mu}catch(e){}
+function sv(){try{localStorage.setItem('lc_snd2',JSON.stringify(S))}catch(e){}}
+var ac,mg;function ctx(){try{try{if(navigator.audioSession)navigator.audioSession.type='playback'}catch(e){}
+if(!ac){ac=new(window.AudioContext||window.webkitAudioContext)();mg=ac.createGain();mg.gain.value=1;mg.connect(ac.destination);var b=ac.createBuffer(1,1,22050),s=ac.createBufferSource();s.buffer=b;s.connect(ac.destination);s.start(0)}
+if(ac.state!='running')ac.resume();return ac}catch(e){return null}}
+function tone(f,t,d,v,ty,at){var a=ctx();if(!a)return;try{var o=a.createOscillator(),g=a.createGain(),n=a.currentTime+t;o.type=ty||'sine';o.frequency.value=f;g.gain.setValueAtTime(.0001,n);g.gain.linearRampToValueAtTime(v,n+(at||.02));g.gain.exponentialRampToValueAtTime(.0001,n+d);o.connect(g);g.connect(mg);o.start(n);o.stop(n+d+.05)}catch(e){}}
+window.lcFx=function(k){if(!S.fx)return;if(k=='click')tone(560,0,.07,.18,'triangle');else if(k=='coin'){tone(740,0,.09,.25);tone(520,.08,.12,.25)}else if(k=='gain'){tone(660,0,.12,.25);tone(880,.09,.2,.25)}else if(k=='win'){[523,659,784,1047].forEach(function(f,i){tone(f,i*.1,.3,.3)})}else if(k=='lose')tone(180,0,.25,.22,'sawtooth')};
+var CH=[[261.6,329.6,392],[220,261.6,329.6],[174.6,220,261.6],[196,246.9,293.7]],ci=0,mt=null;
+function pad(){var c=CH[ci++%4];c.forEach(function(f){tone(f/2,0,4.4,.12,'sine',1.4);tone(f,0,4.4,.05,'sine',1.4)})}
+function music(){if(mt){clearInterval(mt);mt=null}if(S.mu&&!document.hidden){pad();mt=setInterval(pad,4000)}}
+document.addEventListener('visibilitychange',music);
+document.addEventListener('click',function(e){if(e.target.closest&&e.target.closest('button'))lcFx('click')},true);
+window.lcSet=function(k,v){S[k]=!!v;sv();ctx();if(k=='mu')music();else lcFx('gain')};
+window.lcTest=function(){var was=S.fx;S.fx=true;lcFx('win');S.fx=was};
+if(S.mu){document.addEventListener('click',function f(){music();document.removeEventListener('click',f,true)},true)}
+function card(){return'<div class="c" id="lcsn"><h3>Sound</h3><label style="display:flex;gap:10px;align-items:center;padding:8px 0"><input type="checkbox" style="width:22px;height:22px" onchange="lcSet(\'fx\',this.checked)"'+(S.fx?' checked':'')+'> Sound effects</label><label style="display:flex;gap:10px;align-items:center;padding:8px 0"><input type="checkbox" style="width:22px;height:22px" onchange="lcSet(\'mu\',this.checked)"'+(S.mu?' checked':'')+'> Background music</label><button class="s" onclick="lcTest()">Play test sound</button><div class="m">No sound? Turn your phone\'s volume up and check the silent switch is off.</div></div>'}
+var pb=null,_r4=render;render=function(){_r4.apply(this,arguments);try{if(!G){pb=null;return}if(tab=='more'){var a=document.getElementById('app');if(a&&!document.getElementById('lcsn'))a.insertAdjacentHTML('afterbegin',card())}var t=G.cash+G.bank;if(pb!==null&&t!==pb)lcFx(t>pb?'gain':'coin');pb=t}catch(e){}};
 })();
 </script>
 <script>if('serviceWorker' in navigator){var had=navigator.serviceWorker.controller,rl=0;navigator.serviceWorker.addEventListener('controllerchange',function(){if(had&&!rl){rl=1;location.reload()}});window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').then(function(r){r.update()}).catch(function(){})})}</script></body></html>
