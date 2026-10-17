@@ -1476,4 +1476,16 @@ function big(key,nm,k,t){var o=document.createElement('div');o.id='lcbox';o.inne
 var _r10=render;render=function(){_r10.apply(this,arguments);try{if(!G||tab!='shop')return;var N=names();document.querySelectorAll('#app .r').forEach(function(r){if(r.querySelector('.lcth'))return;var sp=r.querySelector('span');if(!sp)return;var tx=sp.textContent.trim(),hit=null;for(var i=0;i<N.length;i++){if(tx.indexOf(N[i][0])==0){hit=N[i];break}}if(!hit||!IMG[hit[1]])return;var im=document.createElement('img');im.className='lcth';im.loading='lazy';im.src=IMG[hit[1]];im.alt=hit[0];im.onerror=function(){im.remove()};im.onclick=function(){big(hit[1],hit[0],hit[2],hit[3])};r.classList.add('lcr');r.insertBefore(im,r.firstChild)});window.lcConv&&window.lcConv()}catch(e){}};
 })();
 </script>
+<style id="lcdesk">
+::-webkit-scrollbar{width:10px;height:10px}::-webkit-scrollbar-thumb{background:var(--bd);border-radius:8px}::-webkit-scrollbar-track{background:transparent}
+@media(min-width:1000px){
+nav{top:0;bottom:0;right:auto;left:0;width:210px;flex-direction:column;justify-content:flex-start;gap:4px;padding:24px 12px;border-top:0;border-right:1px solid var(--bd);overflow-y:auto;background:rgba(10,15,30,.92)}
+nav button{flex:none;display:flex;align-items:center;gap:12px;text-align:left;font-size:15px!important;padding:12px 14px;margin:0;border-radius:12px;min-height:44px}
+nav button.on{background:rgba(212,180,106,.14)}nav button:hover{background:rgba(255,255,255,.06)}
+#app{max-width:1380px;padding:26px 32px 40px 242px;column-count:2;column-gap:16px}
+#app>*{break-inside:avoid}#app>*:not(.c){column-span:all}#app>.c{margin-bottom:16px}
+#app:has(.lch){column-count:1;max-width:760px;padding:30px 24px 40px}
+}
+@media(min-width:1600px){#app{column-count:3}#app:has(.lch){column-count:1}}
+</style>
 <script>if('serviceWorker' in navigator){var had=navigator.serviceWorker.controller,rl=0;navigator.serviceWorker.addEventListener('controllerchange',function(){if(had&&!rl){rl=1;location.reload()}});window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').then(function(r){r.update()}).catch(function(){})})}</script></body></html>
