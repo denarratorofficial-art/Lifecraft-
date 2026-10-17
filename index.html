@@ -1488,4 +1488,42 @@ nav button.on{background:rgba(212,180,106,.14)}nav button:hover{background:rgba(
 }
 @media(min-width:1600px){#app{column-count:3}#app:has(.lch){column-count:1}}
 </style>
+<style id="lcfm">
+html,body{font:16px/1.45 'Segoe UI',system-ui,-apple-system,sans-serif}
+body{background:radial-gradient(900px 500px at 8% -5%,rgba(88,64,200,.28),transparent 60%),radial-gradient(800px 500px at 100% 0,rgba(20,150,130,.22),transparent 60%),radial-gradient(900px 600px at 50% 110%,rgba(212,180,106,.10),transparent 60%),#070b16 fixed}
+.c{background:linear-gradient(180deg,rgba(26,38,70,.92),rgba(14,21,40,.94));border:1px solid rgba(120,140,200,.18);border-radius:18px;padding:16px;box-shadow:0 10px 30px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.05)}
+.c>h3:first-child{margin:-16px -16px 14px;padding:12px 16px;background:linear-gradient(90deg,rgba(212,180,106,.22),rgba(255,255,255,.03) 70%);border-bottom:1px solid rgba(120,140,200,.18);border-left:4px solid #d4b46a;border-radius:18px 18px 0 0;color:#f4f6fb;font:800 13px/1.2 'Segoe UI',system-ui,sans-serif;letter-spacing:.14em}
+h2{font:800 22px/1.2 'Segoe UI',system-ui,sans-serif;letter-spacing:.01em}
+button{border-radius:12px;padding:10px 16px;font-weight:700;box-shadow:0 3px 10px rgba(0,0,0,.35);background:linear-gradient(135deg,#f0d78c,#c9a24f)}
+button.s{background:rgba(255,255,255,.05);border:1px solid rgba(150,170,230,.25);box-shadow:none;color:#eef1f8}button.s:hover{background:rgba(255,255,255,.1)}
+input,select,textarea{padding:11px 12px;border-radius:10px;background:rgba(5,9,20,.7);border:1px solid rgba(120,140,200,.25)}
+.bar{height:12px;border-radius:7px;background:rgba(255,255,255,.08)}.bar i{background:linear-gradient(90deg,#1fd1a0,#d4b46a)}
+.r{padding:6px 0;border-bottom:1px solid rgba(120,140,200,.08)}.m{font-size:14px}
+#lcb{column-span:all;margin:0 0 16px;border-radius:22px;padding:22px;display:flex;gap:20px;align-items:center;flex-wrap:wrap;background:linear-gradient(120deg,rgba(80,60,190,.55),rgba(14,24,52,.95) 55%,rgba(20,140,120,.45));border:1px solid rgba(160,180,255,.22);box-shadow:0 14px 40px rgba(0,0,0,.5);position:relative;overflow:hidden}
+#lcb:after{content:"";position:absolute;inset:auto 0 0 0;height:60px;background:linear-gradient(0deg,rgba(255,255,255,.05),transparent);pointer-events:none}
+#lcb .av{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#f0d78c,#a27c2e);color:#10162a;font:800 28px/72px Georgia,serif;text-align:center;flex:none;box-shadow:0 0 0 4px rgba(255,255,255,.12)}
+#lcb .who{flex:1;min-width:200px}#lcb .who b{font:800 26px/1.15 'Segoe UI',system-ui,sans-serif;display:block}#lcb .who span{color:#b8c3de;font-size:14px}
+#lcb .tl{display:flex;gap:10px;flex-wrap:wrap}#lcb .t{background:rgba(5,9,22,.55);border:1px solid rgba(160,180,255,.18);border-radius:14px;padding:10px 14px;min-width:112px}
+#lcb .t small{display:block;color:#9fb0d6;font-size:11px;letter-spacing:.12em;text-transform:uppercase}#lcb .t b{font:800 19px/1.3 'Segoe UI',system-ui,sans-serif}
+#lcb .mb{display:flex;gap:8px;width:100%}#lcb .mb div{flex:1}#lcb .mb small{color:#9fb0d6;font-size:11px;letter-spacing:.1em;text-transform:uppercase}
+@media(max-width:999px){#lcb:not(.home){display:none}#lcb{padding:16px}#lcb .who b{font-size:21px}}
+@media(min-width:1000px){
+html,body{font-size:17px}
+nav{width:104px;padding:16px 8px;gap:6px;background:linear-gradient(180deg,rgba(18,26,54,.98),rgba(8,12,26,.98));border-right:1px solid rgba(120,140,200,.2)}
+nav:before{content:"LC";display:block;margin:2px auto 14px;width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,#f0d78c,#a27c2e);color:#10162a;font:800 24px/56px Georgia,serif;text-align:center;box-shadow:0 6px 18px rgba(0,0,0,.45)}
+nav button{display:block;text-align:center;font-size:12px!important;padding:10px 4px;border-radius:14px;background:transparent;box-shadow:none;color:#9fb0d6;line-height:1.3}
+nav button::first-line{font-size:26px;line-height:1.4}
+nav button.on{background:linear-gradient(135deg,rgba(212,180,106,.28),rgba(212,180,106,.08));color:#f0d78c;box-shadow:inset 3px 0 0 #d4b46a}
+#app{max-width:1500px;padding:28px 36px 48px 140px}
+}
+@media(min-width:1700px){#app{column-count:3}}
+</style>
+<script>
+(function(){
+function ini(n){return String(n||'?').trim().charAt(0).toUpperCase()}
+function banner(){var st=G.st||{},job=G.job?G.job.t:(G.ret?'Retired':'No job'),mb=[['Energy',st.energy],['Health',st.health],['Happiness',st.happy],['Stress',st.stress],['Reputation',st.rep]].map(function(x){return'<div><small>'+x[0]+' '+Math.round(x[1]||0)+'</small><div class="bar"><i style="width:'+Math.max(0,Math.min(100,x[1]||0))+'%"></i></div></div>'}).join('');
+return'<div id="lcb" class="'+(tab=='home'?'home':'')+'"><div class="av">'+ini(G.name)+'</div><div class="who"><b>'+G.name+'</b><span>Age '+age()+' · '+job+' · '+G.city+'</span></div><div class="tl"><div class="t"><small>Date</small><b>'+fmt(G.day).slice(5)+'</b></div><div class="t"><small>Net worth</small><b>'+M(nw())+'</b></div><div class="t"><small>Cash</small><b>'+M(G.cash)+'</b></div><div class="t"><small>Bank</small><b>'+M(G.bank)+'</b></div></div><div class="mb">'+mb+'</div></div>'}
+var _rf=render;render=function(){_rf.apply(this,arguments);try{if(!G)return;var a=document.getElementById('app');if(a&&!document.getElementById('lcb')){a.insertAdjacentHTML('afterbegin',banner());window.lcConv&&window.lcConv()}}catch(e){}};
+})();
+</script>
 <script>if('serviceWorker' in navigator){var had=navigator.serviceWorker.controller,rl=0;navigator.serviceWorker.addEventListener('controllerchange',function(){if(had&&!rl){rl=1;location.reload()}});window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').then(function(r){r.update()}).catch(function(){})})}</script></body></html>
