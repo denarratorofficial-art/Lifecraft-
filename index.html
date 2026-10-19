@@ -1680,4 +1680,31 @@ function spark(){var p=(G.nwh||[]).slice(-24);if(p.length<3)return'';var lo=Math
 var _r15=render;render=function(){_r15.apply(this,arguments);try{if(!G)return;G.nwh=G.nwh||[];if(!G.nwh.length)G.nwh.push([G.day,nw()]);var t=document.querySelectorAll('#lcb .t')[1];if(t&&!t.querySelector('.spk')){var s=spark();if(s)t.insertAdjacentHTML('beforeend',s)}if(tab=='ins')window.lcConv&&window.lcConv()}catch(e){}};
 })();
 </script>
+<style id="lchubcss">
+.lchub{column-span:all;display:flex;gap:8px;overflow-x:auto;padding:2px 2px 14px;margin:0 -2px;scrollbar-width:none;-webkit-overflow-scrolling:touch}.lchub::-webkit-scrollbar{display:none}
+.lchub button{flex:none;white-space:nowrap;border-radius:999px;padding:9px 15px;font-size:14px;min-height:38px;background:rgba(255,255,255,.05)!important;color:#cfd8f0;border:1px solid rgba(150,170,230,.25);box-shadow:none}
+.lchub button.on{background:linear-gradient(135deg,#f0d78c,#c9a24f)!important;color:#10162a;border-color:transparent}
+.lchub .n{display:inline-block;min-width:18px;padding:1px 6px;margin-left:6px;border-radius:9px;background:#ff7a7a;color:#fff;font-size:11px;line-height:16px;text-align:center}
+@media(max-width:999px){nav{gap:4px;padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px))}nav button{flex:1 1 0;min-width:0;padding:8px 2px;font-size:10.5px!important}}
+nav button{position:relative}nav .lcbd{position:absolute;top:2px;right:12%;min-width:17px;padding:1px 5px;border-radius:9px;background:#ff7a7a;color:#fff;font:700 10px/15px 'Segoe UI',system-ui,sans-serif}
+</style>
+<script>
+(function(){
+var H=[{n:'Life',i:'🏠',d:'home',t:['home','act','gym','edu','cal','inbox','hist','retire','legacy','ach']},
+{n:'Money',i:'💰',d:'bank',t:['bank','inv','wealth','loans','bank2','ins']},
+{n:'Career',i:'💼',d:'hub',t:['hub','jobs','career','biz']},
+{n:'Assets',i:'🏡',d:'house',t:['house','prop','veh','lux','shop','surv']},
+{n:'People',i:'💞',d:'rel',t:['rel','family','social']},
+{n:'World',i:'🌍',d:'city',t:['city','trav','legal','under','prison','more']}];
+var NM={home:'Home',act:'Activities',gym:'Fitness',edu:'Education',cal:'Calendar',inbox:'Inbox',hist:'History',retire:'Later life',legacy:'Legacy and will',ach:'Achievements',bank:'Banking',inv:'Investing',wealth:'Wealth',loans:'Loans',bank2:'Debt',ins:'Insights',hub:'Career hub',jobs:'Jobs',career:'Growth',biz:'Business',house:'Rent',prop:'Property',veh:'Vehicles',lux:'Luxury',shop:'Shopping',surv:'Housing survival',rel:'Relationships',family:'Family',social:'Social media',city:'Cities',trav:'Travel and FX',legal:'Legal',under:'Underworld',prison:'Prison',more:'Settings'};
+function hub(t){for(var i=0;i<H.length;i++)if(H[i].t.indexOf(t)>-1)return i;return t=='menu'?-1:5}
+window.lcHub=function(i){go(H[i].d)};
+function unread(){try{return(G.inbox||[]).filter(function(m){return!m.read}).length}catch(e){return 0}}
+var _r16=render;render=function(){_r16.apply(this,arguments);try{if(!G)return;var cur=hub(tab),u=unread(),nav=document.querySelector('nav');
+if(nav)nav.innerHTML=H.map(function(h,i){return'<button style="font-size:11px" class="'+(i==cur?'on':'')+'" onclick="lcHub('+i+')" aria-label="'+h.n+'">'+h.i+'<br>'+h.n+(i==0&&u?'<span class="lcbd">'+u+'</span>':'')+'</button>'}).join('');
+var a=document.getElementById('app');if(!a||cur<0||document.getElementById('lchub'))return;
+var ids=H[cur].t.filter(function(t){return SEC.some(function(s){return s[0]==t})}),row='<div class="lchub" id="lchub" role="tablist" aria-label="'+H[cur].n+' sections">'+ids.map(function(t){return'<button type="button" role="tab" aria-selected="'+(t==tab)+'" class="'+(t==tab?'on':'')+'" onclick="go(\''+t+'\')">'+NM[t]+(t=='inbox'&&u?'<span class="n">'+u+'</span>':'')+'</button>'}).join('')+'</div>';
+a.insertAdjacentHTML('afterbegin',row);var r=document.getElementById('lchub'),c=r&&r.querySelector('.on');if(c)r.scrollLeft=c.offsetLeft-r.clientWidth/2+c.clientWidth/2}catch(e){}};
+})();
+</script>
 <script>if('serviceWorker' in navigator){var had=navigator.serviceWorker.controller,rl=0;navigator.serviceWorker.addEventListener('controllerchange',function(){if(had&&!rl){rl=1;location.reload()}});window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').then(function(r){r.update()}).catch(function(){})})}</script></body></html>
