@@ -1738,4 +1738,80 @@ else if(t=='Life'){[].slice.call(c.querySelectorAll('.bar')).forEach(function(b)
 }catch(e){}};
 })();
 </script>
+<style id="lcgsstyle">
+.lcgs .gi{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid rgba(255,255,255,.07)}
+.lcgs .gi:first-of-type{border-top:0}
+.lcgs .ck{flex:none;width:22px;height:22px;border-radius:50%;border:2px solid #c9a24a;display:flex;align-items:center;justify-content:center;font-size:13px;color:#10162b;font-weight:800}
+.lcgs .gi.ok .ck{background:linear-gradient(135deg,#f3d98b,#c9a24a)}
+.lcgs .gi.ok .tx{opacity:.55;text-decoration:line-through}
+.lcgs .tx{flex:1;font-size:14px}.lcgs .tx small{display:block;opacity:.65;font-size:12px}
+.lcgs .gb{font-size:13px;padding:7px 14px}
+.lcgs .gp{height:6px;border-radius:4px;background:rgba(255,255,255,.1);overflow:hidden;margin:6px 0 4px}.lcgs .gp i{display:block;height:100%;background:linear-gradient(90deg,#f3d98b,#c9a24a);transition:width .6s}
+</style>
+<script>
+(function(){
+var S=[['Apply for a job','Open Jobs and send your first application','jobs',function(){return G.job||(G.apps&&G.apps.length)||(G.failed&&G.failed.length)}],
+['Land your first job','Interviews lead to offers - keep applying','jobs',function(){return!!G.job}],
+['Do an activity','Spend a slot on something - it all adds up','act',function(){return(G.used||0)>0||(G.day-G.d0)>0&&(G.hist&&G.hist.length>0)}],
+['Meet someone new','Social life and events build contacts','social',function(){return G.cx&&G.cx.length>0}],
+['Survive your first week','Tap Next day on Home','home',function(){return G.day-G.d0>=7}],
+['Check your Insights','See your money and wellbeing charts','ins',function(){return!!(G.gsv&&G.gsv.ins)}]];
+var _r19=render;render=function(){var t0=tab;if(G&&t0=='ins'){G.gsv=G.gsv||{};G.gsv.ins=1}
+_r19.apply(this,arguments);
+try{if(!G||tab!='home')return;var a=document.getElementById('app');if(!a)return;
+var vr=document.getElementById('lcvr');
+var cards=[].slice.call(a.children).filter(function(c){return c.classList&&c.classList.contains('c')&&c.querySelector('h3')});
+var last=cards.length?cards[cards.length-1]:null;
+if(vr&&!vr.getAttribute('data-moved')){var sec=document.createElement('div');sec.className='lcsec';sec.style.cssText='column-span:all;margin:6px 2px 10px;font-weight:800;letter-spacing:.14em;font-size:12px;opacity:.7;text-transform:uppercase';sec.textContent='Explore';a.appendChild(sec);a.appendChild(vr);vr.setAttribute('data-moved','1')}
+if(document.getElementById('lcgs')||G.gsx)return;
+if(G.day-G.d0>45)return;
+var done=S.filter(function(s){try{return s[3]()}catch(e){return false}}).length;if(done>=S.length)return;
+var first=null;var h='<div class="c lcgs" id="lcgsc"><h3>Getting started</h3><div class="gp"><i style="width:'+Math.round(done/S.length*100)+'%"></i></div><div class="m">'+done+' of '+S.length+' done</div>';
+S.forEach(function(s){var ok=false;try{ok=!!s[3]()}catch(e){}if(!ok&&!first)first=s;h+='<div class="gi'+(ok?' ok':'')+'"><span class="ck">'+(ok?'✓':'')+'</span><span class="tx">'+s[0]+'<small>'+s[1]+'</small></span>'+(ok?'':'<button type="button" class="gb" onclick="go(\''+s[2]+'\')">Go</button>')+'</div>'});
+h+='<button type="button" class="gb" style="margin-top:8px;opacity:.7" onclick="G.gsx=1;render()">Hide this</button></div>';
+var panel=document.getElementById('lctl')||document.getElementById('lcb');
+var wn=[].slice.call(a.children).find(function(c){return c.id&&c.id=='lcwn'||(c.querySelector&&c.querySelector('h3')&&/What now/i.test(c.querySelector('h3').textContent))});
+var anchor=wn||document.getElementById('lcts')||document.getElementById('lcb');
+if(anchor)anchor.insertAdjacentHTML('afterend',h.replace('id="lcgsc"','id="lcgs"'))}catch(e){}};
+})();
+</script>
+<style id="lcyrstyle">
+.lcyr{position:fixed;inset:0;z-index:9999;background:rgba(4,7,18,.82);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:16px;animation:lcyrin .35s ease}
+@keyframes lcyrin{from{opacity:0}to{opacity:1}}
+.lcyr .bx{width:100%;max-width:440px;max-height:92vh;overflow:auto;border-radius:18px;border:1px solid #c9a24a;background:linear-gradient(160deg,#151c3a,#0b1022);box-shadow:0 20px 60px rgba(0,0,0,.6),0 0 40px rgba(201,162,74,.18);padding:22px 20px;color:#eef1fb}
+.lcyr .k{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#c9a24a;font-weight:800}
+.lcyr h2{margin:6px 0 2px;font-size:26px}
+.lcyr .v{opacity:.8;font-size:14px;margin-bottom:14px}
+.lcyr .g2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.lcyr .g2>div{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px 12px;font-size:12px;opacity:.95}
+.lcyr .g2 b{display:block;font-size:18px;margin-top:3px}
+.lcyr .up{color:#4fe0a8}.lcyr .dn{color:#ff7a7a}
+.lcyr ul{margin:0 0 14px;padding-left:18px;font-size:14px;line-height:1.5}
+.lcyr button{width:100%;padding:13px;border:0;border-radius:12px;font-weight:800;font-size:15px;color:#10162b;background:linear-gradient(135deg,#f3d98b,#c9a24a);cursor:pointer}
+.lcyl .r{display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-top:1px solid rgba(255,255,255,.07);font-size:13px}
+.lcyl .r:first-of-type{border-top:0}.lcyl .r span:first-child{opacity:.8}
+</style>
+<script>
+(function(){
+function cnt(){return[Object.keys(G.ach||{}).length+(G.ach2?G.ach2.length:0),(G.cx||[]).length]}
+function verdict(e){var sv=e.inc-e.exp;if(e.dnw>0&&sv>0)return['A year of growth','You earned more than you spent and your wealth grew.'];if(e.dnw>0)return['Wealth rising','Your net worth grew, even though spending outran income.'];if(e.dnw<0&&sv<0)return['A tough year','You spent more than you earned and your net worth fell. Next year is a fresh start.'];if(e.dnw<0)return['A setback year','Your net worth slipped. Check investments and big purchases.'];return['A steady year','Not much changed. A bold move could change that.']}
+function fm(n){try{return M(n)}catch(e){return '£'+Math.round(n)}}
+var _r20=render;render=function(){_r20.apply(this,arguments);
+try{if(!G)return;var a=document.getElementById('app');if(!a)return;
+if(G.yrSeen==null){G.yrSeen=(G.yr&&G.yr.length)?G.yr[G.yr.length-1].y:0;var c0=cnt();G.yrP={a:c0[0],c:c0[1]}}
+if(G.yr&&G.yr.length){var e=G.yr[G.yr.length-1];
+if(e.y>G.yrSeen&&!document.getElementById('lcyr')){var c=cnt(),p=G.yrP||{a:0,c:0},v=verdict(e),sv=e.inc-e.exp,da=Math.max(0,c[0]-p.a),dc=Math.max(0,c[1]-p.c);
+var h='<div class="lcyr" id="lcyr" role="dialog" aria-label="Year in review"><div class="bx"><div class="k">Year in review</div><h2>'+e.y+'</h2><div class="v"><b>'+v[0]+'.</b> '+v[1]+'</div>'+
+'<div class="g2"><div>Income<b>'+fm(e.inc)+'</b></div><div>Spending<b>'+fm(e.exp)+'</b></div><div>Net worth<b>'+fm(e.nw)+'</b></div><div>Change<b class="'+(e.dnw>=0?'up':'dn')+'">'+(e.dnw>=0?'+':'-')+fm(Math.abs(e.dnw))+'</b></div></div><ul>'+
+'<li>Age now: '+G.age+(G.job?' · Job: '+G.job.t:' · No job')+'</li>'+
+'<li>'+(sv>0?'You saved '+fm(sv)+' of what you earned':sv==0?'You broke even':'You overspent by '+fm(-sv))+'</li>'+
+'<li>'+da+' new achievement'+(da==1?'':'s')+' · '+dc+' new contact'+(dc==1?'':'s')+'</li></ul>'+
+'<button type="button" id="lcyrok">Start '+(e.y+1)+'</button></div></div>';
+a.insertAdjacentHTML('beforeend',h);try{conv()}catch(x){}
+document.getElementById('lcyrok').onclick=function(){G.yrSeen=e.y;G.yrP={a:c[0],c:c[1]};var o=document.getElementById('lcyr');if(o)o.remove();try{if(typeof save=='function')save()}catch(x){}}}}
+if(tab=='ins'&&G.yr&&G.yr.length&&!document.getElementById('lcyl')){var rows=G.yr.slice(-8).reverse().map(function(e){return'<div class="r"><span>'+e.y+' · '+(e.job&&e.job!='none'?e.job:'No job')+'</span><span>in '+fm(e.inc)+' · out '+fm(e.exp)+' · '+(e.dnw>=0?'+':'-')+fm(Math.abs(e.dnw))+'</span></div>'}).join('');
+a.insertAdjacentHTML('beforeend','<div class="c lcyl" id="lcyl"><h3>Year by year</h3>'+rows+'</div>');try{conv()}catch(x){}}
+}catch(x){}};
+})();
+</script>
 <script>if('serviceWorker' in navigator){var had=navigator.serviceWorker.controller,rl=0;navigator.serviceWorker.addEventListener('controllerchange',function(){if(had&&!rl){rl=1;location.reload()}});window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').then(function(r){r.update()}).catch(function(){})})}</script></body></html>
