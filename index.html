@@ -1729,4 +1729,13 @@ if(hdr){[].slice.call(hdr.querySelectorAll('button')).forEach(function(b){if(/Me
 }catch(e){}};
 })();
 </script>
+<script>
+(function(){
+var _r18=render;render=function(){_r18.apply(this,arguments);try{if(!G||tab!='home')return;var a=document.getElementById('app');if(!a)return;
+[].slice.call(a.children).forEach(function(c){if(!c.classList||!c.classList.contains('c')||c.getAttribute('data-slim'))return;var h=c.querySelector('h3'),t=h&&h.textContent;
+if(t=='Money'){var g=c.querySelector('.g');if(g){[].slice.call(g.children).forEach(function(d){if(/^(Cash|Bank|Net worth)/.test(d.textContent.trim()))d.remove()});g.style.gridTemplateColumns='1fr'}c.setAttribute('data-slim','1')}
+else if(t=='Life'){[].slice.call(c.querySelectorAll('.bar')).forEach(function(b){var p=b.previousElementSibling;if(p&&/^(Energy|Health|Happiness|Stress|Reputation)\b/.test(p.textContent.trim()))p.remove();b.remove()});c.setAttribute('data-slim','1')}})
+}catch(e){}};
+})();
+</script>
 <script>if('serviceWorker' in navigator){var had=navigator.serviceWorker.controller,rl=0;navigator.serviceWorker.addEventListener('controllerchange',function(){if(had&&!rl){rl=1;location.reload()}});window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').then(function(r){r.update()}).catch(function(){})})}</script></body></html>
