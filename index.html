@@ -1707,4 +1707,26 @@ var ids=H[cur].t.filter(function(t){return SEC.some(function(s){return s[0]==t})
 a.insertAdjacentHTML('afterbegin',row);var r=document.getElementById('lchub'),c=r&&r.querySelector('.on');if(c)r.scrollLeft=c.offsetLeft-r.clientWidth/2+c.clientWidth/2}catch(e){}};
 })();
 </script>
+<style id="lcdd">
+.lcwn .qa{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:0 16px 12px}.lcwn .qa>span{width:100%;color:var(--mu);font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+.lcwn .qa button{min-height:40px;padding:9px 16px}.lcwn .dt{padding:0 16px 10px}.lcwn .dt summary{cursor:pointer;color:var(--mu);font-size:13px;padding:6px 0}.lcwn .dt .g{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:6px}
+.lcwn .ft{display:flex;gap:8px;padding:2px 16px 14px;flex-wrap:wrap}.lcwn .ft button{flex:1;min-width:120px}
+#lcb .who .xt{display:block;margin-top:6px;color:#cfd8f0;font-size:13px}
+</style>
+<script>
+(function(){
+var _r17=render;render=function(){_r17.apply(this,arguments);try{if(!G||tab!='home')return;var a=document.getElementById('app'),w=document.getElementById('lcwn');if(!a||!w||document.getElementById('lcqa'))return;
+var kids=[].slice.call(a.children),hdr=kids.filter(function(e){return e.className=='r'&&/New life/.test(e.textContent)})[0],
+who=kids.filter(function(e){return e.classList.contains('c')&&/time today/.test(e.textContent)})[0],
+tim=kids.filter(function(e){return e.classList.contains('c')&&/^\s*Time/i.test(e.textContent)&&e.querySelector('#td')})[0],
+qa=kids.filter(function(e){return e.classList.contains('c')&&e.querySelector('button[onclick^="actn("]')})[0];
+w.insertAdjacentHTML('beforeend','<div class="qa" id="lcqa"><span>Quick actions</span></div><details class="dt"><summary>Jump to a date</summary><div id="lcdt"></div></details><div class="ft" id="lcft"></div>');
+var cta=w.querySelector('.cta');if(cta&&!cta.querySelector('[data-w1]'))cta.insertAdjacentHTML('beforeend','<button class="s" data-w1="1" onclick="adv(7)">+1 week</button>');
+if(who){var ms=who.querySelectorAll('.m'),hs=ms[ms.length-1],se=who.querySelector('.r .m'),bw=document.querySelector('#lcb .who');if(bw&&hs){bw.insertAdjacentHTML('beforeend','<span class="xt">'+hs.innerHTML+(se?' · '+se.textContent:'')+'</span>')}who.remove()}
+if(tim){var g=tim.querySelector('.g');if(g)document.getElementById('lcdt').appendChild(g);tim.remove()}
+if(qa){[].slice.call(qa.querySelectorAll('button[onclick^="actn("]')).forEach(function(b){b.className='s';document.getElementById('lcqa').appendChild(b)});qa.remove()}
+if(hdr){[].slice.call(hdr.querySelectorAll('button')).forEach(function(b){if(/Menu|New life/.test(b.textContent)){b.className='s';document.getElementById('lcft').appendChild(b)}});hdr.remove()}
+}catch(e){}};
+})();
+</script>
 <script>if('serviceWorker' in navigator){var had=navigator.serviceWorker.controller,rl=0;navigator.serviceWorker.addEventListener('controllerchange',function(){if(had&&!rl){rl=1;location.reload()}});window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').then(function(r){r.update()}).catch(function(){})})}</script></body></html>
