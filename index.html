@@ -1692,11 +1692,11 @@ nav button{position:relative}nav .lcbd{position:absolute;top:2px;right:12%;min-w
 (function(){
 var H=[{n:'Life',i:'🏠',d:'home',t:['home','act','gym','edu','cal','inbox','hist','retire','legacy','ach']},
 {n:'Money',i:'💰',d:'bank',t:['bank','inv','wealth','loans','bank2','ins']},
-{n:'Career',i:'💼',d:'hub',t:['hub','jobs','career','biz']},
+{n:'Career',i:'💼',d:'hub',t:['hub','jobs','skl','career','biz']},
 {n:'Assets',i:'🏡',d:'house',t:['house','prop','veh','lux','shop','surv']},
 {n:'People',i:'💞',d:'rel',t:['rel','family','social']},
 {n:'World',i:'🌍',d:'city',t:['city','trav','legal','under','prison','more']}];
-var NM={home:'Home',act:'Activities',gym:'Fitness',edu:'Education',cal:'Calendar',inbox:'Inbox',hist:'History',retire:'Later life',legacy:'Legacy and will',ach:'Achievements',bank:'Banking',inv:'Investing',wealth:'Wealth',loans:'Loans',bank2:'Debt',ins:'Insights',hub:'Career hub',jobs:'Jobs',career:'Growth',biz:'Business',house:'Rent',prop:'Property',veh:'Vehicles',lux:'Luxury',shop:'Shopping',surv:'Housing survival',rel:'Relationships',family:'Family',social:'Social media',city:'Cities',trav:'Travel and FX',legal:'Legal',under:'Underworld',prison:'Prison',more:'Settings'};
+var NM={home:'Home',act:'Activities',gym:'Fitness',edu:'Education',cal:'Calendar',inbox:'Inbox',hist:'History',retire:'Later life',legacy:'Legacy and will',ach:'Achievements',bank:'Banking',inv:'Investing',wealth:'Wealth',loans:'Loans',bank2:'Debt',ins:'Insights',hub:'Career hub',jobs:'Jobs',skl:'Skills',career:'Growth',biz:'Business',house:'Rent',prop:'Property',veh:'Vehicles',lux:'Luxury',shop:'Shopping',surv:'Housing survival',rel:'Relationships',family:'Family',social:'Social media',city:'Cities',trav:'Travel and FX',legal:'Legal',under:'Underworld',prison:'Prison',more:'Settings'};
 function hub(t){for(var i=0;i<H.length;i++)if(H[i].t.indexOf(t)>-1)return i;return t=='menu'?-1:5}
 window.lcHub=function(i){go(H[i].d)};
 function unread(){try{return(G.inbox||[]).filter(function(m){return!m.read}).length}catch(e){return 0}}
@@ -1812,6 +1812,49 @@ document.getElementById('lcyrok').onclick=function(){G.yrSeen=e.y;G.yrP={a:c[0],
 if(tab=='ins'&&G.yr&&G.yr.length&&!document.getElementById('lcyl')){var rows=G.yr.slice(-8).reverse().map(function(e){return'<div class="r"><span>'+e.y+' · '+(e.job&&e.job!='none'?e.job:'No job')+'</span><span>in '+fm(e.inc)+' · out '+fm(e.exp)+' · '+(e.dnw>=0?'+':'-')+fm(Math.abs(e.dnw))+'</span></div>'}).join('');
 a.insertAdjacentHTML('beforeend','<div class="c lcyl" id="lcyl"><h3>Year by year</h3>'+rows+'</div>');try{conv()}catch(x){}}
 }catch(x){}};
+})();
+</script>
+<style id="lcskstyle">
+.lcsk2 .top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.lcsk2 .top b{font-size:16px}.lcsk2 .lv{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#c9a24a;font-weight:800}
+.lcsk2 .sb{height:8px;border-radius:5px;background:rgba(255,255,255,.1);overflow:hidden;margin:8px 0 10px}
+.lcsk2 .sb i{display:block;height:100%;background:linear-gradient(90deg,#f3d98b,#c9a24a);transition:width .6s}
+.lcsk2 .bt{display:flex;flex-wrap:wrap;gap:8px}.lcsk2 .bt button{flex:1 1 90px;padding:9px 8px;font-size:13px}
+.lcsk2 .bt button small{display:block;opacity:.7;font-size:11px}
+.lcsk2 .jr{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 0;border-top:1px solid rgba(255,255,255,.07);font-size:14px}
+.lcsk2 .jr:first-of-type{border-top:0}.lcsk2 .jr small{display:block;opacity:.65;font-size:12px}
+</style>
+<script>
+(function(){
+var LV=[[0,'Untrained'],[20,'Beginner'],[40,'Competent'],[60,'Skilled'],[80,'Expert']];
+function lvl(p){var n=LV[0][1];LV.forEach(function(l){if(p>=l[0])n=l[1]});return n}
+function sx(){G.sx=G.sx||{};SKL.forEach(function(s){if(typeof G.sx[s]!='number')G.sx[s]=0});G.sxc=G.sxc||{};return G.sx}
+function bonus(v){if(!v||!v.sk)return 0;var p=(sx()[v.sk])||0;return Math.round(p*.15+(p>=60?3:0))}
+window.skillBonus=bonus;
+var _sc=score;score=function(a){var r=_sc.apply(this,arguments);try{var v=G.vac.find(function(x){return x.id==a.vid});r+=bonus(v)}catch(e){}return r};
+var TR={p:{n:'Practise',c:0,g:3,e:8,cd:0},l:{n:'Online lesson',c:2500,g:8,e:6,cd:0},w:{n:'Workshop',c:9000,g:16,e:10,cd:14}};
+window.skTrain=function(sk,k){var t=TR[k],s=sx();if(slots()<=0){tr='No time slots left today.';return render()}
+if(t.cd&&G.sxc[sk+k]&&G.day-G.sxc[sk+k]<t.cd){tr='You can take another '+sk+' workshop in '+(t.cd-(G.day-G.sxc[sk+k]))+' days.';return render()}
+if(G.st.energy<t.e+5){tr='Too tired. Rest first.';return render()}
+if(t.c&&!spend(t.c,t.n+': '+sk,'Education')){return render()}
+var before=lvl(s[sk]);G.used++;G.st.energy=cl(G.st.energy-t.e);G.st.stress=cl(G.st.stress+(k=='p'?1:2));s[sk]=Math.min(100,s[sk]+t.g);if(t.cd)G.sxc[sk+k]=G.day;
+var after=lvl(s[sk]);tr=t.n+': '+sk+' +'+t.g+(after!=before?'. Level up: '+after+'!':'.');try{G.log.push({d:G.day,t:'Skill: '+sk+' is now '+after})}catch(e){}render()};
+var _m21=morning;morning=function(){_m21();try{if(G.job&&isWork(G.day)){var sk=G.job._sk;if(!sk){var v=G.vac.find(function(x){return x.id==G.job.vid});sk=v&&v.sk;if(sk)G.job._sk=sk}if(sk){var s=sx();s[sk]=Math.min(100,s[sk]+.25)}}}catch(e){}};
+function fm(n){try{return M(n)}catch(e){return'£'+Math.round(n/100)}}
+function pg(){var s=sx();var h='<div class="c lcsk2"><h3>Skills</h3><div class="m">Train skills to raise your chances in interviews. Working a job slowly builds its skill too.</div></div>';
+var tr_=SKL.filter(function(k){return s[k]>0||(G.cv&&G.cv.sk&&G.cv.sk.indexOf(k)>-1)}).sort(function(x,y){return s[y]-s[x]}),rest=SKL.filter(function(k){return tr_.indexOf(k)<0});
+tr_.forEach(function(k){var p=s[k],cdw=G.sxc[k+'w']&&G.day-G.sxc[k+'w']<14;
+h+='<div class="c lcsk2"><div class="top"><b>'+k+'</b><span class="lv">'+lvl(p)+' · '+Math.floor(p)+'/100</span></div><div class="sb"><i style="width:'+p+'%"></i></div><div class="bt">'+
+'<button type="button" onclick="skTrain(\''+k+'\',\'p\')">Practise<small>Free · 1 slot</small></button>'+
+'<button type="button" onclick="skTrain(\''+k+'\',\'l\')">Lesson<small>'+fm(2500)+' · 1 slot</small></button>'+
+'<button type="button" onclick="skTrain(\''+k+'\',\'w\')"'+(cdw?' style="opacity:.55"':'')+'>Workshop<small>'+fm(9000)+(cdw?' · cooling down':' · big boost')+'</small></button></div></div>'});
+if(!tr_.length)h+='<div class="c lcsk2"><div class="m">You have not trained any skills yet. Pick one below to start.</div></div>';
+h+='<details class="c lcsk2"'+(tr_.length?'':' open')+'><summary style="cursor:pointer;font-weight:800">Start a new skill ('+rest.length+')</summary>'+rest.map(function(k){return'<div class="jr"><span>'+k+'</span><button type="button" onclick="skTrain(\''+k+'\',\'p\')">Practise</button></div>'}).join('')+'</details>';
+var best=(G.vac||[]).filter(function(v){return v.open&&bonus(v)>0}).sort(function(a,b){return bonus(b)-bonus(a)}).slice(0,4);
+h+='<div class="c lcsk2"><h3>Best matches for your skills</h3>'+(best.length?best.map(function(v){return'<div class="jr"><span><b>'+v.t+'</b> · '+v.e+'<small>'+v.sk+': '+lvl(s[v.sk])+' · +'+bonus(v)+' to your application score</small></span><button type="button" onclick="go(\'jobs\')">Jobs</button></div>'}).join(''):'<div class="m">No open jobs match a trained skill yet. Practise one above, then check Jobs.</div>')+'</div>';
+return h}
+SEC.splice(SEC.findIndex(function(x){return x[0]=='more'}),0,['skl','🧠','Skills']);
+var _v22=view;view=function(){if(tab=='skl')return pg();return _v22.apply(this,arguments)};
 })();
 </script>
 <script>if('serviceWorker' in navigator){var had=navigator.serviceWorker.controller,rl=0;navigator.serviceWorker.addEventListener('controllerchange',function(){if(had&&!rl){rl=1;location.reload()}});window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').then(function(r){r.update()}).catch(function(){})})}</script></body></html>
