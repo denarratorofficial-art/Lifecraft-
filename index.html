@@ -1695,8 +1695,8 @@ var H=[{n:'Life',i:'🏠',d:'home',t:['home','act','gym','edu','cal','inbox','hi
 {n:'Career',i:'💼',d:'hub',t:['hub','jobs','skl','career','biz']},
 {n:'Assets',i:'🏡',d:'house',t:['house','prop','veh','lux','shop','surv']},
 {n:'People',i:'💞',d:'rel',t:['rel','family','social']},
-{n:'World',i:'🌍',d:'city',t:['city','trav','legal','under','prison','more']}];
-var NM={home:'Home',act:'Activities',gym:'Fitness',edu:'Education',cal:'Calendar',inbox:'Inbox',hist:'History',retire:'Later life',legacy:'Legacy and will',ach:'Achievements',bank:'Banking',inv:'Investing',wealth:'Wealth',loans:'Loans',bank2:'Debt',ins:'Insights',hub:'Career hub',jobs:'Jobs',skl:'Skills',career:'Growth',biz:'Business',house:'Rent',prop:'Property',veh:'Vehicles',lux:'Luxury',shop:'Shopping',surv:'Housing survival',rel:'Relationships',family:'Family',social:'Social media',city:'Cities',trav:'Travel and FX',legal:'Legal',under:'Underworld',prison:'Prison',more:'Settings'};
+{n:'World',i:'🌍',d:'map',t:['map','city','trav','legal','under','prison','more']}];
+var NM={home:'Home',act:'Activities',gym:'Fitness',edu:'Education',cal:'Calendar',inbox:'Inbox',hist:'History',retire:'Later life',legacy:'Legacy and will',ach:'Achievements',bank:'Banking',inv:'Investing',wealth:'Wealth',loans:'Loans',bank2:'Debt',ins:'Insights',hub:'Career hub',jobs:'Jobs',skl:'Skills',map:'World map',career:'Growth',biz:'Business',house:'Rent',prop:'Property',veh:'Vehicles',lux:'Luxury',shop:'Shopping',surv:'Housing survival',rel:'Relationships',family:'Family',social:'Social media',city:'Cities',trav:'Travel and FX',legal:'Legal',under:'Underworld',prison:'Prison',more:'Settings'};
 function hub(t){for(var i=0;i<H.length;i++)if(H[i].t.indexOf(t)>-1)return i;return t=='menu'?-1:5}
 window.lcHub=function(i){go(H[i].d)};
 function unread(){try{return(G.inbox||[]).filter(function(m){return!m.read}).length}catch(e){return 0}}
@@ -2214,6 +2214,155 @@ var _v30=view;view=function(){if(tab=='ach')return gallery();return _v30.apply(t
 var _m30=morning;morning=function(){_m30.apply(this,arguments);try{G.ach3=G.ach3||{};A.forEach(function(a){if(NEW[a[0]]&&!G.ach3[a[0]]){var ok=false;try{ok=!!a[6]()}catch(e){}if(ok){G.ach3[a[0]]=G.day;log('Achievement unlocked: '+a[4]+'.',0)}}})}catch(e){}};
 var _lr=window.lcRv;if(_lr)window.lcRv=function(n,k){var had=!!(G.bizs[n]&&G.bizs[n].rival);var r=_lr.apply(this,arguments);try{if(k=='buy'&&had&&G.bizs[n]&&!G.bizs[n].rival){G.rvB=(G.rvB||0)+1}}catch(e){}return r};
 var pd=false;var _r30=render;render=function(){var wasDec=!!(G&&G.dec);_r30.apply(this,arguments);try{if(!G)return;if(pd&&!G.dec)G.decN=(G.decN||0)+1;pd=!!G.dec}catch(e){}};
+})();
+</script>
+<style id="lcmapstyle">
+.lcmap{position:relative;width:100%;aspect-ratio:1.6/1;border-radius:14px;overflow:hidden;border:1px solid rgba(160,180,255,.25);box-shadow:inset 0 0 40px rgba(0,0,0,.45)}
+.lcmap svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.lcmleg{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;opacity:.85;margin:8px 2px 10px}
+.lcmleg i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:-1px}
+.lcmd .hd{display:flex;align-items:center;gap:12px}.lcmd .fl{font-size:34px;line-height:1}
+.lcmd .nm{flex:1;min-width:0}.lcmd .nm b{display:block;font-size:20px}.lcmd .nm small{opacity:.7;font-size:13px}
+.lcmd .tg{font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:800;text-align:right}
+.lcmd .mpg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.lcmd .mp{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:8px 12px;font-size:12px}
+.lcmd .mp b{display:block;font-size:17px;margin-top:2px}.lcmd .mp b.ok{color:#4fe0a8}.lcmd .mp b.bad{color:#ff8a8a}
+.lcmd .bt{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.lcmd .bt button{flex:1 1 140px;padding:11px 10px}
+.lcmd .vc{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:10px}
+.lcmd .vc div{text-align:center;padding:8px 4px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);opacity:.5;filter:grayscale(1)}
+.lcmd .vc div.on{opacity:1;filter:none;border-color:rgba(79,224,168,.5);background:rgba(79,224,168,.08)}
+.lcmd .vc span{font-size:26px;display:block}.lcmd .vc small{font-size:11px;display:block;margin-top:2px}
+.lcmd .tr{display:flex;justify-content:space-between;gap:8px;font-size:13px;padding:6px 0;border-top:1px solid rgba(255,255,255,.07)}
+</style>
+<script>
+(function(){
+var LAND=[
+// North America (incl. Alaska, Central America)
+"-168,66 -162,70 -156,71.5 -141,70 -128,70 -115,68.5 -105,68 -95,72 -88,70 -82,67 -86,65 -90,63.5 -94,59 -92,57 -88,56 -82,55 -80,52 -79,54.5 -78,58 -77,62 -73,62 -70,60.5 -65,60 -62,57 -57,53.5 -56,52 -60,48 -64,47 -66,44.5 -70,43.5 -70,41.7 -74,40.5 -76,37 -76,35 -78,34 -81,31.5 -80,27 -80.5,25.3 -82,26.5 -83,29.5 -85,29.7 -89,30 -92,29.6 -94.5,29.4 -97,27.5 -97.7,24 -97.2,21 -95.5,18.8 -93,18.3 -91,18.8 -90.5,21 -87,21.4 -87.5,18 -88.3,16 -86,15.8 -83.5,15 -83.3,12 -82.7,9.3 -80,9 -78,9 -77.5,8 -79,7.2 -81,7.8 -84,9.5 -86,11.2 -88,13.2 -91.5,14 -94,15.8 -97,15.8 -101,17.2 -105,19.7 -105.6,22.5 -108,25.5 -110.5,27.5 -112.5,29.5 -114.7,31.7 -113,29 -112,26.5 -110,24.2 -109.5,23 -111,24.5 -112.5,27 -114.5,29.7 -115.5,30.5 -117,32.5 -118.5,34 -120.7,34.6 -122.5,37.5 -124,40.5 -124.2,43 -124,46.2 -124.6,48.3 -123,48.5 -122.8,49.3 -125,50.2 -128,52.2 -130.5,54.5 -133,56 -136,58.3 -140,59.8 -144,60 -148,60.3 -151.7,59.2 -153.5,57.5 -157,56.5 -162,55 -164.5,54.5 -160,58.5 -162,60 -165,61.5 -166,63 -161,64.5 -165,65 -168,66",
+// Greenland
+"-73,78 -66,80.5 -50,82 -30,83.5 -20,81 -17,77 -19,74 -22,70.5 -26,68.5 -33,67 -38,65.5 -42,61 -44,59.8 -48,61 -51,63 -53,66.5 -54,69.5 -56,72 -60,75 -67,76.5 -73,78",
+// Baffin
+"-80,63.5 -77.5,66 -73,68.3 -68,70.3 -62,67 -64,64 -66,62 -70,62.3 -73,63 -77,64.2 -80,63.5",
+// Victoria / Banks
+"-118,71 -113,73.5 -104,72.5 -101,70.8 -106,69 -113,68.8 -117,69.5",
+// Ellesmere
+"-92,76.5 -86,77.5 -75,79 -63,81.5 -72,83 -85,82.7 -94,81 -93,78",
+// Newfoundland
+"-59.2,47.7 -56,51.5 -53.5,49.5 -52.8,47.5 -55,46.8 -58,47.5",
+// Cuba
+"-85,21.9 -82.5,23.2 -80,23 -77.5,21.6 -74.2,20.2 -77.5,19.9 -79.5,21.5 -83.5,22.2",
+// Hispaniola
+"-74.4,18.5 -72.3,19.9 -69,19.8 -68.4,18.6 -70.5,18.2 -72.5,18",
+// South America
+"-77,8.6 -75,10.8 -72,12 -70,11.5 -66,10.6 -62,10.7 -60,8.5 -57,6 -54,5.5 -52,4.5 -50.5,1.8 -50,-0.5 -48,-1 -44.5,-2.5 -41,-2.9 -38,-4 -35,-5.5 -35,-8.5 -36.5,-10.7 -39,-13.5 -39,-17.5 -40.5,-20.5 -42,-23 -45,-23.8 -48,-25.7 -48.7,-28.3 -51,-31 -53.5,-33.7 -56,-34.7 -57.5,-36.5 -57,-38.2 -62,-39 -62.2,-41 -65,-41 -64.5,-43.5 -65.5,-45 -67.5,-46.5 -66,-48 -68.5,-50 -69,-52.3 -68.3,-53.8 -71,-54.2 -74,-52 -75.5,-48 -73.5,-44 -73.7,-40 -73,-37 -71.5,-33 -71.5,-29 -70.5,-23 -70.2,-18.5 -75,-15.5 -76.5,-13 -78.5,-9 -80.5,-6.5 -81.2,-4.6 -80,-2.5 -80.8,-1 -80,1 -78.7,2.5 -77.5,4 -77.4,6.5 -77,8.6",
+// Eurasia
+"-9.3,43.2 -8.5,42 -8.8,40.5 -9.5,38.8 -9,37 -7.5,37.2 -6.3,36.5 -5.6,36 -4.5,36.7 -2,36.8 -0.7,37.6 0.2,38.8 -0.2,39.5 0.8,41 3.2,42 3.5,43.2 5,43.3 7.2,43.7 8.5,44.4 10.2,43.9 11.2,42.4 13,41.2 14.3,40.7 15.8,40 15.7,38.3 16,37.9 16.5,39 17.2,39.9 16.8,40.5 18.5,40.3 16.2,41.9 14.8,42 13.6,43.5 12.5,44.2 12.3,45.3 13.7,45.6 14.5,45 16,43.5 18,42.6 19,42.4 19.4,41.8 20.2,39.7 21.2,38.3 21.5,37 22.5,36.5 23.2,38 23.2,39.2 23,40.3 24,40.7 25,40.9 26.5,40.8 26.2,40 26.8,38.5 27.5,37.2 28,36.7 30.5,36.2 34,36.2 36,36.6 35.8,35.5 35,33.5 34.3,31.3 34.8,29.5 35.5,27.5 37.5,24.5 39.2,21.3 40.5,18 42.7,15 43.3,12.6 45,12.8 49,14.5 52.5,16.2 55,17 57,18.8 58.5,20.5 59.8,22.5 57.8,23.8 56.4,24.8 56.3,26.2 55,25.2 53,24.1 51.5,24.5 51.6,25.9 50.8,25 50,26.5 49.2,27.5 48.4,28.5 48.5,30 50.5,29.5 52,27.8 54,26.8 56.5,27 57.3,25.8 62,25.2 67,24.8 68.5,23.5 69,22.4 70.5,20.8 72.8,21 73,18 74,15 75,12.5 76.2,10 77.5,8.1 78.8,9.3 79.8,10.5 80,13 80.3,15.5 83,17.5 85,19.5 87,21.2 89,21.8 90.5,22 91.5,22.5 92.4,20.5 94,18 94.5,16.2 97.5,16.8 98,15.5 98.8,12 98.5,10 98.3,8 100,6.5 100.5,5 101.2,3 103,1.3 104.1,1.4 104.5,3 103.5,6 102,8 100.5,12.5 102,12.2 103,10.8 104.8,10 105,8.6 107,10.4 109,11.5 109,13 108,16 106,19.5 107,21.3 109,21.5 110,20.3 111,21.5 114,22.3 117,23.5 120,26 122,29 121,30 121.8,31.2 121,32 119.2,35 120.5,36 122.5,37 119,37.3 118,39 120,39.2 122,40.2 121.5,39 124.5,39.8 125,38 126.5,37 126.5,34.5 129.2,35.2 129.5,37 128,39 129.5,40.5 130.5,42.5 132,42.8 135,43.5 138,46 140,48 141,53 137,54 135,54.5 140,57 143,59.3 150,59.5 155,59.5 156,57 156.5,51 160,53 163,58 164,60 170,60 178,62.5 180,65 180,69 170,70 160,69.5 150,71 140,72.5 130,71 125,73 113,74 110,76 104,77.5 95,76 87,75 80,73.5 78,72.5 72,73 68,72 66,69 60,69.5 55,68.5 50,68 44,68.5 41,67 33,69.5 30,70.5 25,71 20,70 15,68.7 12,66 8,63.5 5,62 5.2,59.5 6,58.6 8,58 9.5,59 10.6,59.8 11,59 11.7,57.8 12.5,56.5 12.8,55.5 14.3,55.4 16,56.2 16.5,57.5 17.5,58.8 18.8,59.4 17.5,60.3 17.2,61.5 18.5,63.2 21,64.5 22,65.6 25.4,65.6 25,65.2 22.5,63.5 21.5,61.5 22.5,60 25,60.2 30,60.2 28,59.5 24,59.4 23.5,57.5 21,57 21,55.2 18.5,54.8 14,54 11,54 9.5,54.8 9.8,55 10.6,56 10.5,57.7 8.5,57 8.2,56.7 8.8,55 8.5,53.8 7,53.4 4.8,52.9 4,51.8 2.5,51.2 1.5,50 -1.5,49.7 -1.8,48.7 -4.5,48.4 -2.5,47.3 -1.2,46 -1.8,43.4 -9.3,43.2",
+// Chukotka tail (east of antimeridian)
+"-180,69 -175,67.5 -170,66 -172,64.5 -176,65 -180,65",
+// Africa
+"32.4,31.2 30,31.3 27,31.4 25,31.7 23,32.6 20,32 19,30.2 15.5,32.3 12,32.8 10.2,34.2 10.8,35.3 11,37 9.8,37.3 8,36.9 5,36.8 2,36.6 -1.5,35.5 -2.5,35.2 -5.4,35.9 -6.5,34 -9.2,32 -10,29.5 -13,27.7 -16.5,23.8 -17,21 -16,19.5 -16.5,16 -17.5,14.7 -16.7,13.5 -15,10.9 -13.3,9 -12,7.5 -10,6 -7.5,4.4 -4,5.1 -2,4.8 1,5.8 3,6.3 5,5.8 6,4.3 8.5,4.5 9.5,3.8 9.8,2 9.4,0 9,-1 10.5,-3 12,-5.5 13.2,-8.5 13.5,-12 12,-17 11.8,-18 14.5,-22.5 15,-27 16.5,-29 18,-32.5 19,-34.5 21,-34.4 23,-34 26,-33.7 28,-32.5 31,-29.5 32.5,-26 35,-24 35.5,-21 34.8,-19.5 37,-17.8 40.5,-15 40.3,-11 39,-7 38.8,-5.5 40,-3 41.8,-1 43.5,1.5 47.5,4.5 51,10.5 51.2,11.8 48,11.2 44,10.5 43,12 41,14.5 38.5,17.5 37.2,20.5 35.5,24 34,26.5 32.5,29.8 32.4,31.2",
+// Madagascar
+"49.3,-12 50.5,-15.5 49.5,-18 47.5,-24.8 45,-25.5 43.4,-22 44,-19.5 44.3,-16.2 46.5,-15.5 48,-13.5",
+// Great Britain
+"-5.7,50 -3.5,50.3 -1,50.7 1.4,51.2 1.7,52.7 0.3,53 0.2,53.6 -0.2,54.5 -1.5,55.5 -2.1,56 -1.8,57.5 -3.5,57.7 -3.8,58.6 -5,58.6 -6.2,57.5 -5.8,56.5 -5.3,55.8 -4.9,55 -3.2,54.9 -3,54 -3,53.4 -4.3,53.2 -4.6,52.8 -4.2,52.3 -5.2,51.8 -3.3,51.4 -4.2,51.2 -5.1,50.6 -5.7,50",
+// Ireland
+"-6,52.2 -6.1,53.5 -5.8,54.5 -7.2,55.2 -8.5,54.9 -8.3,54 -9.8,53.5 -10,52.2 -9.5,51.6 -8,51.8 -6.3,52.1",
+// Iceland
+"-24,65.5 -22,66.4 -18,66.2 -14.5,66.3 -13.6,65 -18,63.5 -22.5,63.8 -24,65",
+// Sicily, Sardinia, Corsica
+"12.5,38 15.6,38.2 15.1,36.7 12.8,37.6","8.2,41 9.7,41 9.6,39 8.5,39","8.6,42.8 9.5,43 9.3,41.4 8.7,41.6",
+// Honshu, Kyushu, Shikoku, Hokkaido
+"131,34.1 133,35.5 135.5,35.7 136.5,37 138.5,37.6 139.8,39.5 140,41 141.5,41.2 141.9,39 141,38 140.8,36.5 140.5,35.2 139.8,35 138,34.6 136.8,34.3 135.2,33.5 134.5,34.7 132.5,34.2 131,34.1",
+"130,33.6 131.8,33.5 131.5,31.5 130.5,31.2 129.8,32.6","132.5,33.5 134.5,34.2 134.2,33.2 133,32.8","140,41.6 141,43.3 141.5,45.4 144,44 145.4,43.3 143.3,42 141.5,42.5 140.4,42.8",
+// Sakhalin
+"142,46 143.5,49 143.2,52 142,54 141.8,50 142,46",
+// Taiwan, Sri Lanka, Hainan
+"121,25.2 122,24.9 121,22 120.2,23","79.8,9.5 81.8,7.5 81.2,6.2 80,6 79.8,7.5","108.6,19.8 110.8,20 110.2,18.3 108.7,18.5",
+// Philippines
+"120.3,18.5 122.2,18.4 121.5,14.2 124,12.8 122,13.8 120.6,14.2","122,7 126.5,8 125.5,6 123.5,7.5 121.8,6.8","122,11 124,11.5 123,9.5","125,10 126,9 125.2,8.8",
+// Sumatra, Borneo, Java, Sulawesi, New Guinea
+"95.3,5.5 98,4 100.5,2 104,-1 106,-3.2 105.8,-5.8 102,-4 99,-1.5 96,2.5","109,1.5 111,1.8 114,4.5 116.8,7 119,5 117.5,1 118.5,-1 116.5,-3.5 114.5,-4 112,-3.2 110,-2 109.2,0","105.2,-6.5 108,-6.3 111,-6.5 114.5,-7.8 114.2,-8.7 110,-8.2 106.5,-7.5","119.5,-5.5 120.5,-3 121.5,-1 123.5,0.8 125,1.5 123,-1 122,-4.5 121,-3.5 120.5,-5.5","131,-0.8 135,-3.3 138,-1.8 141,-2.6 145,-5 148,-8 150.5,-10.5 147,-10 143.5,-8.5 141,-9 138,-8 137.5,-5.5 135,-4 132.5,-4.5",
+// Australia, Tasmania
+"113,-22 114,-26 115,-34 118,-35 123,-34 129,-31.7 134,-32.7 138,-35 139.5,-36.5 141,-38 146,-39 150,-37.5 151.5,-33 153,-28 153,-25 150,-22 146,-19 145.4,-15 143.7,-14 142.5,-10.7 141.5,-13 141,-17 139,-17.5 136.5,-15.5 135.5,-13 132,-11.3 130,-12.5 129,-15 126,-14 123,-17 122,-18 118,-20.3 114,-22","144.7,-40.7 148.3,-40.9 147.8,-43.2 146,-43.5",
+// New Zealand
+"173,-35 175,-37 178.5,-37.6 177.5,-39.5 176,-41.3 174.8,-41.2 174.6,-39.8 173.8,-39.2 174.6,-38 173,-35","172.7,-40.6 174,-41.5 173.2,-43.5 171.2,-44.5 170.5,-46 168.5,-46.5 166.5,-45.8 168,-44 170.5,-43 172,-41.5",
+// Novaya Zemlya, Svalbard
+"52,71.5 57,75 68,77 60,74 55,71","11,78 17,80 25,79.5 20,77.5","-65,-54.8 -60,-51.3 -58,-52 -61,-52"
+];
+var SEAS=[
+"28,41.2 28,43.5 30,46 33,46 35,45 37,45 41,43 41.5,41.5 37,41 33,42 29,41.2",
+"47,45 50,46.5 53,45 53,41 54,37 51,36.8 49,38 49,40 47.5,43",
+"-86,47.5 -84,46 -82,43.5 -79.5,43.2 -76.5,44 -79,45 -81.5,46 -84,46.3 -87,48"
+];
+
+var FL={UK:'🇬🇧',IE:'🇮🇪',DE:'🇩🇪',CA:'🇨🇦',AU:'🇦🇺',AE:'🇦🇪',JP:'🇯🇵'};
+var REG={world:{n:'World'},uk:{n:'UK & Ireland',lon:-3.5,lat:54.6,span:15},eu:{n:'Europe',lon:4,lat:49,span:42},na:{n:'North America',lon:-95,lat:42,span:75},me:{n:'Middle East',lon:52,lat:27,span:36},jp:{n:'Japan',lon:136,lat:36,span:26},au:{n:'Australia',lon:147,lat:-31,span:46}};
+var MET={ov:{n:'Overview'},col:{n:'Living costs',k:'col',inv:1},w:{n:'Wages',k:'w'},j:{n:'Jobs',k:'j'},r:{n:'Rent',k:'r',inv:1}};
+var K=2.7778,AS=1.6;
+function X(lo){return(lo+180)*K}function Y(la){return(84-la)*K}
+var PT=null,SPT=null;
+function pts(s){return s.split(' ').map(function(p){var q=p.split(',');return X(+q[0]).toFixed(1)+','+Y(+q[1]).toFixed(1)}).join(' ')}
+function init(){if(!PT){PT=LAND.map(pts);SPT=SEAS.map(pts)}}
+window._mapR=window._mapR||'world';window._mapM=window._mapM||'ov';window._mapC=window._mapC||null;
+function vb(){var r=REG[window._mapR];if(!r.span)return{x:0,y:-30,w:1000,h:476};var w=r.span*K,h=w/AS;return{x:X(r.lon)-w/2,y:Y(r.lat)-h/2,w:w,h:h}}
+function esc(x){return String(x).replace(/&/g,'&amp;').replace(/</g,'&lt;')}
+function fm(n){try{return M(n)}catch(e){return'£'+Math.round(n/100)}}
+function home(){return CITIES[G.city]||CITIES[Object.keys(CITIES)[0]]}
+function ratio(c,m){var h=home(),k=MET[m].k;return c[k]/h[k]}
+function good(c,m){var g=Math.max(-1,Math.min(1,(ratio(c,m)-1)/.5));return MET[m].inv?-g:g}
+function hue(g){var h=g>0?48+82*g:48+48*g;return'hsl('+Math.round(h)+',80%,55%)'}
+function pct(x){return(x>=1?'+':'')+Math.round((x-1)*100)+'%'}
+function status(n){var c=CITIES[n];if(n==G.city)return'home';if(G.abroad&&CTRY[G.abroad.to]&&CTRY[G.abroad.to].city==n)return'abroad';if((G.visited||[]).indexOf(c.ct)>-1&&c.ct!=home().ct)return'visited';return c.ct==home().ct?'same':'far'}
+var SC={home:'#f3d98b',abroad:'#ff9b4a',visited:'#4fe0a8',same:'#7fb2ff',far:'#9aa6cf'};
+function arc(a,b,col,dash,v){var x1=X(a[1]),y1=Y(a[0]),x2=X(b[1]),y2=Y(b[0]),mx=(x1+x2)/2,my=(y1+y2)/2,d=Math.hypot(x2-x1,y2-y1);return'<path d="M'+x1+' '+y1+' Q'+mx+' '+(my-d*.28)+' '+x2+' '+y2+'" fill="none" stroke="'+col+'" stroke-width="'+(v.w*.0035)+'" '+(dash?'stroke-dasharray="'+(v.w*.012)+' '+(v.w*.01)+'"':'')+' stroke-linecap="round" opacity=".9"/>'}
+function mapSVG(){init();var v=vb(),m=window._mapM,sel=window._mapC,s=v.w/1000,zoom=window._mapR!='world',r=v.w*.0115,sw=v.w*.003,fs=v.w*(window._mapR=='eu'?.029:.034);
+var o='<svg viewBox="'+v.x+' '+v.y+' '+v.w+' '+v.h+'" preserveAspectRatio="xMidYMid slice" role="img" aria-label="World map"><defs><linearGradient id="lcmS" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#10204a"/><stop offset="1" stop-color="#0a1230"/></linearGradient><linearGradient id="lcmL" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#34457f"/><stop offset="1" stop-color="#222f5e"/></linearGradient><pattern id="lcmD" width="'+(v.w*.011)+'" height="'+(v.w*.011)+'" patternUnits="userSpaceOnUse"><circle cx="'+(v.w*.0055)+'" cy="'+(v.w*.0055)+'" r="'+(v.w*.0016)+'" fill="#9fb2ff" opacity=".28"/></pattern></defs><rect x="'+(v.x-5)+'" y="'+(v.y-5)+'" width="'+(v.w+10)+'" height="'+(v.h+10)+'" fill="url(#lcmS)"/>';
+for(var lo=-180;lo<=180;lo+=30)o+='<line x1="'+X(lo)+'" y1="-200" x2="'+X(lo)+'" y2="700" stroke="#fff" stroke-opacity=".05" stroke-width="'+(v.w*.0012)+'"/>';
+for(var la=-60;la<=90;la+=30)o+='<line x1="-50" y1="'+Y(la)+'" x2="1100" y2="'+Y(la)+'" stroke="#fff" stroke-opacity=".05" stroke-width="'+(v.w*.0012)+'"/>';
+o+='<rect x="-50" y="'+Y(-68)+'" width="1100" height="200" fill="url(#lcmL)" opacity=".4"/>';
+PT.forEach(function(p){o+='<polygon points="'+p+'" fill="url(#lcmL)" stroke="#8fa2ff" stroke-opacity=".5" stroke-width="'+(v.w*.0014)+'" stroke-linejoin="round"/><polygon points="'+p+'" fill="url(#lcmD)"/>'});
+SPT.forEach(function(p){o+='<polygon points="'+p+'" fill="#0e1b40" stroke="#8fa2ff" stroke-opacity=".35" stroke-width="'+(v.w*.001)+'"/>'});
+var hc=home().c;
+if(G.trip&&CTRY[G.trip.to]&&CITIES[CTRY[G.trip.to].city])o+=arc(hc,CITIES[CTRY[G.trip.to].city].c,'#f3d98b',1,v);
+if(G.abroad&&CTRY[G.abroad.to]&&CITIES[CTRY[G.abroad.to].city])o+=arc(hc,CITIES[CTRY[G.abroad.to].city].c,'#ff9b4a',0,v);
+var names=Object.keys(CITIES).sort(function(a,b){return(b==G.city)-(a==G.city)||(b==sel)-(a==sel)});
+var placed=[];
+function free(bx){return placed.every(function(p){return bx.x2<p.x1||bx.x1>p.x2||bx.y2<p.y1||bx.y1>p.y2})}
+var marks='',labels='',hits='';
+names.forEach(function(n){var c=CITIES[n],x=X(c.c[1]),y=Y(c.c[0]),st=status(n),col=m=='ov'?SC[st]:hue(good(c,m)),isSel=n==sel;
+if(st=='home'||st=='abroad')marks+='<circle cx="'+x+'" cy="'+y+'" r="'+r+'" fill="none" stroke="'+SC[st]+'" stroke-width="'+sw+'"><animate attributeName="r" values="'+r+';'+(r*2.6)+';'+r+'" dur="2.2s" repeatCount="indefinite"/><animate attributeName="opacity" values=".9;0;.9" dur="2.2s" repeatCount="indefinite"/></circle>';
+if(isSel)marks+='<circle cx="'+x+'" cy="'+y+'" r="'+(r*1.9)+'" fill="none" stroke="#fff" stroke-width="'+sw+'"/>';
+marks+='<circle cx="'+x+'" cy="'+y+'" r="'+r+'" fill="'+col+'" stroke="#0a1230" stroke-width="'+sw+'"/>';
+placed.push({x1:x-r*1.5,x2:x+r*1.5,y1:y-r*1.5,y2:y+r*1.5});
+var lab=(zoom?esc(n):'')+(zoom&&m!='ov'?' '+(MET[m].k=='j'?Math.round(c.j*100):pct(ratio(c,m))):'');
+if(lab){var tw=lab.length*fs*.6,cand=[{ax:'start',dx:r*1.7,dy:0},{ax:'end',dx:-r*1.7,dy:0},{ax:'start',dx:r*1.7,dy:fs*1.15},{ax:'end',dx:-r*1.7,dy:-fs*1.15},{ax:'start',dx:r*1.7,dy:-fs*1.15},{ax:'end',dx:-r*1.7,dy:fs*1.15}];
+for(var i=0;i<cand.length;i++){var q=cand[i],bx=q.ax=='start'?{x1:x+q.dx,x2:x+q.dx+tw}:{x1:x+q.dx-tw,x2:x+q.dx};bx.y1=y+q.dy-fs*.6;bx.y2=y+q.dy+fs*.5;
+if(free(bx)){placed.push(bx);labels+='<text x="'+(x+q.dx)+'" y="'+(y+q.dy+fs*.34)+'" text-anchor="'+q.ax+'" font-size="'+fs+'" font-weight="700" fill="#fff" stroke="#0a1230" stroke-width="'+(fs*.22)+'" paint-order="stroke" font-family="system-ui,sans-serif">'+lab+'</text>';break}}}
+hits+='<circle cx="'+x+'" cy="'+y+'" r="'+(r*2.8)+'" fill="transparent" style="cursor:pointer" onclick="lcMapSel(\''+n+'\')"/>'});
+o+=marks+labels+hits;
+return o+'</svg>'}
+function legend(){var m=window._mapM;if(m=='ov')return'<span><i style="background:'+SC.home+'"></i>You</span><span><i style="background:'+SC.visited+'"></i>Visited</span><span><i style="background:'+SC.same+'"></i>Your country</span><span><i style="background:'+SC.far+'"></i>Abroad</span>';return'<span><i style="background:'+hue(-1)+'"></i>Worse than home</span><span><i style="background:'+hue(0)+'"></i>Same</span><span><i style="background:'+hue(1)+'"></i>Better than home</span>'}
+function pill(lbl,val,cls){return'<div class="mp"><span>'+lbl+'</span><b class="'+cls+'">'+val+'</b></div>'}
+function detail(){var n=window._mapC||G.city,c=CITIES[n],h=home(),st=status(n),cn=CTRY[c.ct]&&CTRY[c.ct].n||c.ct,tag={home:'You live here',abroad:'You are here',visited:'Visited',same:'Your country',far:'Not visited'}[st];
+var cr=function(x){return x>1.02?'bad':x<.98?'ok':''},wr=function(x){return x>1.02?'ok':x<.98?'bad':''};
+var h2='<div class="c lcmd"><div class="hd"><div class="fl">'+(FL[c.ct]||'🌍')+'</div><div class="nm"><b>'+esc(n)+'</b><small>'+esc(cn)+'</small></div><span class="tg" style="color:'+SC[st]+'">'+tag+'</span></div><div class="m" style="margin:8px 0 10px">'+esc(c.d)+'</div><div class="mpg">'+
+pill('Living costs',n==G.city?'Baseline':pct(c.col/h.col),cr(c.col/h.col))+pill('Wages',n==G.city?'Baseline':pct(c.w/h.w),wr(c.w/h.w))+pill('Jobs',Math.round(c.j*100)+'/100',wr(c.j/h.j))+pill('Rent',n==G.city?'Baseline':pct(c.r/h.r),cr(c.r/h.r))+'</div><div class="m" style="margin-top:10px">☁️ '+esc(c.cl)+' · 🚆 '+esc(c.tr)+'</div>'+(c.nb?'<div class="m" style="margin-top:4px">📍 '+c.nb.map(esc).join(' · ')+'</div>':'')+'<div class="bt">';
+if(n==G.city)h2+='<button type="button" class="s" onclick="CSEL=null;go(\'city\')">City details</button>';
+else if(c.ct==h.ct)h2+='<button type="button" onclick="CSEL=\''+n+'\';go(\'city\')">Compare &amp; move</button>';
+else h2+='<button type="button" onclick="go(\'trav\')">Plan a trip</button><button type="button" class="s" onclick="go(\'trav\')">Migration options</button>';
+return h2+'</div></div>'}
+function travels(){var vis=G.visited||[],all=Object.keys(CTRY).filter(function(k){return k!=home().ct}),t=(G.trh||[]).slice(0,5);
+var h='<div class="c lcmd"><h3>Your travels</h3><div class="m">'+vis.length+' of '+all.length+' countries visited</div><div class="vc">'+all.map(function(k){var v=vis.indexOf(k)>-1;return'<div class="'+(v?'on':'')+'"><span>'+(FL[k]||'🌍')+'</span><small>'+esc(CTRY[k].n)+'</small></div>'}).join('')+'</div>';
+if(G.trip)h+='<div class="m" style="margin-top:8px">✈️ Upcoming: '+esc(CTRY[G.trip.to].n)+' · '+fmt(G.trip.dep).slice(5,11)+' to '+fmt(G.trip.ret).slice(5,11)+'</div>';
+if(G.abroad)h+='<div class="m" style="margin-top:8px">📍 Currently in '+esc(CTRY[G.abroad.to].n)+'</div>';
+if(t.length)h+='<div style="margin-top:8px">'+t.map(function(x){return'<div class="tr"><span>'+(FL[x.to]||'🌍')+' '+esc(CTRY[x.to].n)+'</span><span>'+x.nights+' nights · '+fmt(x.d).slice(5)+'</span></div>'}).join('')+'</div>';
+return h+'</div>'}
+function page(){if(!window._mapC||!CITIES[window._mapC])window._mapC=G.city;
+var chips=function(list,cur,fn){return'<div class="lcaf">'+Object.keys(list).map(function(k){return'<button type="button" class="'+(k==cur?'on':'')+'" onclick="'+fn+'(\''+k+'\')">'+list[k].n+'</button>'}).join('')+'</div>'};
+return'<div class="c lcmc"><h3>World map</h3>'+chips(REG,window._mapR,'lcMapR')+'<div class="lcmap" style="aspect-ratio:'+(window._mapR=='world'?'2.1':'1.6')+'/1">'+mapSVG()+'</div><div class="lcmleg">'+legend()+'</div>'+chips(MET,window._mapM,'lcMapM')+'<div class="m">Tap a city. Colours compare each city with your home, '+esc(G.city)+'.</div></div>'+detail()+travels()}
+window.lcMapR=function(k){window._mapR=k;render()};window.lcMapM=function(k){window._mapM=k;render()};window.lcMapSel=function(n){window._mapC=n;render()};
+var _v31=view;view=function(){if(tab=='map')return page();return _v31.apply(this,arguments)};
+SEC.splice(SEC.findIndex(function(s){return s[0]=='more'}),0,['map','🗺️','World map']);
 })();
 </script>
 <script>if('serviceWorker' in navigator){var had=navigator.serviceWorker.controller,rl=0;navigator.serviceWorker.addEventListener('controllerchange',function(){if(had&&!rl){rl=1;location.reload()}});window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').then(function(r){r.update()}).catch(function(){})})}</script></body></html>
