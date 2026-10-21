@@ -2047,4 +2047,173 @@ if(mc)mc.insertAdjacentHTML('beforeend','<div id="lcnl" style="margin-top:14px;p
 }catch(e){}};
 })();
 </script>
+<style id="lctourstyle">
+#lctour{position:fixed;inset:0;z-index:9990;pointer-events:none}
+#lctour .bl{position:absolute;inset:0;pointer-events:auto;background:transparent}
+#lctour .sp{position:absolute;border-radius:16px;border:2px solid #f3d98b;box-shadow:0 0 0 9999px rgba(4,7,18,.8),0 0 24px rgba(243,217,139,.55);transition:all .3s ease;pointer-events:none;animation:lcpulse 1.6s ease-in-out infinite}
+#lctour .sp.none{border-color:transparent;box-shadow:0 0 0 9999px rgba(4,7,18,.82);animation:none}
+@keyframes lcpulse{0%,100%{box-shadow:0 0 0 9999px rgba(4,7,18,.8),0 0 10px rgba(243,217,139,.35)}50%{box-shadow:0 0 0 9999px rgba(4,7,18,.8),0 0 26px rgba(243,217,139,.8)}}
+#lctour .tp{position:absolute;pointer-events:auto;border-radius:16px;border:1px solid #c9a24a;background:linear-gradient(160deg,#171f40,#0b1022);box-shadow:0 14px 40px rgba(0,0,0,.65);padding:14px 16px 12px;color:#eef1fb;transition:top .25s ease,left .25s ease}
+#lctour .tp .k{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#c9a24a;font-weight:800;display:flex;justify-content:space-between;gap:10px}
+#lctour .tp h4{margin:5px 0 4px;font-size:18px}
+#lctour .tp p{margin:0 0 12px;font-size:14px;line-height:1.5;opacity:.92}
+#lctour .tp .row{display:flex;gap:8px;align-items:center;justify-content:space-between}
+#lctour .tp button{padding:10px 16px;border:0;border-radius:12px;font-weight:800;font-size:14px;cursor:pointer}
+#lctour .tp .nx{color:#10162b;background:linear-gradient(135deg,#f3d98b,#c9a24a)}
+#lctour .tp .sk{background:none;color:#aab3d4;text-decoration:underline;padding:10px 4px;font-weight:600}
+#lctour .tp .wt{font-size:12px;color:#f3d98b;font-weight:700}
+#lctour .dots{display:flex;gap:4px;margin-bottom:2px}#lctour .dots i{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.2)}#lctour .dots i.on{background:#f3d98b}
+</style>
+<script>
+(function(){
+var CAREER=['hub','jobs','skl','career','biz'];
+function $(s){return document.querySelector(s)}
+function btnByText(root,t){return[].slice.call((root||document).querySelectorAll('button')).find(function(b){return b.textContent.trim().toLowerCase().indexOf(t)==0})}
+var S=[
+{c:1,t:'Welcome to LIFECRAFT',p:'Let me show you around. It takes about a minute, and you can skip any time.',nx:'Start tour',tab:'home'},
+{t:'This is you',p:'Your age, home and money live here. The glowing bars are energy, health, happiness, stress and reputation. Keep them healthy.',el:function(){return $('#lcb')},tab:'home'},
+{t:'What now?',p:'The game suggests what to do next. Tap Go on any suggestion to jump straight there.',el:function(){return $('#lcwn .it')},tab:'home'},
+{t:'Move time forward',p:'Tap Next day. Each day gives you a few time slots to spend. Pay, bills and surprises happen as days pass.',el:function(){return $('#lcwn .cta button')},tab:'home',wait:'Tap Next day to continue',done:function(t){return G.day>t.base.day}},
+{t:'Six hubs',p:'Everything in the game lives in one of six hubs: Life, Money, Career, Assets, People and World.',el:function(){return $('#app > nav')},nx:'Got it'},
+{t:'Open Career',p:'Tap Career to see your work options.',el:function(){return btnByText($('#app > nav'),'career')||$('#app > nav')},wait:'Tap Career to continue',done:function(){return CAREER.indexOf(tab)>-1}},
+{t:'Sections',p:'Every hub has sections along the top. Swipe the row to see more. Now tap Jobs.',el:function(){return btnByText($('#lchub'),'jobs')||$('#lchub')},tab:CAREER,wait:'Tap Jobs to continue',done:function(){return tab=='jobs'}},
+{t:'Your CV',p:'Tick the skills you have. They decide which jobs suit you. Training in the Skills section raises them later.',el:function(){return[].slice.call(document.querySelectorAll('#app .c')).find(function(c){var h=c.querySelector('h3');return h&&/my cv/i.test(h.textContent)})},tab:'jobs',nx:'Next',skipIfMissing:1},
+{t:'Apply for a job',p:'Tap Apply on a vacancy. It uses one time slot. Then press Next day and watch your Inbox for replies.',el:function(){return $('#app button[onclick^="apply("]')},tab:'jobs',wait:'Tap Apply to continue',done:function(){return(G.apps&&G.apps.length>0)||!!G.job},skipIfMissing:1},
+{c:1,t:'You are ready',p:'Keep an eye on the Getting started list on Home, and open Insights to watch your finances. You can replay this tour from the Menu any time.',nx:'Finish'}
+];
+var T=null,root=null,tmr=null;
+function save_(){try{if(typeof save=='function')save()}catch(e){}}
+function end(done){if(root){root.remove();root=null}clearInterval(tmr);tmr=null;T=null;if(G){G.tut='done';save_()}}
+function enter(i){if(i>=S.length)return end(true);T.i=i;T.base={day:G.day};T.moved=false;if(G)G.tut={i:i};var s=S[i];
+if(s.tab){var want=[].concat(s.tab);if(want.indexOf(tab)<0){go(want[0])}}
+draw()}
+function ensure(){if(!root){root=document.createElement('div');root.id='lctour';root.setAttribute('role','dialog');root.setAttribute('aria-label','Tutorial');document.body.appendChild(root)}return root}
+function draw(){if(!T||!G)return;var s=S[T.i],r=ensure();
+if(document.getElementById('lcdec')){r.style.display='none';return}r.style.display='';
+var el=s.el&&s.el();
+if(s.el&&!el&&s.skipIfMissing){return enter(T.i+1)}
+var vw=window.innerWidth,vh=window.innerHeight,rect=null;
+if(el){var q=el.getBoundingClientRect();if(q.top<70||q.bottom>vh-90){var inFixed=false,e=el;while(e&&e!==document.body){if(getComputedStyle(e).position=='fixed'){inFixed=true;break}e=e.parentElement}
+if(!inFixed&&!T.scrolled){T.scrolled=1;el.scrollIntoView({block:'center',behavior:'auto'})}}
+q=el.getBoundingClientRect();rect={l:Math.max(4,q.left-6),t:Math.max(4,q.top-6),w:Math.min(vw-8,q.width+12),h:Math.min(vh-8,q.height+12)}}
+var interactive=!!s.wait,dots='';for(var d=0;d<S.length;d++)dots+='<i'+(d==T.i?' class="on"':'')+'></i>';
+var html=(interactive?'':'<div class="bl"></div>')+'<div class="sp'+(rect?'':' none')+'" style="'+(rect?'left:'+rect.l+'px;top:'+rect.t+'px;width:'+rect.w+'px;height:'+rect.h+'px':'left:50%;top:50%;width:0;height:0')+'"></div>'+
+'<div class="tp" id="lctp"><div class="dots">'+dots+'</div><div class="k"><span>Step '+(T.i+1)+' of '+S.length+'</span></div><h4>'+s.t+'</h4><p>'+s.p+'</p><div class="row">'+(interactive?'<span class="wt">'+s.wait+'</span>':'<button type="button" class="nx" id="lctn">'+(s.nx||'Next')+'</button>')+'<button type="button" class="sk" id="lcts2">'+(T.i==S.length-1?'':'Skip tour')+'</button></div></div>';
+var key=T.i+'|'+(rect?1:0)+'|'+(interactive?1:0);if(r.getAttribute('data-k')!=key){r.setAttribute('data-k',key);r.innerHTML=html}else{var spx=r.querySelector('.sp');if(spx&&rect){spx.style.left=rect.l+'px';spx.style.top=rect.t+'px';spx.style.width=rect.w+'px';spx.style.height=rect.h+'px'}}
+var tp=document.getElementById('lctp'),w=Math.min(340,vw-24);tp.style.width=w+'px';var th=tp.offsetHeight,top,left;
+if(rect){left=Math.min(Math.max(12,rect.l),vw-w-12);if(rect.t+rect.h+th+16<vh-8)top=rect.t+rect.h+12;else if(rect.t-th-12>8)top=rect.t-th-12;else top=Math.max(8,vh-th-90)}
+else{left=(vw-w)/2;top=Math.max(12,(vh-th)/2)}
+tp.style.left=left+'px';tp.style.top=top+'px';
+var n=document.getElementById('lctn');if(n)n.onclick=function(){enter(T.i+1)};
+var k=document.getElementById('lcts2');if(k)k.onclick=function(){end(true)}}
+function check(){if(!T||!G)return;var s=S[T.i];if(s.done&&s.done(T)){enter(T.i+1);return}draw()}
+function start(i){if(T)return;T={i:i||0,base:{day:G.day}};if(!tmr)tmr=setInterval(function(){if(T)check()},500);enter(i||0)}
+window.lcTour=function(){if(!G)return;if(T){end(false)}G.tut=null;try{go('home')}catch(e){}setTimeout(function(){start(0)},150)};
+window.addEventListener('resize',function(){if(T){T.scrolled=0;draw()}});
+var _r28=render;render=function(){_r28.apply(this,arguments);
+try{if(!G)return;
+if(G.tut==null){if(G.day-G.d0<=1&&!G.job&&!(G.apps&&G.apps.length)&&tab=='home')setTimeout(function(){if(G&&G.tut==null&&!T)start(0)},700);else if(G.day-G.d0>1||G.job)G.tut='done'}
+else if(G.tut&&G.tut.i!=null&&!T&&G.tut!=='done'){start(G.tut.i)}
+if(T){T.scrolled=T.scrolled&&0;check()}
+if(tab=='menu'&&!document.getElementById('lctr')){var a=document.getElementById('app'),nl=document.getElementById('lcnl'),h='<div id="lctr" style="margin-top:12px"><button type="button" class="s" onclick="lcTour()">🎓 Take the tour</button><div class="m" style="margin-top:6px">Replay the guided first-week tutorial.</div></div>';if(nl)nl.insertAdjacentHTML('beforebegin',h);else{var mc=[].slice.call(a.querySelectorAll('.c')).find(function(c){var x=c.querySelector('h3');return x&&/menu/i.test(x.textContent)});if(mc)mc.insertAdjacentHTML('beforeend',h)}}
+}catch(e){}};
+})();
+</script>
+<style id="lcachstyle">
+.lcag{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px 6px}
+@media(min-width:700px){.lcag{grid-template-columns:repeat(5,minmax(0,1fr))}}
+.lcbd{background:none;border:0;padding:6px 2px;color:#eef1fb;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;font:inherit}
+.lcbd svg{width:78px;height:78px;filter:drop-shadow(0 4px 8px rgba(0,0,0,.45));transition:transform .15s}
+.lcbd:active svg{transform:scale(.94)}
+.lcbd span{font-size:12px;line-height:1.25;text-align:center;font-weight:700;max-width:100px}
+.lcbd.lk span{opacity:.55;font-weight:500}.lcbd.lk svg{filter:grayscale(1) brightness(.7) drop-shadow(0 3px 6px rgba(0,0,0,.4))}
+.lcaf{display:flex;gap:8px;overflow-x:auto;padding:2px 0 10px;-webkit-overflow-scrolling:touch}
+.lcaf button{flex:none;padding:8px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:#eef1fb;font-size:13px;font-weight:700;cursor:pointer}
+.lcaf button.on{background:linear-gradient(135deg,#f3d98b,#c9a24a);color:#10162b;border-color:transparent}
+.lcah{display:flex;gap:16px;align-items:center}.lcah .tx{flex:1;min-width:0}
+.lcah .sc{font-size:34px;font-weight:900;line-height:1;background:linear-gradient(135deg,#f3d98b,#c9a24a);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lcah .rk{font-size:12px;letter-spacing:.14em;font-weight:800;color:#c9a24a;margin-top:4px}
+.lcah .tc{display:flex;gap:10px;margin-top:8px;font-size:13px;flex-wrap:wrap}.lcah .tc span{opacity:.9}
+.lcad{position:fixed;inset:0;z-index:9980;background:rgba(4,7,18,.78);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:16px;animation:lcyrin .25s ease}
+.lcad .bx{width:100%;max-width:380px;border-radius:18px;border:1px solid #c9a24a;background:linear-gradient(160deg,#171f40,#0b1022);box-shadow:0 20px 60px rgba(0,0,0,.6);padding:22px 20px 18px;color:#eef1fb;text-align:center}
+.lcad svg{width:130px;height:130px;filter:drop-shadow(0 8px 16px rgba(0,0,0,.5))}.lcad .lkd svg{filter:grayscale(1) brightness(.7)}
+.lcad h3{margin:8px 0 2px;font-size:22px;color:#eef1fb;text-transform:none;letter-spacing:0;background:none;border:0;padding:0;box-shadow:none}.lcad .tr{font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:800}
+.lcad .ds{font-size:15px;line-height:1.5;margin:10px 0}.lcad .st{font-size:13px;opacity:.85;margin-bottom:10px}
+.lcad .pb{height:8px;border-radius:5px;background:rgba(255,255,255,.12);overflow:hidden;margin:6px 0 4px}.lcad .pb i{display:block;height:100%;background:linear-gradient(90deg,#f3d98b,#c9a24a)}
+.lcad button.cl{margin-top:10px;width:100%;padding:12px;border:0;border-radius:12px;font-weight:800;font-size:15px;color:#10162b;background:linear-gradient(135deg,#f3d98b,#c9a24a);cursor:pointer}
+</style>
+<script>
+(function(){
+var TI={b:{n:'Bronze',c:['#e0a060','#8a4f1d'],t:'#d99a5b'},s:{n:'Silver',c:['#eef1f8','#8a93a8'],t:'#cfd5e4'},g:{n:'Gold',c:['#fbe38f','#b98a2c'],t:'#f3d98b'},p:{n:'Platinum',c:['#c8f4ff','#5f7fe8'],t:'#a9ddff'}};
+function sk(){var s=G.sx||{},m=0;Object.keys(s).forEach(function(k){if(s[k]>m)m=s[k]});return m}
+function sk20(){var s=G.sx||{};return Object.keys(s).filter(function(k){return s[k]>=20}).length}
+function days(){return G.day-G.d0}
+function met(){return(G.ppl||[]).filter(function(p){return p.met}).length}
+var A=[
+['n1','Wealth','b','💷','First £1,000','Reach a net worth of £1,000',function(){return nw()>=100000},function(){return[nw()/100,1000,'m']}],
+['n2','Wealth','s','💰','Five figures','Reach a net worth of £10,000',function(){return nw()>=1000000},function(){return[nw()/100,10000,'m']}],
+['n3','Wealth','g','🏦','Six figures','Reach a net worth of £100,000',function(){return nw()>=10000000},function(){return[nw()/100,100000,'m']}],
+['n4','Wealth','p','💎','Millionaire','Reach a net worth of £1,000,000',function(){return nw()>=100000000},function(){return[nw()/100,1000000,'m']}],
+['n5','Wealth','p','👑','Tycoon','Reach a net worth of £10,000,000',function(){return nw()>=1000000000},function(){return[nw()/100,10000000,'m']}],
+['j1','Career','b','💼','Employed','Get your first job',function(){return!!G.job}],
+['b1','Business','b','🏢','Founder','Start a business',function(){return G.bizs&&G.bizs.length>0}],
+['b2','Business','s','🏬','Entrepreneur','Run two businesses at once',function(){return G.bizs&&G.bizs.length>=2},function(){return[G.bizs?G.bizs.length:0,2]}],
+['b3','Business','s','🧑‍💼','Hands-off','Hire a manager',function(){return G.bizs&&G.bizs.some(function(b){return b.mgr})}],
+['b4','Business','g','🌆','Expansion','Open a second location',function(){return G.bizs&&G.bizs.some(function(b){return b.locs&&b.locs.length>1})}],
+['l1','Wealth','g','🛥️','Living the dream','Buy a luxury asset',function(){return G.lux&&G.lux.length>0}],
+['l2','Wealth','p','✈️','Jet set','Own a private jet',function(){return G.lux&&G.lux.some(function(o){return o.id.indexOf('LJ')==0})}],
+['l3','Wealth','p','🏰','Estate owner','Own a luxury house',function(){return G.lux&&G.lux.some(function(o){return o.id.indexOf('LM')==0})}],
+['p1','Wealth','s','🏠','Homeowner','Own a property',function(){return G.props&&G.props.length>0}],
+['r1','People','s','🤝','Well liked','Reach reputation 80',function(){return G.st&&G.st.rep>=80},function(){return[G.st?G.st.rep:0,80]}],
+['r2','People','b','👥','Connected','Know five people',function(){return met()>=5},function(){return[met(),5]}],
+['t1','Life','s','📆','Survivor','Reach your fifth year',function(){return days()>=1826},function(){return[days(),1826]}],
+['t2','Life','g','🏛️','A decade','Reach your tenth year',function(){return days()>=3652},function(){return[days(),3652]}],
+['x1','Career','b','📨','First application','Apply for a job',function(){return(G.apps&&G.apps.length>0)||!!G.job}],
+['x2','Career','b','🎓','Qualified','Earn a qualification',function(){return G.quals&&G.quals.length>0}],
+['x3','Career','s','🧠','Skilled','Train any skill to 60',function(){return sk()>=60},function(){return[Math.floor(sk()),60]}],
+['x4','Career','g','🌟','Expert','Train any skill to 80',function(){return sk()>=80},function(){return[Math.floor(sk()),80]}],
+['x5','Career','s','🧩','Well rounded','Get five skills to level 20',function(){return sk20()>=5},function(){return[sk20(),5]}],
+['x6','People','b','🗣️','Networker','Make three contacts',function(){return G.cx&&G.cx.length>=3},function(){return[G.cx?G.cx.length:0,3]}],
+['x7','People','g','💞','Best friend','Build a bond above 90 with someone',function(){return(G.cx||[]).some(function(c){return c.tr>=90})||(G.ppl||[]).some(function(p){return p.met&&p.sc>=90})}],
+['x8','Life','b','🏋️','Gym member','Join a gym',function(){return!!(G.fit&&G.fit.mem)}],
+['x9','Life','s','💪','Fit and strong','Reach fitness 50',function(){return G.fit&&G.fit.fit>=50},function(){return[G.fit?Math.floor(G.fit.fit):0,50]}],
+['x10','Wealth','b','🐷','Rainy day','Hold £500 in cash and bank',function(){return(G.bank||0)+(G.cash||0)>=50000},function(){return[((G.bank||0)+(G.cash||0))/100,500,'m']}],
+['x11','Wealth','s','🏧','Saver','Build £1,000 in savings',function(){return(G.sav||0)>=100000},function(){return[(G.sav||0)/100,1000,'m']}],
+['x12','Wealth','s','📈','Investor','Own an investment',function(){return G.inv&&Object.keys(G.inv).some(function(k){var v=G.inv[k];return v&&(typeof v=='number'?v>0:(v.n||v.u||v.q||1)>0)})}],
+['x13','Life','s','🌍','Globe-trotter','Visit another country',function(){return G.visited&&G.visited.length>0}],
+['x14','Life','s','👶','Family','Become a parent',function(){return G.kids&&G.kids.length>0}],
+['x15','Life','b','🎒','Year one','Survive your first year',function(){return days()>=365},function(){return[days(),365]}],
+['x16','Life','b','🎂','Coming of age','Turn 21',function(){return G.age>=21},function(){return[G.age,21]}],
+['x17','Life','s','🥂','Thirty','Turn 30',function(){return G.age>=30},function(){return[G.age,30]}],
+['x18','Life','g','🎖️','Half century','Turn 50',function(){return G.age>=50},function(){return[G.age,50]}],
+['x19','Life','b','✉️','Decision maker','Resolve ten life decisions',function(){return(G.decN||0)>=10},function(){return[G.decN||0,10]}],
+['x20','Business','g','⚔️','Rival crusher','Buy out a rival business',function(){return(G.rvB||0)>=1}],
+['x21','Business','g','⭐','Market leader','Reach reputation 80 in a business',function(){return G.bizs&&G.bizs.some(function(b){return b.rep>=80})}],
+['x22','Wealth','s','🛍️','Collector','Own ten shop items',function(){return G.items&&G.items.length>=10},function(){return[G.items?G.items.length:0,10]}]
+];
+var NEW={};A.forEach(function(a){if(a[0].charAt(0)=='x')NEW[a[0]]=1});
+function got(id){return NEW[id]?(G.ach3||{})[id]:(G.ach||{})[id]}
+function fmt2(d){try{return fmt(d).slice(5)}catch(e){return''}}
+function badge(a,lk){var t=TI[a[2]],c=t.c,id='bg'+a[0]+(lk?'l':'u');
+return'<svg viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="'+id+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="'+c[0]+'"/><stop offset="1" stop-color="'+c[1]+'"/></linearGradient><radialGradient id="'+id+'i" cx=".5" cy=".35" r=".8"><stop offset="0" stop-color="#232c57"/><stop offset="1" stop-color="#0b1022"/></radialGradient></defs><path d="M50 4 L90 24 L90 62 Q90 84 50 97 Q10 84 10 62 L10 24Z" fill="url(#'+id+')"/><path d="M50 12 L82 28 L82 61 Q82 78 50 89 Q18 78 18 61 L18 28Z" fill="url(#'+id+'i)"/><path d="M50 12 L82 28" stroke="rgba(255,255,255,.35)" stroke-width="1.5" fill="none"/><text x="50" y="62" font-size="32" text-anchor="middle" '+(lk?'opacity=".3"':'')+'>'+a[3]+'</text>'+(lk?'<text x="50" y="86" font-size="14" text-anchor="middle">🔒</text>':'')+'</svg>'}
+function total(){return A.length}
+function counts(){var n=0,t={b:0,s:0,g:0,p:0};A.forEach(function(a){if(got(a[0])){n++;t[a[2]]++}});return{n:n,t:t}}
+function score(){var o=Object.keys(G.ach||{}).length,nn=Object.keys(G.ach3||{}).length;return Math.round(Math.sqrt(Math.max(0,nw())/100))+o*50+nn*20+(G.bizs?G.bizs.length*100:0)+(G.lux?G.lux.length*75:0)+Math.round((G.st&&G.st.rep||0))}
+function rank(s){return s<150?'Struggling':s<400?'Getting by':s<800?'Comfortable':s<1500?'Wealthy':s<2500?'Tycoon':'Legend'}
+function ring(n,t){var r=34,c=2*Math.PI*r,f=c*n/t;return'<svg width="92" height="92" viewBox="0 0 92 92"><circle cx="46" cy="46" r="'+r+'" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="8"/><circle cx="46" cy="46" r="'+r+'" fill="none" stroke="#f3d98b" stroke-width="8" stroke-linecap="round" stroke-dasharray="'+f+' '+c+'" transform="rotate(-90 46 46)"/><text x="46" y="52" text-anchor="middle" font-size="20" font-weight="800" fill="#eef1fb">'+n+'</text><text x="46" y="66" text-anchor="middle" font-size="9" fill="#aab3d4">of '+t+'</text></svg>'}
+window._achF=window._achF||'All';
+function gallery(){G.ach=G.ach||{};G.ach3=G.ach3||{};var c=counts(),s=score(),F=window._achF,cats=['All','Unlocked','Locked','Wealth','Career','Business','People','Life'];
+var list=A.filter(function(a){var g=!!got(a[0]);return F=='All'||(F=='Unlocked'&&g)||(F=='Locked'&&!g)||a[1]==F});
+return'<div class="c"><h3>Your legacy</h3><div class="lcah"><div>'+ring(c.n,total())+'</div><div class="tx"><div class="sc">'+s+'</div><div class="rk">'+rank(s).toUpperCase()+'</div><div class="tc"><span>🥉 '+c.t.b+'</span><span>🥈 '+c.t.s+'</span><span>🥇 '+c.t.g+'</span><span>💠 '+c.t.p+'</span></div></div></div><div class="m" style="margin-top:10px">Legacy grows with your wealth, badges, businesses, luxury assets and reputation. Tap any badge for details.</div></div><div class="c"><h3>Badges</h3><div class="lcaf">'+cats.map(function(k){return'<button type="button" class="'+(k==F?'on':'')+'" onclick="lcAF(\''+k+'\')">'+k+'</button>'}).join('')+'</div>'+(list.length?'<div class="lcag">'+list.map(function(a){var g=!!got(a[0]);return'<button type="button" class="lcbd'+(g?'':' lk')+'" onclick="lcAD(\''+a[0]+'\')" aria-label="'+a[4]+(g?', unlocked':', locked')+'">'+badge(a,!g)+'<span>'+a[4]+'</span></button>'}).join('')+'</div>':'<div class="m">Nothing here yet.</div>')+'</div>'}
+window.lcAF=function(k){window._achF=k;render()};
+window.lcAD=function(id){var a=A.filter(function(x){return x[0]==id})[0];if(!a)return;var g=got(id),t=TI[a[2]],pr='';
+if(!g&&a[7]){try{var p=a[7](),cur=Math.min(p[0],p[1]),pc=Math.max(0,Math.min(100,Math.round(cur/p[1]*100))),f=p[2]=='m'?function(v){return M(v*100)}:function(v){return Math.floor(v)};pr='<div class="pb"><i style="width:'+pc+'%"></i></div><div class="st">'+f(cur)+' of '+f(p[1])+'</div>'}catch(e){}}
+var h='<div class="lcad" id="lcad" role="dialog" aria-label="'+a[4]+'"><div class="bx"><div class="'+(g?'':'lkd')+'">'+badge(a,!g)+'</div><h3>'+a[4]+'</h3><div class="tr" style="color:'+t.t+'">'+t.n+' · '+a[1]+'</div><div class="ds">'+a[5]+'</div>'+(g?'<div class="st">Unlocked '+fmt2(g)+'</div>':'<div class="st">Locked</div>'+pr)+'<button type="button" class="cl" onclick="document.getElementById(\'lcad\').remove()">Close</button></div></div>';
+var o=document.getElementById('lcad');if(o)o.remove();document.getElementById('app').insertAdjacentHTML('beforeend',h);try{conv()}catch(e){}};
+var _v30=view;view=function(){if(tab=='ach')return gallery();return _v30.apply(this,arguments)};
+var _m30=morning;morning=function(){_m30.apply(this,arguments);try{G.ach3=G.ach3||{};A.forEach(function(a){if(NEW[a[0]]&&!G.ach3[a[0]]){var ok=false;try{ok=!!a[6]()}catch(e){}if(ok){G.ach3[a[0]]=G.day;log('Achievement unlocked: '+a[4]+'.',0)}}})}catch(e){}};
+var _lr=window.lcRv;if(_lr)window.lcRv=function(n,k){var had=!!(G.bizs[n]&&G.bizs[n].rival);var r=_lr.apply(this,arguments);try{if(k=='buy'&&had&&G.bizs[n]&&!G.bizs[n].rival){G.rvB=(G.rvB||0)+1}}catch(e){}return r};
+var pd=false;var _r30=render;render=function(){var wasDec=!!(G&&G.dec);_r30.apply(this,arguments);try{if(!G)return;if(pd&&!G.dec)G.decN=(G.decN||0)+1;pd=!!G.dec}catch(e){}};
+})();
+</script>
 <script>if('serviceWorker' in navigator){var had=navigator.serviceWorker.controller,rl=0;navigator.serviceWorker.addEventListener('controllerchange',function(){if(had&&!rl){rl=1;location.reload()}});window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').then(function(r){r.update()}).catch(function(){})})}</script></body></html>
