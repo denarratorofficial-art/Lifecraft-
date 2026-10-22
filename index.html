@@ -1695,8 +1695,8 @@ var H=[{n:'Life',i:'🏠',d:'home',t:['home','act','gym','edu','cal','inbox','hi
 {n:'Career',i:'💼',d:'hub',t:['hub','jobs','skl','career','biz']},
 {n:'Assets',i:'🏡',d:'house',t:['house','prop','veh','lux','shop','surv']},
 {n:'People',i:'💞',d:'rel',t:['rel','family','social']},
-{n:'World',i:'🌍',d:'map',t:['map','city','trav','legal','under','prison','more']}];
-var NM={home:'Home',act:'Activities',gym:'Fitness',edu:'Education',cal:'Calendar',inbox:'Inbox',hist:'History',retire:'Later life',legacy:'Legacy and will',ach:'Achievements',bank:'Banking',inv:'Investing',wealth:'Wealth',loans:'Loans',bank2:'Debt',ins:'Insights',hub:'Career hub',jobs:'Jobs',skl:'Skills',map:'World map',career:'Growth',biz:'Business',house:'Rent',prop:'Property',veh:'Vehicles',lux:'Luxury',shop:'Shopping',surv:'Housing survival',rel:'Relationships',family:'Family',social:'Social media',city:'Cities',trav:'Travel and FX',legal:'Legal',under:'Underworld',prison:'Prison',more:'Settings'};
+{n:'World',i:'🌍',d:'map',t:['map','paper','city','trav','legal','under','prison','more']}];
+var NM={home:'Home',act:'Activities',gym:'Fitness',edu:'Education',cal:'Calendar',inbox:'Inbox',hist:'History',retire:'Later life',legacy:'Legacy and will',ach:'Achievements',bank:'Banking',inv:'Investing',wealth:'Wealth',loans:'Loans',bank2:'Debt',ins:'Insights',hub:'Career hub',jobs:'Jobs',skl:'Skills',map:'World map',paper:'Newspaper',career:'Growth',biz:'Business',house:'Rent',prop:'Property',veh:'Vehicles',lux:'Luxury',shop:'Shopping',surv:'Housing survival',rel:'Relationships',family:'Family',social:'Social media',city:'Cities',trav:'Travel and FX',legal:'Legal',under:'Underworld',prison:'Prison',more:'Settings'};
 function hub(t){for(var i=0;i<H.length;i++)if(H[i].t.indexOf(t)>-1)return i;return t=='menu'?-1:5}
 window.lcHub=function(i){go(H[i].d)};
 function unread(){try{return(G.inbox||[]).filter(function(m){return!m.read}).length}catch(e){return 0}}
@@ -2191,7 +2191,10 @@ var A=[
 ['x21','Business','g','⭐','Market leader','Reach reputation 80 in a business',function(){return G.bizs&&G.bizs.some(function(b){return b.rep>=80})}],
 ['x22','Wealth','s','🛍️','Collector','Own ten shop items',function(){return G.items&&G.items.length>=10},function(){return[G.items?G.items.length:0,10]}],
 ['x23','Life','s','🧳','World traveller','Visit five countries',function(){return G.visited&&G.visited.length>=5},function(){return[G.visited?G.visited.length:0,5]}],
-['x24','Life','g','🌐','Citizen of the world','Visit ten countries',function(){return G.visited&&G.visited.length>=10},function(){return[G.visited?G.visited.length:0,10]}]
+['x24','Life','g','🌐','Citizen of the world','Visit ten countries',function(){return G.visited&&G.visited.length>=10},function(){return[G.visited?G.visited.length:0,10]}],
+['x25','Wealth','s','🍀','Lucky draw','Win a prize in the Saturday Draw',function(){return G.ld&&G.ld.wins>0}],
+['x26','Wealth','p','🎰','Jackpot!','Win the Saturday Draw jackpot',function(){return G.ld&&G.ld.jpWon>0}],
+['x27','Life','b','📰','Well informed','Read the newspaper on seven different days',function(){return G.pd&&G.pd.length>=7},function(){return[G.pd?G.pd.length:0,7]}]
 ];
 var NEW={};A.forEach(function(a){if(a[0].charAt(0)=='x')NEW[a[0]]=1});
 function got(id){return NEW[id]?(G.ach3||{})[id]:(G.ach||{})[id]}
@@ -2432,7 +2435,8 @@ var SEAS={1:'New Year resolutions fill the gyms',2:'Valentine’s dinners are bo
 function items(){var d=G.day,r=rng(d*31+7),L=[],city=G.city,c=CITIES[city]||{},mo=dt(d).getUTCMonth()+1;
 function A(k,tg,html,tab){L.push({k:k,tg:tg,h:html,t:tab||''})}
 // WORLD
-A('wo','WORLD',esc(W[(d*7)%W.length]),'');A('wo','WORLD',esc(W[(d*5+3)%W.length]),'');A('wo','CITY',esc(city)+': '+esc(['new cafés open across the centre.','council promises better transport links.','weekend markets draw bigger crowds.','a busy week for local employers.','pavement works finish ahead of schedule.'][(d+city.length)%5]),'');
+try{if(window.lcBN)lcBN(A)}catch(e){}
+A('wo','WORLD',esc(W[(d*7)%W.length]),'paper');A('wo','WORLD',esc(W[(d*5+3)%W.length]),'paper');A('wo','CITY',esc(city)+': '+esc(['new cafés open across the centre.','council promises better transport links.','weekend markets draw bigger crowds.','a busy week for local employers.','pavement works finish ahead of schedule.'][(d+city.length)%5]),'');
 // TRENDING
 A('tr','TRENDING',esc(SEAS[mo]),'');A('tr','TRENDING',esc(TR[(d*3+2)%TR.length]),'');
 // MARKETS
@@ -2447,10 +2451,8 @@ try{var o=G.fxo,fx=Object.keys(FXC).filter(function(k){return k!='GBP'&&G.fxr[k]
 // SALES
 try{deals().forEach(function(x){var e=Math.max(0,x.end-d);A('sa','SALE',(ICON[x.cat]||'🏷️')+' '+esc(x.t)+' · applied at checkout · ends '+(e==0?'today':e==1?'tomorrow':'in '+e+' days'),TABS[x.cat]||'shop')})}catch(e){}
 // LOTTERY
-try{var w=Math.floor(d/7),lr=rng(w*977+13),nb=(c.nb||['City Centre']),loc=nb[Math.floor(lr()*nb.length)]+', '+city,tier=lr(),big=(w%6==3);
-if(big)A('lo','LOTTERY','🎉 JACKPOT! One lucky ticket in '+esc(loc)+' wins '+mm(500000000),'shop');
-else A('lo','LOTTERY','Jackpot rolls over to '+mm(500000000)+'. Saturday’s draw: a ticket in '+esc(loc)+' won '+mm(tier<.5?100000:tier<.85?10000:2000),'shop');
-A('lo','LOTTERY','Odds of the jackpot: about 1 in 45 million. Tickets '+mm(200)+' in the shop','shop')}catch(e){}
+try{if(window.lcLotItems)lcLotItems(A,city,c,d)}catch(e){}
+try{if(window.lcSportItems)lcSportItems(A)}catch(e){}
 // EVENTS
 try{var hs=nextHols();hs.slice(0,2).forEach(function(h){A('ev','EVENT',esc(h[0])+' '+inDays(h[1]),'cal')});
 var cv=[];try{cv=[].slice.call(calV().matchAll(/<div class="r"><span>([^<]*)<\/span><span>([^<]*)<\/span><\/div>/g)).slice(0,2)}catch(e){}cv.forEach(function(m){A('ev','COMING UP',esc(m[1].trim())+' · '+esc(m[2]),'cal')});
@@ -2466,16 +2468,192 @@ if(G.arrears&&G.arrears.length)A('al','BILLS','You have unpaid bills','bank');
 if(G.dec)A('al','DECISION','Something needs your attention','home');
 (G.log||[]).slice(0,3).forEach(function(l){A('yo','LIFE',esc(l.t),'')});
 return L}
-function order(L){var by={},ks=[];L.forEach(function(x){(by[x.k]=by[x.k]||[]).push(x);if(ks.indexOf(x.k)<0)ks.push(x.k)});var pr=['wo','mk','sa','tr','ev','cr','lo','fx','jb','wx','yo','al'];ks.sort(function(a,b){return pr.indexOf(a)-pr.indexOf(b)});var out=[],more=true,i=0;while(more){more=false;ks.forEach(function(k){if(by[k][i]){out.push(by[k][i]);more=true}});i++}return out}
+function order(L){var by={},ks=[];L.forEach(function(x){(by[x.k]=by[x.k]||[]).push(x);if(ks.indexOf(x.k)<0)ks.push(x.k)});var pr=['br','wo','mk','sp','sa','tr','ev','cr','lo','fx','jb','wx','yo','al'];ks.sort(function(a,b){return pr.indexOf(a)-pr.indexOf(b)});var out=[],more=true,i=0;while(more){more=false;ks.forEach(function(k){if(by[k][i]){out.push(by[k][i]);more=true}});i++}return out}
 function build(){var L=order(items());var h=L.map(function(x){return'<a class="ti" data-t="'+x.t+'"><b class="tg tg-'+x.k+'">'+x.tg+'</b>'+x.h+'</a>'}).join('');return{h:h,n:L.length}}
 var _r50=render;render=function(){_r50.apply(this,arguments);try{if(!G)return;var a=document.getElementById('app'),t=document.getElementById('lcts');
 if(t){var b=build();t.innerHTML='<div class="tk">'+b.h+b.h+'</div>';var tk=t.firstChild;tk.style.animationDuration=Math.max(90,b.n*9)+'s';
-t.onclick=function(e){var x=e.target.closest&&e.target.closest('a.ti');if(x&&x.getAttribute('data-t'))go(x.getAttribute('data-t'))};
+t.onclick=function(e){var x=e.target.closest&&e.target.closest('a.ti'),k=x&&x.getAttribute('data-t');if(!k)return;if(k=='lotto'){go('shop');setTimeout(function(){var z=document.getElementById('lcld');if(z)z.scrollIntoView({block:'start'})},200)}else go(k)};
 var rs=null;t.ontouchstart=function(){tk.style.animationPlayState='paused';clearTimeout(rs);rs=setTimeout(function(){tk.style.animationPlayState=''},3500)};try{window.lcConv&&window.lcConv()}catch(e){}try{conv()}catch(e){}}
 if(a&&(tab=='shop'||tab=='trav')&&!document.getElementById('lcdl')){var ds=deals().filter(function(x){return tab=='shop'?(x.cat=='Shopping'||x.cat=='Food'):x.cat=='Travel'});
 var h='<div class="c lcdl" id="lcdl"><h3>Deals this week</h3>'+(ds.length?ds.map(function(x){var e=Math.max(0,x.end-G.day);return'<div class="r"><span>'+(ICON[x.cat]||'🏷️')+' '+esc(x.t)+'</span><b>−'+Math.round(x.p*100)+'% · '+(e==0?'ends today':e+'d left')+'</b></div>'}).join('')+'<div class="m" style="margin-top:6px">Discounts apply automatically when you pay.'+(G.saleSaved?' You have saved '+mm(G.saleSaved)+' so far.':'')+'</div>':'<div class="m">No deals on at the moment. Check back next week.</div>')+'</div>';
 var f=[].slice.call(a.children).find(function(c){return c.classList&&c.classList.contains('c')});if(f)f.insertAdjacentHTML('beforebegin',h);else a.insertAdjacentHTML('beforeend',h);try{conv()}catch(e){}}
 if(a&&tab=='shop'&&G.co&&G.co.tot){var bs=deals().filter(function(x){return x.cat=='Shopping'}).sort(function(x,y){return y.p-x.p})[0];if(bs){var card=[].slice.call(a.querySelectorAll('.c')).filter(function(c){var h=c.querySelector('h3');return h&&/order preview/i.test(h.textContent)})[0];if(card){var row=[].slice.call(card.querySelectorAll('.r')).filter(function(r){return/^\s*Total/i.test(r.textContent)})[0];if(row&&!row.getAttribute('data-sale')){row.setAttribute('data-sale','1');var sp=row.lastElementChild,np=Math.round(G.co.tot*(1-bs.p));sp.innerHTML='<s style="opacity:.55">'+sp.innerHTML+'</s> <b>'+mm(np)+'</b>';row.insertAdjacentHTML('afterend','<div class="r"><span class="m">'+esc(bs.n)+' (−'+Math.round(bs.p*100)+'%)</span><span class="m">you save '+mm(G.co.tot-np)+'</span></div>');try{conv()}catch(e){}}}}}}catch(e){}};
+})();
+</script>
+<style id="lclotstyle">
+.lcld .jp{font-size:30px;font-weight:900;line-height:1.1;background:linear-gradient(135deg,#f3d98b,#c9a24a);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lcld .jp small{display:block;font-size:12px;font-weight:600;letter-spacing:.04em;-webkit-text-fill-color:#aab3d4;margin-top:2px}
+.lcld .ng{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:4px;margin:10px 0}
+.lcld .ng button{box-sizing:border-box;width:100%;height:auto;min-height:0;max-width:100%;margin:0;padding:0;display:flex;align-items:center;justify-content:center;aspect-ratio:1/1;border-radius:50%;line-height:1;overflow:hidden;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:#eef1fb;font-size:11px;font-weight:700;cursor:pointer;min-width:0}
+.lcld .ng button.on{background:linear-gradient(135deg,#f3d98b,#c9a24a);color:#10162b;border-color:transparent}
+.lcld .bt{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 10px}.lcld .bt button{flex:1 1 90px;padding:10px 8px;font-size:13px}
+.lcld .bl{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;font-size:12px;font-weight:800;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);margin:0 3px 3px 0}
+.lcld .bl.hit{background:linear-gradient(135deg,#f3d98b,#c9a24a);color:#10162b;border-color:transparent}
+.lcld .bl.dr{background:linear-gradient(135deg,#b79cff,#6a58d6);color:#fff;border-color:transparent}
+.lcld .tk2{padding:8px 0;border-top:1px solid rgba(255,255,255,.07);font-size:13px}.lcld .tk2 .pz{float:right;font-weight:800;color:#4fe0a8}
+.lcbn{position:fixed;inset:0;z-index:9979;background:rgba(4,7,18,.8);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:16px;animation:lcyrin .3s ease}
+.lcbn .bx{width:100%;max-width:420px;border-radius:18px;border:1px solid #ff4d57;background:linear-gradient(160deg,#241226,#0b1022);box-shadow:0 20px 60px rgba(0,0,0,.6),0 0 36px rgba(255,77,87,.25);padding:20px 18px 16px;color:#eef1fb}
+.lcbn .br{display:inline-flex;align-items:center;gap:8px;font-size:11px;letter-spacing:.2em;font-weight:900;color:#fff;background:#e8404a;padding:4px 10px;border-radius:6px}
+.lcbn .br:before{content:"";width:7px;height:7px;border-radius:50%;background:#fff;animation:lclive 1.4s infinite}
+.lcbn h3{margin:12px 0 6px;font-family:inherit;font-size:21px;line-height:1.25;color:#eef1fb;text-transform:none;letter-spacing:0;background:none;border:0;padding:0;box-shadow:none}
+.lcbn p{margin:0 0 14px;font-size:15px;line-height:1.5;opacity:.92}
+.lcbn button{display:block;width:100%;padding:13px;border:0;border-radius:12px;font-weight:800;font-size:15px;cursor:pointer;margin-bottom:8px;color:#10162b;background:linear-gradient(135deg,#f3d98b,#c9a24a)}
+.lcbn button.alt{background:rgba(255,255,255,.1);color:#eef1fb;border:1px solid rgba(255,255,255,.18)}
+.tg-br{background:#ff4d57!important;color:#fff!important}
+</style>
+<script>
+(function(){
+var NUM=59,PICK=6,PRICE=200,TIER={3:2500,4:14000,5:175000},BASE=500000000,MAXT=10;
+function ld(){G.ld=G.ld||{jp:BASE,tk:[],last:null,n:0,wins:0,jpWon:0,won:0,spent:0};return G.ld}
+function mm(n){try{return M(n)}catch(e){return'£'+(n/100).toFixed(2)}}
+function esc(x){return String(x).replace(/&/g,'&amp;').replace(/</g,'&lt;')}
+function p2(n){return(n<10?'0':'')+n}
+function dow(){return dt(G.day).getUTCDay()}
+function nextIn(){return(6-dow()+7)%7}
+function when(){var n=nextIn();return n==0?'tonight':n==1?'tomorrow':'in '+n+' days'}
+window._lsel=window._lsel||[];
+window.lcLoT=function(n){var s=window._lsel,i=s.indexOf(n);if(i>=0)s.splice(i,1);else if(s.length<PICK)s.push(n);render()};
+window.lcLoClr=function(){window._lsel=[];render()};
+window.lcLoDip=function(){var s=[],gd=0;while(s.length<PICK&&gd++<400){var n=1+Math.floor(Math.random()*NUM);if(s.indexOf(n)<0)s.push(n)}window._lsel=s;render()};
+window.lcLoBuy=function(){var L=ld(),s=window._lsel;if(s.length!=PICK){tr='Pick '+PICK+' numbers first.';return render()}if(L.tk.length>=MAXT){tr='You can enter up to '+MAXT+' lines per draw.';return render()}
+if(!spend(PRICE,'Saturday Draw ticket','Lottery'))return render();L.tk.push(s.slice().sort(function(a,b){return a-b}));L.spent+=PRICE;window._lsel=[];try{beep(660,.12)}catch(e){}tr='Ticket entered for the draw '+when()+'.';render()};
+function draw(){var L=ld(),nums=[],gd=0;while(nums.length<PICK&&gd++<400){var n=1+Math.floor(rnd()*NUM);if(nums.indexOf(n)<0)nums.push(n)}for(var q=1;nums.length<PICK&&q<=NUM;q++){if(nums.indexOf(q)<0)nums.push(q)}nums.sort(function(a,b){return a-b});
+var jp=L.jp,res=[],won=0,jpHit=false;L.tk.forEach(function(t){var m=t.filter(function(x){return nums.indexOf(x)>=0}).length,pz=m==6?jp:(TIER[m]||0);if(m==6)jpHit=true;won+=pz;res.push({t:t,m:m,pz:pz})});
+var npc=false,loc='';if(!jpHit){if(rnd()<.2){npc=true;var c=CITIES[G.city]||{},nb=c.nb||['City Centre'];loc=nb[Math.floor(rnd()*nb.length)]+', '+G.city}}
+L.n++;L.last={d:G.day-1,n:L.n,nums:nums,res:res,won:won,jp:jp,npc:npc,loc:loc,jpHit:jpHit,had:L.tk.length};
+if(jpHit||npc)L.jp=BASE;else L.jp=Math.min(4000000000,jp+150000000);
+if(won>0){led('bank',won,'Saturday Draw win','Lottery','deposit','National Lottery');L.won+=won;L.wins++;if(jpHit)L.jpWon++;try{beep(880,.3)}catch(e){}log((jpHit?'JACKPOT! ':'')+'You won '+mm(won)+' in the Saturday Draw.',jpHit?1:0);note(jpHit?'You won the jackpot!':'Saturday Draw: you won',(jpHit?'Incredible luck! ':'')+'Your ticket'+(res.length>1?'s':'')+' won '+mm(won)+'. Numbers: '+nums.map(p2).join(' · ')+'.');}
+else if(L.tk.length){note('Saturday Draw results','No win this time. Numbers: '+nums.map(p2).join(' · ')+'.')}
+L.tk=[]}
+window.lcLotDraw=draw;var _m60=morning;morning=function(){var r=_m60.apply(this,arguments);try{if(dow()==0)draw()}catch(e){}return r};
+window.lcLotItems=function(A,city,c,d){var L=ld(),n=nextIn();
+A('lo','LOTTERY','Saturday Draw '+(n==0?'tonight':n==1?'tomorrow':'in '+n+' days')+' · jackpot '+mm(L.jp),'lotto');
+var l=L.last;if(l){A('lo','LOTTERY','Last draw: '+l.nums.map(p2).join(' · ')+(l.npc?' · 🎉 JACKPOT '+mm(l.jp)+' won by a ticket in '+esc(l.loc):l.jpHit?' · you hit the JACKPOT!':' · no jackpot winner, it rolls over'),'lotto');
+if(l.had)A('yo','LOTTERY','Your draw result: '+(l.won>0?'you won '+mm(l.won):'no win this time'),'lotto')}
+if(L.tk.length)A('lo','LOTTERY','You have '+L.tk.length+' line'+(L.tk.length>1?'s':'')+' in the next draw','lotto');
+else A('lo','LOTTERY','Jackpot odds are about 1 in 45 million. Lines are '+mm(PRICE),'lotto')};
+function card(){var L=ld(),s=window._lsel,ng='';for(var i=1;i<=NUM;i++)ng+='<button type="button" class="'+(s.indexOf(i)>=0?'on':'')+'" onclick="lcLoT('+i+')" aria-label="Number '+i+'">'+i+'</button>';
+var h='<div class="c lcld" id="lcld"><h3>Saturday Draw</h3><div class="jp">'+mm(L.jp)+'<small>JACKPOT · NEXT DRAW '+when().toUpperCase()+'</small></div><div class="m" style="margin-top:8px">Pick 6 numbers from 1 to '+NUM+'. Lines are '+mm(PRICE)+' each. Match 3 to win '+mm(TIER[3])+', 4 for '+mm(TIER[4])+', 5 for '+mm(TIER[5])+', and all 6 for the jackpot. If nobody wins it rolls over.</div><div class="ng">'+ng+'</div><div class="m">Your pick: '+(s.length?s.slice().sort(function(a,b){return a-b}).map(p2).join(' · '):'none yet')+' ('+s.length+'/'+PICK+')</div><div class="bt"><button type="button" class="s" onclick="lcLoDip()">Lucky dip</button><button type="button" class="s" onclick="lcLoClr()">Clear</button><button type="button" onclick="lcLoBuy()">Buy line '+mm(PRICE)+'</button></div>';
+if(L.tk.length){h+='<div class="m" style="margin-bottom:4px">Your lines for the next draw ('+L.tk.length+'/'+MAXT+')</div>'+L.tk.map(function(t){return'<div class="tk2">'+t.map(function(n){return'<span class="bl">'+p2(n)+'</span>'}).join('')+'</div>'}).join('')}
+var l=L.last;if(l){h+='<div class="m" style="margin:12px 0 4px"><b>Last draw (#'+l.n+')</b>'+(l.npc?' · jackpot '+mm(l.jp)+' won by a ticket in '+esc(l.loc):l.jpHit?' · you won the jackpot!':' · no jackpot winner')+'</div><div>'+l.nums.map(function(n){return'<span class="bl dr">'+p2(n)+'</span>'}).join('')+'</div>';
+if(l.res.length)h+=l.res.map(function(r){return'<div class="tk2">'+r.t.map(function(n){return'<span class="bl'+(l.nums.indexOf(n)>=0?' hit':'')+'">'+p2(n)+'</span>'}).join('')+'<span class="pz">'+(r.pz>0?mm(r.pz):r.m+' match'+(r.m==1?'':'es'))+'</span></div>'}).join('');else h+='<div class="m" style="margin-top:6px">You did not enter that draw.</div>'}
+if(L.spent)h+='<div class="m" style="margin-top:10px">All time: spent '+mm(L.spent)+' · won '+mm(L.won)+'</div>';
+return h+'</div>'}
+// ---- Breaking news
+function pct(x){return(x>=0?'+':'')+x.toFixed(1)+'%'}
+function chk(){if(!G||(G.bnCool||0)>G.day||G.bn||!G.pxp)return;var sh=ASSETS.filter(function(a){return a[1]=='share'}),cr=ASSETS.filter(function(a){return a[1]=='crypto'});
+function c(id){var p=G.pxp[id],q=G.px[id];return p&&q?(q-p)/p*100:0}
+var sc=sh.map(function(a){return{id:a[0],n:a[2],c:c(a[0])}}),avg=sc.reduce(function(s,x){return s+x.c},0)/sc.length,best=null;
+if(avg<=-5)best={w:Math.abs(avg)*2,e:'📉',t:'Markets tumble',b:'Shares fell '+Math.abs(avg).toFixed(1)+'% on average this week as investors rushed to sell.'};
+else if(avg>=5)best={w:avg*2,e:'📈',t:'Markets rally',b:'Shares rose '+avg.toFixed(1)+'% on average this week on a wave of buying.'};
+sc.forEach(function(x){if(Math.abs(x.c)>=26&&(!best||Math.abs(x.c)>best.w)){best={w:Math.abs(x.c),e:x.c>0?'🚀':'💥',t:x.n+(x.c>0?' surges ':' plunges ')+pct(x.c),b:x.n+' shares '+(x.c>0?'jumped':'dropped')+' '+Math.abs(x.c).toFixed(1)+'% after a dramatic week for the company.'}}});
+cr.forEach(function(a){var x=c(a[0]);if(Math.abs(x)>=32&&(!best||Math.abs(x)*.7>best.w)){var n=a[2].replace(' (simulated)','');best={w:Math.abs(x)*.7,e:x>0?'🚀':'⚡',t:n+(x>0?' soars ':' crashes ')+pct(x),b:n+' '+(x>0?'jumped':'tumbled')+' '+Math.abs(x).toFixed(1)+'% in a single day. Crypto traders are on edge.'}}});
+if(best){var pv=0,pp=G.pfp;try{pv=pfv()}catch(e){}var ex=(pv>0&&pp>0)?' Your portfolio is now worth '+mm(pv)+' ('+(pv>=pp?'+':'−')+mm(Math.abs(pv-pp))+').':'';G.bn={e:best.e,t:best.t,b:best.b+ex,d:G.day};G.bnCool=G.day+12;G.stop=true}}
+var _m61=morning;morning=function(){var r=_m61.apply(this,arguments);try{chk()}catch(e){}return r};
+window.lcBN=function(A){if(G.bn&&G.day-G.bn.d<=2)A('br','BREAKING',esc(G.bn.t),'inv');else if(G.bnLast&&G.day-G.bnLast.d<=3)A('br','BREAKING',esc(G.bnLast.t),'inv')};
+window.lcBnGo=function(go_){if(G.bn){G.bnLast=G.bn;G.bn=null}var o=document.getElementById('lcbn');if(o)o.remove();if(go_)go('inv');else render()};
+var _r61=render;render=function(){_r61.apply(this,arguments);try{if(!G)return;var a=document.getElementById('app');if(!a)return;
+if(tab=='shop'&&!document.getElementById('lcld')){var lc=[].slice.call(a.querySelectorAll('.c')).filter(function(c){var h=c.querySelector('h3');return h&&/national lottery/i.test(h.textContent)})[0];if(lc)lc.insertAdjacentHTML('beforebegin',card());try{conv()}catch(e){}}
+var o=document.getElementById('lcbn');if(!G.bn||document.getElementById('lcdec')){if(o&&!G.bn)o.remove();if(o&&document.getElementById('lcdec'))o.remove();return}
+if(!o){a.insertAdjacentHTML('beforeend','<div class="lcbn" id="lcbn" role="dialog" aria-label="Breaking news"><div class="bx"><span class="br">BREAKING NEWS</span><h3>'+G.bn.e+' '+esc(G.bn.t)+'</h3><p>'+esc(G.bn.b)+'</p><button type="button" onclick="lcBnGo(1)">Open investments</button><button type="button" class="alt" onclick="lcBnGo(0)">Dismiss</button></div></div>');try{conv()}catch(e){}}}catch(e){}};
+})();
+</script>
+<style id="lcpapstyle">
+.lcpp{column-span:all;-webkit-column-span:all;background:#e9e2cf;color:#1b1a17;font-family:Georgia,'Times New Roman',serif;border-radius:6px!important;border:1px solid #b9ae8f!important;box-shadow:0 8px 26px rgba(0,0,0,.45);padding:14px 14px 16px!important;position:relative}
+.lcpp:before{content:"";position:absolute;inset:0;border-radius:6px;background:repeating-linear-gradient(0deg,rgba(0,0,0,.018) 0 2px,transparent 2px 4px);pointer-events:none}
+.lcpp .mh{text-align:center;border-bottom:3px double #1b1a17;padding-bottom:8px;margin-bottom:8px}
+.lcpp .mh b{display:block;font-size:30px;line-height:1.05;letter-spacing:.02em;font-weight:900;font-family:'Georgia','Times New Roman',serif;text-transform:uppercase}
+.lcpp .mh small{display:flex;justify-content:space-between;gap:8px;font-size:11px;letter-spacing:.06em;text-transform:uppercase;margin-top:6px;border-top:1px solid #1b1a17;padding-top:4px}
+.lcpp .lead h2{margin:4px 0 6px;font-size:27px;line-height:1.08;font-weight:900;color:#1b1a17;text-transform:none;letter-spacing:0;background:none;border:0;padding:0;box-shadow:none;font-family:inherit}
+.lcpp .lead p{margin:0 0 8px;font-size:15px;line-height:1.45}
+.lcpp .kk{display:inline-block;background:#1b1a17;color:#e9e2cf;font:800 10px/1.4 system-ui,sans-serif;letter-spacing:.14em;padding:2px 7px;text-transform:uppercase;margin-bottom:4px}
+.lcpp .kk.red{background:#b3202a}
+.lcpp hr{border:0;border-top:1px solid #1b1a17;margin:10px 0}
+.lcpap{column-gap:14px}@media(min-width:760px){.lcpap{column-count:2}}@media(min-width:1180px){.lcpap{column-count:3}}
+.lcpp .bx{break-inside:avoid;margin:0 0 14px;padding-bottom:10px;border-bottom:1px solid #1b1a17;cursor:pointer}
+.lcpp .bx h4{margin:0 0 6px;font-size:13px;letter-spacing:.14em;text-transform:uppercase;border-bottom:2px solid #1b1a17;padding-bottom:3px;font-family:system-ui,sans-serif;font-weight:900;color:#1b1a17}
+.lcpp .bx p{margin:0 0 6px;font-size:14px;line-height:1.4}.lcpp .bx p b{font-size:14.5px}
+.lcpp .rw{display:flex;justify-content:space-between;gap:8px;font-size:13.5px;padding:3px 0;border-bottom:1px dotted #8a8266}.lcpp .rw:last-child{border-bottom:0}
+.lcpp .up{color:#0f7a4d;font-weight:800}.lcpp .dn{color:#b3202a;font-weight:800}.lcpp .me{background:#f6e7a8;font-weight:800}
+.lcpp .ball{display:inline-block;min-width:26px;text-align:center;border:1.5px solid #1b1a17;border-radius:50%;font:800 12px/24px system-ui,sans-serif;margin:0 3px 3px 0}
+.lcpp button{font:800 12px system-ui,sans-serif;padding:7px 12px;border:1.5px solid #1b1a17;border-radius:4px;background:#1b1a17;color:#e9e2cf;cursor:pointer;margin-top:4px}
+.lcpp .sm{font-size:12px;opacity:.75}
+.lcpp .tb{width:100%;border-collapse:collapse;font:12.5px system-ui,sans-serif}.lcpp .tb td,.lcpp .tb th{padding:2px 3px;text-align:right}.lcpp .tb td:nth-child(2),.lcpp .tb th:nth-child(2){text-align:left}.lcpp .tb th{border-bottom:1.5px solid #1b1a17;font-size:11px}
+.tg-sp{background:#8be28b}
+</style>
+<script>
+(function(){
+function mm(n){try{return M(n)}catch(e){return'£'+(n/100).toFixed(2)}}
+function esc(x){return String(x).replace(/&/g,'&amp;').replace(/</g,'&lt;')}
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function hs(s){var h=2166136261;s=String(s);for(var i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
+function p2(n){return(n<10?'0':'')+n}
+function ar(p){return'<span class="'+(p>=0?'up':'dn')+'">'+(p>=0?'▲':'▼')+Math.abs(p).toFixed(1)+'%</span>'}
+// ---------- Football league (deterministic, no saved state) ----------
+var CL=['Northgate Rovers','Harbour Town','Redwood Athletic','Ironbridge United','Kestrel City','Oakmere Wanderers','Silverline FC','Westfield Albion','Lumen Rangers','Foxglove Town','Crownlight City','Brightside United','Ashford Town','Bridgewater Rovers','Cliftonville Athletic','Dalesbury City','Eastmoor United','Fairhaven FC','Greystone Wanderers','Hollowdene Albion'],NT=20,MD=38;
+function teams(){var t=CL.slice(),i=hs(G.city)%NT;t[i]=G.city+' Athletic';return{t:t,me:i}}
+function str(n){return .8+(hs('S'+n)%50)/100}
+var SCH=null;function sched(){if(SCH)return SCH;var arr=[],R=[],i,r;for(i=0;i<NT;i++)arr.push(i);for(r=0;r<NT-1;r++){var m=[];for(i=0;i<NT/2;i++){var a=arr[i],b=arr[NT-1-i];m.push(r%2?[b,a]:[a,b])}R.push(m);arr.splice(1,0,arr.pop())}SCH=R.concat(R.map(function(x){return x.map(function(p){return[p[1],p[0]]})}));return SCH}
+function seasonStart(y){var d=Date.UTC(y,7,8)/864e5,dow=new Date(d*864e5).getUTCDay();return d+(6-dow+7)%7}
+function pois(l,r){var L=Math.exp(-l),k=0,p=1;do{k++;p*=r()}while(p>L&&k<9);return k-1}
+function play(season,md,h,a,T){var r=rng(season*7919+md*131+h*17+a),sh=str(T[h]),sa=str(T[a]);return{h:h,a:a,hs:pois(1.5*Math.pow(sh/sa,1.2)*1.08,r),as:pois(1.05*Math.pow(sa/sh,1.2),r)}}
+window.lcLeague=function(day){day=day==null?G.day:day;var y=dt(day).getUTCFullYear(),sy=day>=seasonStart(y)?y:y-1,st=seasonStart(sy),nm=day>=st?Math.min(MD,Math.floor((day-st)/7)+1):0,tm=teams(),T=tm.t,S=sched(),tab={},i;
+for(i=0;i<NT;i++)tab[i]={i:i,t:T[i],p:0,w:0,d:0,l:0,gf:0,ga:0,pts:0};
+var last=null;for(var md=1;md<=nm;md++){var fx=S[md-1].map(function(p){return play(sy,md,p[0],p[1],T)});fx.forEach(function(f){var H=tab[f.h],A=tab[f.a];H.p++;A.p++;H.gf+=f.hs;H.ga+=f.as;A.gf+=f.as;A.ga+=f.hs;if(f.hs>f.as){H.w++;A.l++;H.pts+=3}else if(f.hs<f.as){A.w++;H.l++;A.pts+=3}else{H.d++;A.d++;H.pts++;A.pts++}});if(md==nm)last={md:md,day:st+7*(md-1),fx:fx}}
+var rows=[];for(i=0;i<NT;i++)rows.push(tab[i]);rows.sort(function(a,b){return b.pts-a.pts||(b.gf-b.ga)-(a.gf-a.ga)||b.gf-a.gf||(a.t>b.t?1:-1)});
+var nx=nm<MD?{md:nm+1,day:st+7*nm,fx:S[nm].map(function(p){return{h:p[0],a:p[1]}})}:null;
+return{season:sy,md:nm,total:MD,t:T,me:tm.me,table:rows,last:last,next:nx,done:nm>=MD,champ:nm>=MD?rows[0].t:null,preseason:nm==0}};
+function fxLine(L,f){return esc(L.t[f.h])+' '+f.hs+'–'+f.as+' '+esc(L.t[f.a])}
+window.lcSportItems=function(A){try{var L=lcLeague();if(L.last&&G.day-L.last.day<=6){var me=L.last.fx.filter(function(f){return f.h==L.me||f.a==L.me})[0],o=L.last.fx.filter(function(f){return f!=me}).slice(0,2);A('sp','SPORT','Matchday '+L.last.md+': '+[me].concat(o).filter(Boolean).map(function(f){return fxLine(L,f)}).join(' · '),'paper')}
+if(L.done)A('sp','SPORT',esc(L.champ)+' are league champions this season','paper');else if(L.md>0){var pos=L.table.map(function(r){return r.i}).indexOf(L.me)+1;A('sp','SPORT',esc(L.table[0].t)+' lead the league on '+L.table[0].pts+' pts · '+esc(L.t[L.me])+' are '+pos+(pos==1?'st':pos==2?'nd':pos==3?'rd':'th'),'paper')}else A('sp','SPORT','New season kicks off '+fmt(seasonStart(dt(G.day).getUTCFullYear()+(0))).slice(5,11)+'. Fixtures announced','paper')}catch(e){}};
+// ---------- Newspaper ----------
+var W2=[['Interest rates held as inflation cools','The central bank kept rates steady this month, citing calmer prices and a resilient jobs market.'],['High street footfall improves','Shops report their busiest fortnight in months as shoppers return to town centres.'],['Tech start-up raises record funding','A young software firm has secured a record round, promising hundreds of new jobs.'],['Supermarket prices ease slightly','Food bills are edging down for the first time this year, say retail analysts.'],['Energy bills set to fall next quarter','Households could see lower bills from the new quarter as wholesale prices drop.'],['Rents rise again in big cities','Landlords are asking for more as demand outstrips supply in city centres.'],['Consumer confidence hits a six-month high','A new survey finds more people planning big purchases over the coming months.'],['Housing market cools as mortgages bite','Buyers are cautious as higher borrowing costs weigh on offers.'],['Train fares rise slower than expected','Commuters get a small reprieve as fare rises come in below forecasts.'],['City firms report a hiring boom','Recruiters say vacancies are up sharply, especially in finance and healthcare.'],['New study: remote work is here to stay','Most employers now offer flexible days, researchers find.'],['Savers see better rates on offer','Banks are competing for deposits with new fixed-rate deals.'],['Airlines add extra routes','Carriers are putting on extra flights to meet booming demand for city breaks.'],['Construction output picks up','Builders report full order books and a shortage of skilled trades.'],['Wages growth slows, say economists','Pay packets are growing more slowly, though still ahead of last year.'],['Retail sales beat forecasts','A strong week for fashion and electronics surprised economists.']];
+var LOCAL=['new cafés open across the centre','the council promises better transport links','weekend markets draw bigger crowds','a busy week for local employers','roadworks finish ahead of schedule'];
+function chgW(id){var p=G.pxo&&G.pxo[id],c=G.px&&G.px[id];if(p&&c)return(c-p)/p*100;var q=G.pxp&&G.pxp[id];return q&&c?(c-q)/q*100:null}
+function chgD(id){var q=G.pxp&&G.pxp[id],c=G.px&&G.px[id];return q&&c?(c-q)/q*100:0}
+function dayStr(){return fmt(G.day).replace(/^(\w+), (\d+) (\w+) (\d+)$/,'$1 $2 $3 $4')}
+function lead(){var d=G.day,r=rng(d*13+5),jp=(G.ld&&G.ld.jp)||500000000;
+if(G.bn)return{k:'Breaking',red:1,h:G.bn.e+' '+G.bn.t,p:G.bn.b,t:'inv'};
+if(jp>=2000000000)return{k:'Lottery',h:'Jackpot soars to '+mm(jp),p:'Nobody has matched all six numbers in the Saturday Draw. Next Saturday’s draw could make someone very rich.',t:'lotto'};
+var l=G.ld&&G.ld.last;if(l&&l.npc&&G.day-l.day<=4)return{k:'Lottery',h:'Lucky ticket wins '+mm(l.jp),p:'The jackpot was claimed by a player in '+l.loc+'. The prize has reset for Saturday’s draw.',t:'lotto'};
+try{var best=null;ASSETS.forEach(function(a){var c=chgW(a[0]);if(c!=null&&(!best||Math.abs(c)>Math.abs(best.c)))best={n:a[2].replace(' (simulated)',''),c:c}});if(best&&Math.abs(best.c)>=8)return{k:'Markets',h:best.n+(best.c>0?' surges ':' slumps ')+Math.abs(best.c).toFixed(1)+'%',p:'Traders reacted sharply as '+best.n+' moved '+Math.abs(best.c).toFixed(1)+'% over the week. Analysts expect more volatility.',t:'inv'}}catch(e){}
+var w=W2[(d*3)%W2.length];return{k:'World',h:w[0],p:w[1],t:''}}
+function marketBox(){var rows='',sh=ASSETS.filter(function(a){return a[1]=='share'||a[1]=='fund'||a[1]=='reit'||a[1]=='commodity'}).map(function(a){return{id:a[0],n:a[2],c:chgW(a[0])}}).filter(function(x){return x.c!=null}).sort(function(x,y){return y.c-x.c}),avg=sh.length?sh.reduce(function(s,x){return s+x.c},0)/sh.length:null;
+if(avg!=null)rows+='<div class="rw"><span><b>Market index</b> <span class="sm">(7 days)</span></span>'+ar(avg)+'</div>';
+sh.slice(0,2).concat(sh.slice(-1)).forEach(function(x){rows+='<div class="rw"><span>'+esc(x.id)+' <span class="sm">'+esc(x.n)+'</span></span><span>'+mm(G.px[x.id])+' '+ar(x.c)+'</span></div>'});
+ASSETS.filter(function(a){return a[1]=='crypto'}).forEach(function(a){rows+='<div class="rw"><span>'+esc(a[2].replace(' (simulated)',''))+'</span><span>'+mm(G.px[a[0]])+' '+ar(chgD(a[0]))+'</span></div>'});
+try{var o=G.fxo;Object.keys(FXC).filter(function(k){return k=='USD'||k=='EUR'||k=='JPY'}).forEach(function(k){var f=FXC[k],v=G.fxr[k];if(v)rows+='<div class="rw"><span>£1 in '+k+'</span><span>'+v.toFixed(f.d==0?0:2)+(o&&o[k]?' '+ar((v-o[k])/o[k]*100):'')+'</span></div>'})}catch(e){}
+return'<div class="bx" onclick="go(\'inv\')"><h4>Markets</h4>'+rows+'</div>'}
+function sportBox(){var L=lcLeague(),h='<div class="bx" onclick="lcPaperGo(\'sport\')"><h4>Sport · Football</h4>';
+if(L.preseason&&!L.last){h+='<p>Pre-season. The new campaign starts '+esc(fmt(seasonStart(dt(G.day).getUTCFullYear()+(G.day>=seasonStart(dt(G.day).getUTCFullYear())?0:0))).slice(5,11))+'.</p></div>';return h}
+if(L.last){h+='<p class="sm">Matchday '+L.last.md+' results</p>'+L.last.fx.map(function(f){var me=(f.h==L.me||f.a==L.me);return'<div class="rw'+(me?' me':'')+'"><span>'+esc(L.t[f.h])+'</span><span><b>'+f.hs+' – '+f.as+'</b></span><span style="text-align:right">'+esc(L.t[f.a])+'</span></div>'}).join('')}
+h+='<p class="sm" style="margin-top:8px">'+(L.done?'Final table · champions '+esc(L.champ):'Table after '+L.md+' of '+L.total)+'</p><table class="tb"><tr><th>#</th><th>Club</th><th>P</th><th>GD</th><th>Pts</th></tr>'+L.table.slice(0,6).map(function(r,i){return'<tr'+(r.i==L.me?' class="me"':'')+'><td>'+(i+1)+'</td><td>'+esc(r.t)+'</td><td>'+r.p+'</td><td>'+(r.gf-r.ga>0?'+':'')+(r.gf-r.ga)+'</td><td><b>'+r.pts+'</b></td></tr>'}).join('')+'</table>';
+var pos=L.table.map(function(r){return r.i}).indexOf(L.me)+1;if(pos>6){var r=L.table[pos-1];h+='<table class="tb"><tr class="me"><td>'+pos+'</td><td>'+esc(r.t)+'</td><td>'+r.p+'</td><td>'+(r.gf-r.ga>0?'+':'')+(r.gf-r.ga)+'</td><td><b>'+r.pts+'</b></td></tr></table>'}
+if(L.next){var f=L.next.fx.filter(function(x){return x.h==L.me||x.a==L.me})[0];if(f)h+='<p class="sm" style="margin-top:6px">Next: '+esc(L.t[f.h])+' v '+esc(L.t[f.a])+' · '+esc(fmt(L.next.day).slice(0,11))+'</p>'}
+return h+'</div>'}
+function lotBox(){var L=G.ld||{jp:500000000,tk:[]},l=L.last,h='<div class="bx" onclick="lcPaperGo(\'lotto\')"><h4>Lottery · Saturday Draw</h4><p><b>Jackpot '+mm(L.jp)+'</b></p>';
+if(l){h+='<p class="sm">Last draw (#'+l.n+')</p><div>'+l.nums.map(function(n){return'<span class="ball">'+p2(n)+'</span>'}).join('')+'</div><p>'+(l.npc?'Jackpot of '+mm(l.jp)+' won in '+esc(l.loc)+'.':l.jpHit?'You won the jackpot!':'No jackpot winner, it rolls over.')+'</p>'}
+else h+='<p>First draw coming up on Saturday. Pick six numbers in the Shop.</p>';
+if(L.tk&&L.tk.length)h+='<p class="sm">You have '+L.tk.length+' line'+(L.tk.length>1?'s':'')+' in the next draw.</p>';return h+'</div>'}
+function dealsBox(){var ds=[];try{ds=lcDeals()}catch(e){}return'<div class="bx" onclick="go(\'shop\')"><h4>Sales &amp; offers</h4>'+(ds.length?ds.map(function(x){var e=Math.max(0,x.end-G.day);return'<div class="rw"><span>'+esc(x.t)+'</span><span><b>−'+Math.round(x.p*100)+'%</b></span></div><div class="sm" style="margin-bottom:3px">'+(e==0?'Ends today':'Ends in '+e+' day'+(e>1?'s':''))+' · discount applied at checkout</div>'}).join(''):'<p>No big offers on this week.</p>')+'</div>'}
+function localBox(){var c=CITIES[G.city]||{},op=0;try{op=(G.vac||[]).filter(function(v){return v.open}).length}catch(e){}var d=G.day;return'<div class="bx" onclick="go(\'city\')"><h4>'+esc(G.city)+' · Local</h4><p>Around town, '+esc(LOCAL[(d+G.city.length)%LOCAL.length])+'.</p><div class="rw"><span>Weather</span><span>'+esc((c.cl||'Mild').toLowerCase())+'</span></div><div class="rw"><span>Getting around</span><span>'+esc((c.tr||'Bus and rail').toLowerCase())+'</span></div><div class="rw"><span>Open vacancies</span><span><b>'+op+'</b></span></div></div>'}
+function eventsBox(){var rows=[];try{[].slice.call(calV().matchAll(/<div class="r"><span>([^<]*)<\/span><span>([^<]*)<\/span><\/div>/g)).slice(0,4).forEach(function(m){rows.push([m[1].trim(),m[2]])})}catch(e){}
+if(G.trip)rows.push(['Trip to '+CTRY[G.trip.to].n,fmt(G.trip.dep).slice(5,11)]);
+return'<div class="bx" onclick="go(\'cal\')"><h4>What’s on</h4>'+(rows.length?rows.map(function(r){return'<div class="rw"><span>'+esc(r[0])+'</span><span>'+esc(r[1])+'</span></div>'}).join(''):'<p>Nothing in the diary yet. Check the calendar for holidays.</p>')+'</div>'}
+function classifieds(){var v=(G.vac||[]).filter(function(x){return x.open}).slice(0,3);return'<div class="bx" onclick="go(\'jobs\')"><h4>Classifieds · Jobs</h4>'+(v.length?v.map(function(x){return'<div class="rw"><span><b>'+esc(x.t)+'</b> <span class="sm">'+esc(x.e)+'</span></span><span>'+mm(Math.round(x.r))+'/hr</span></div>'}).join(''):'<p>No vacancies advertised today.</p>')+'</div>'}
+function lucky(){var r=rng(hs(G.name)+G.day*3),s=[];while(s.length<6){var n=1+Math.floor(r()*59);if(s.indexOf(n)<0)s.push(n)}s.sort(function(a,b){return a-b});return s}
+function luckBox(){var s=lucky(),st=1+Math.floor(rng(hs(G.name)+G.day)()*5);window._lucky=s;return'<div class="bx" style="cursor:default"><h4>Stars &amp; luck</h4><p>Today’s lucky numbers for <b>'+esc(G.name)+'</b>:</p><div>'+s.map(function(n){return'<span class="ball">'+p2(n)+'</span>'}).join('')+'</div><p class="sm">Luck rating: '+'★'.repeat(st)+'☆'.repeat(5-st)+'</p><button type="button" onclick="lcPaperPlay()">Play these in the Saturday Draw</button></div>'}
+window.lcPaperPlay=function(){window._lsel=(window._lucky||lucky()).slice();go('shop');setTimeout(function(){var z=document.getElementById('lcld');if(z)z.scrollIntoView({block:'start'})},250)};
+window.lcPaperGo=function(k){if(k=='lotto'){go('shop');setTimeout(function(){var z=document.getElementById('lcld');if(z)z.scrollIntoView({block:'start'})},250)}else if(k=='sport'){}else go(k)};
+function page(){var L=lead(),sec=[],d=G.day,w1=W2[(d*5+1)%W2.length],w2=W2[(d*7+4)%W2.length];
+G.pd=G.pd||[];if(G.pd.indexOf(d)<0){G.pd.push(d);if(G.pd.length>60)G.pd.shift()}
+var h='<div class="c lcpp"><div class="mh"><b>The Daily Lifecraft</b><small><span>'+esc(G.city)+' edition</span><span>'+esc(fmt(d))+'</span><span>'+mm(120)+'</span></small></div><div class="lead"><span class="kk'+(L.red?' red':'')+'">'+esc(L.k)+'</span><h2>'+esc(L.h)+'</h2><p>'+esc(L.p)+'</p>'+(L.t?'<button type="button" onclick="lcPaperGo(\''+L.t+'\')">Read more</button>':'')+'</div><hr><div class="lcpap">';
+h+='<div class="bx" style="cursor:default"><h4>World</h4><p><b>'+esc(w1[0])+'</b><br>'+esc(w1[1])+'</p><p><b>'+esc(w2[0])+'</b><br>'+esc(w2[1])+'</p></div>';
+h+=marketBox()+sportBox()+lotBox()+dealsBox()+localBox()+eventsBox()+classifieds()+luckBox();
+return h+'</div></div>'}
+var _v70=view;view=function(){if(tab=='paper')return page();return _v70.apply(this,arguments)};
+SEC.splice(SEC.findIndex(function(s){return s[0]=='more'}),0,['paper','📰','Newspaper']);
+var _r70=render;render=function(){_r70.apply(this,arguments);try{if(!G)return;var n=document.getElementById('lcn');if(n&&!n.getAttribute('data-pp')){n.setAttribute('data-pp','1');n.insertAdjacentHTML('beforeend','<button type="button" class="s" style="margin-top:8px" onclick="go(\'paper\')">📰 Read today’s paper</button>')}try{conv()}catch(e){}}catch(e){}};
 })();
 </script>
 <script>if('serviceWorker' in navigator){var had=navigator.serviceWorker.controller,rl=0;navigator.serviceWorker.addEventListener('controllerchange',function(){if(had&&!rl){rl=1;location.reload()}});window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').then(function(r){r.update()}).catch(function(){})})}</script></body></html>
