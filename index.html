@@ -1695,8 +1695,8 @@ var H=[{n:'Life',i:'🏠',d:'home',t:['home','act','gym','edu','cal','inbox','hi
 {n:'Career',i:'💼',d:'hub',t:['hub','jobs','skl','career','biz']},
 {n:'Assets',i:'🏡',d:'house',t:['house','prop','veh','lux','shop','surv']},
 {n:'People',i:'💞',d:'rel',t:['rel','family','social']},
-{n:'World',i:'🌍',d:'map',t:['map','paper','city','trav','legal','under','prison','more']}];
-var NM={home:'Home',act:'Activities',gym:'Fitness',edu:'Education',cal:'Calendar',inbox:'Inbox',hist:'History',retire:'Later life',legacy:'Legacy and will',ach:'Achievements',bank:'Banking',inv:'Investing',wealth:'Wealth',loans:'Loans',bank2:'Debt',ins:'Insights',hub:'Career hub',jobs:'Jobs',skl:'Skills',map:'World map',paper:'Newspaper',career:'Growth',biz:'Business',house:'Rent',prop:'Property',veh:'Vehicles',lux:'Luxury',shop:'Shopping',surv:'Housing survival',rel:'Relationships',family:'Family',social:'Social media',city:'Cities',trav:'Travel and FX',legal:'Legal',under:'Underworld',prison:'Prison',more:'Settings'};
+{n:'World',i:'🌍',d:'map',t:['map','paper','sport','city','trav','legal','under','prison','more']}];
+var NM={home:'Home',act:'Activities',gym:'Fitness',edu:'Education',cal:'Calendar',inbox:'Inbox',hist:'History',retire:'Later life',legacy:'Legacy and will',ach:'Achievements',bank:'Banking',inv:'Investing',wealth:'Wealth',loans:'Loans',bank2:'Debt',ins:'Insights',hub:'Career hub',jobs:'Jobs',skl:'Skills',map:'World map',paper:'Newspaper',sport:'Sports & betting',career:'Growth',biz:'Business',house:'Rent',prop:'Property',veh:'Vehicles',lux:'Luxury',shop:'Shopping',surv:'Housing survival',rel:'Relationships',family:'Family',social:'Social media',city:'Cities',trav:'Travel and FX',legal:'Legal',under:'Underworld',prison:'Prison',more:'Settings'};
 function hub(t){for(var i=0;i<H.length;i++)if(H[i].t.indexOf(t)>-1)return i;return t=='menu'?-1:5}
 window.lcHub=function(i){go(H[i].d)};
 function unread(){try{return(G.inbox||[]).filter(function(m){return!m.read}).length}catch(e){return 0}}
@@ -2194,7 +2194,10 @@ var A=[
 ['x24','Life','g','🌐','Citizen of the world','Visit ten countries',function(){return G.visited&&G.visited.length>=10},function(){return[G.visited?G.visited.length:0,10]}],
 ['x25','Wealth','s','🍀','Lucky draw','Win a prize in the Saturday Draw',function(){return G.ld&&G.ld.wins>0}],
 ['x26','Wealth','p','🎰','Jackpot!','Win the Saturday Draw jackpot',function(){return G.ld&&G.ld.jpWon>0}],
-['x27','Life','b','📰','Well informed','Read the newspaper on seven different days',function(){return G.pd&&G.pd.length>=7},function(){return[G.pd?G.pd.length:0,7]}]
+['x27','Life','b','📰','Well informed','Read the newspaper on seven different days',function(){return G.pd&&G.pd.length>=7},function(){return[G.pd?G.pd.length:0,7]}],
+['x28','Life','b','🏟️','Matchday regular','Go to five matches',function(){return G.sb&&G.sb.att>=5},function(){return[G.sb?G.sb.att:0,5]}],
+['x29','Wealth','s','🎯','Called it','Win five bets',function(){return G.sb&&G.sb.wins>=5},function(){return[G.sb?G.sb.wins:0,5]}],
+['x30','Wealth','g','🧾','Acca winner','Win an accumulator of three or more picks',function(){return G.sb&&G.sb.accaWin>=1}]
 ];
 var NEW={};A.forEach(function(a){if(a[0].charAt(0)=='x')NEW[a[0]]=1});
 function got(id){return NEW[id]?(G.ach3||{})[id]:(G.ach||{})[id]}
@@ -2453,6 +2456,7 @@ try{deals().forEach(function(x){var e=Math.max(0,x.end-d);A('sa','SALE',(ICON[x.
 // LOTTERY
 try{if(window.lcLotItems)lcLotItems(A,city,c,d)}catch(e){}
 try{if(window.lcSportItems)lcSportItems(A)}catch(e){}
+try{if(window.lcSbItems)lcSbItems(A)}catch(e){}
 // EVENTS
 try{var hs=nextHols();hs.slice(0,2).forEach(function(h){A('ev','EVENT',esc(h[0])+' '+inDays(h[1]),'cal')});
 var cv=[];try{cv=[].slice.call(calV().matchAll(/<div class="r"><span>([^<]*)<\/span><span>([^<]*)<\/span><\/div>/g)).slice(0,2)}catch(e){}cv.forEach(function(m){A('ev','COMING UP',esc(m[1].trim())+' · '+esc(m[2]),'cal')});
@@ -2468,7 +2472,7 @@ if(G.arrears&&G.arrears.length)A('al','BILLS','You have unpaid bills','bank');
 if(G.dec)A('al','DECISION','Something needs your attention','home');
 (G.log||[]).slice(0,3).forEach(function(l){A('yo','LIFE',esc(l.t),'')});
 return L}
-function order(L){var by={},ks=[];L.forEach(function(x){(by[x.k]=by[x.k]||[]).push(x);if(ks.indexOf(x.k)<0)ks.push(x.k)});var pr=['br','wo','mk','sp','sa','tr','ev','cr','lo','fx','jb','wx','yo','al'];ks.sort(function(a,b){return pr.indexOf(a)-pr.indexOf(b)});var out=[],more=true,i=0;while(more){more=false;ks.forEach(function(k){if(by[k][i]){out.push(by[k][i]);more=true}});i++}return out}
+function order(L){var by={},ks=[];L.forEach(function(x){(by[x.k]=by[x.k]||[]).push(x);if(ks.indexOf(x.k)<0)ks.push(x.k)});var pr=['br','wo','mk','sb','sp','sa','tr','ev','cr','lo','fx','jb','wx','yo','al'];ks.sort(function(a,b){return pr.indexOf(a)-pr.indexOf(b)});var out=[],more=true,i=0;while(more){more=false;ks.forEach(function(k){if(by[k][i]){out.push(by[k][i]);more=true}});i++}return out}
 function build(){var L=order(items());var h=L.map(function(x){return'<a class="ti" data-t="'+x.t+'"><b class="tg tg-'+x.k+'">'+x.tg+'</b>'+x.h+'</a>'}).join('');return{h:h,n:L.length}}
 var _r50=render;render=function(){_r50.apply(this,arguments);try{if(!G)return;var a=document.getElementById('app'),t=document.getElementById('lcts');
 if(t){var b=build();t.innerHTML='<div class="tk">'+b.h+b.h+'</div>';var tk=t.firstChild;tk.style.animationDuration=Math.max(90,b.n*9)+'s';
@@ -2603,6 +2607,7 @@ var last=null;for(var md=1;md<=nm;md++){var fx=S[md-1].map(function(p){return pl
 var rows=[];for(i=0;i<NT;i++)rows.push(tab[i]);rows.sort(function(a,b){return b.pts-a.pts||(b.gf-b.ga)-(a.gf-a.ga)||b.gf-a.gf||(a.t>b.t?1:-1)});
 var nx=nm<MD?{md:nm+1,day:st+7*nm,fx:S[nm].map(function(p){return{h:p[0],a:p[1]}})}:null;
 return{season:sy,md:nm,total:MD,t:T,me:tm.me,table:rows,last:last,next:nx,done:nm>=MD,champ:nm>=MD?rows[0].t:null,preseason:nm==0}};
+window.lcLg={teams:teams,str:str,play:play,sched:sched,seasonStart:seasonStart,NT:NT,MD:MD};
 function fxLine(L,f){return esc(L.t[f.h])+' '+f.hs+'–'+f.as+' '+esc(L.t[f.a])}
 window.lcSportItems=function(A){try{var L=lcLeague();if(L.last&&G.day-L.last.day<=6){var me=L.last.fx.filter(function(f){return f.h==L.me||f.a==L.me})[0],o=L.last.fx.filter(function(f){return f!=me}).slice(0,2);A('sp','SPORT','Matchday '+L.last.md+': '+[me].concat(o).filter(Boolean).map(function(f){return fxLine(L,f)}).join(' · '),'paper')}
 if(L.done)A('sp','SPORT',esc(L.champ)+' are league champions this season','paper');else if(L.md>0){var pos=L.table.map(function(r){return r.i}).indexOf(L.me)+1;A('sp','SPORT',esc(L.table[0].t)+' lead the league on '+L.table[0].pts+' pts · '+esc(L.t[L.me])+' are '+pos+(pos==1?'st':pos==2?'nd':pos==3?'rd':'th'),'paper')}else A('sp','SPORT','New season kicks off '+fmt(seasonStart(dt(G.day).getUTCFullYear()+(0))).slice(5,11)+'. Fixtures announced','paper')}catch(e){}};
@@ -2654,6 +2659,147 @@ return h+'</div></div>'}
 var _v70=view;view=function(){if(tab=='paper')return page();return _v70.apply(this,arguments)};
 SEC.splice(SEC.findIndex(function(s){return s[0]=='more'}),0,['paper','📰','Newspaper']);
 var _r70=render;render=function(){_r70.apply(this,arguments);try{if(!G)return;var n=document.getElementById('lcn');if(n&&!n.getAttribute('data-pp')){n.setAttribute('data-pp','1');n.insertAdjacentHTML('beforeend','<button type="button" class="s" style="margin-top:8px" onclick="go(\'paper\')">📰 Read today’s paper</button>')}try{conv()}catch(e){}}catch(e){}};
+})();
+</script>
+<style id="lcsbstyle">
+.lcsb .crest{display:inline-block;vertical-align:middle}
+.lcsb .cl{display:flex;align-items:center;gap:12px;padding:9px 0;border-top:1px solid rgba(255,255,255,.07)}.lcsb .cl:first-of-type{border-top:0}
+.lcsb .cl .bd{flex:1;min-width:0}.lcsb .cl .nm{font-weight:800;font-size:15px}.lcsb .cl .sb2{font-size:12px;opacity:.7}
+.lcsb .cl button{padding:8px 14px;font-size:13px}
+.lcsb .hero{display:flex;gap:14px;align-items:center}.lcsb .hero .nm{font-size:21px;font-weight:900;line-height:1.1}.lcsb .hero .sb2{font-size:12px;opacity:.75;margin-top:3px}
+.lcsb .frm{display:inline-flex;gap:4px;margin-top:6px}.lcsb .frm i{font-style:normal;width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font:800 11px system-ui,sans-serif;color:#10162b}
+.lcsb .frm i.W{background:#4fe0a8}.lcsb .frm i.D{background:#f3d98b}.lcsb .frm i.L{background:#ff8a8a}
+.lcsb .nx{margin-top:10px;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);font-size:14px}
+.lcsb .bt{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.lcsb .bt button{flex:1 1 130px;padding:10px 8px;font-size:13px}
+.lcsb .lm{height:8px;border-radius:5px;background:rgba(255,255,255,.1);overflow:hidden;margin:6px 0 4px}.lcsb .lm i{display:block;height:100%;background:linear-gradient(90deg,#4fe0a8,#f3d98b)}.lcsb .lm i.hot{background:linear-gradient(90deg,#f3d98b,#ff7a7a)}
+.lcsb select.lim{width:100%;padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:#eef1fb;font-size:14px;margin-top:6px}.lcsb select.lim option{background:#10162b}
+.lcsb .fx{padding:10px 0;border-top:1px solid rgba(255,255,255,.07)}.lcsb .fx:first-of-type{border-top:0}
+.lcsb .fx .tt{display:flex;justify-content:space-between;gap:8px;font-size:14px;font-weight:700;margin-bottom:6px}.lcsb .fx .tt small{opacity:.65;font-weight:500}
+.lcsb .fx.mine{background:rgba(243,217,139,.07);border-radius:12px;padding:10px 8px;margin:4px 0}
+.lcsb .od{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.lcsb .od.two{grid-template-columns:repeat(2,minmax(0,1fr))}.lcsb .od.cs{grid-template-columns:repeat(3,minmax(0,1fr))}
+.lcsb .od button{padding:7px 4px;border-radius:10px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.06);color:#eef1fb;font-size:12px;line-height:1.25;cursor:pointer}.lcsb .od button b{display:block;font-size:15px;margin-top:2px;color:#f3d98b}
+.lcsb .od button.on{background:linear-gradient(135deg,#f3d98b,#c9a24a);color:#10162b;border-color:transparent}.lcsb .od button.on b{color:#10162b}
+.lcsb .mx{font-size:12px;color:#aab3d4;background:none;border:0;padding:6px 0 0;text-decoration:underline;cursor:pointer}
+.lcsb .mk{font-size:11px;letter-spacing:.08em;text-transform:uppercase;opacity:.65;margin:10px 0 4px}
+.lcsb .sl .lg{display:flex;justify-content:space-between;gap:8px;padding:6px 0;border-top:1px solid rgba(255,255,255,.07);font-size:13px}.lcsb .sl .lg:first-of-type{border-top:0}.lcsb .sl .lg button{padding:2px 8px;font-size:12px}
+.lcsb .sl input[type=number]{width:100%;padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.18);background:#0a0f20;color:#eef1fb;font-size:16px;box-sizing:border-box}
+.lcsb .sl label{display:block;font-size:13px;margin:6px 0}
+.lcsb .bet{padding:10px 0;border-top:1px solid rgba(255,255,255,.07);font-size:13px}.lcsb .bet:first-of-type{border-top:0}.lcsb .bet .hd{display:flex;justify-content:space-between;gap:8px;font-weight:800;font-size:14px;margin-bottom:4px}
+.lcsb .bet .won{color:#4fe0a8}.lcsb .bet .lost{color:#ff8a8a}.lcsb .bet .open{color:#f3d98b}
+.lcsb table.lt{width:100%;border-collapse:collapse;font-size:12.5px}.lcsb table.lt td,.lcsb table.lt th{padding:5px 3px;text-align:right}.lcsb table.lt td:nth-child(2),.lcsb table.lt th:nth-child(2){text-align:left}.lcsb table.lt th{opacity:.6;font-size:11px}
+.lcsb table.lt tr.me td{background:rgba(243,217,139,.12);font-weight:800}.lcsb table.lt tr+tr td{border-top:1px solid rgba(255,255,255,.06)}
+.tg-sb{background:#ffd166}
+</style>
+<script>
+(function(){
+var API=window.lcLg;
+function mm(n){try{return M(n)}catch(e){return'£'+(n/100).toFixed(2)}}
+function esc(x){return String(x).replace(/&/g,'&amp;').replace(/</g,'&lt;')}
+function hs(s){var h=2166136261;s=String(s);for(var i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
+function sb(){G.sb=G.sb||{team:null,since:0,bets:[],n:0,staked:0,won:0,lim:10000,ls:0,wk:{w:-1,s:0,r:0,warn:0},att:0,st:null,fan:null,wins:0,accaWin:0};return G.sb}
+var MARG=1.07,MARGCS=1.16,CAP=10000000,MAXLEG=4;
+// ---------- probabilities & odds ----------
+function pmf(l){var a=[],s=0,k;for(k=0;k<8;k++){var v=Math.exp(-l)*Math.pow(l,k);for(var j=2;j<=k;j++)v/=j;a.push(v);s+=v}a.push(Math.max(0,1-s));return a}
+function probs(sh,sa){var lh=1.5*Math.pow(sh/sa,1.2)*1.08,la=1.05*Math.pow(sa/sh,1.2),ph=pmf(lh),pa=pmf(la),P={H:0,D:0,A:0,O:0,U:0,Y:0,N:0,cs:[]};
+for(var h=0;h<=8;h++)for(var a=0;a<=8;a++){var p=ph[h]*pa[a];if(h>a)P.H+=p;else if(h==a)P.D+=p;else P.A+=p;if(h+a>=3)P.O+=p;else P.U+=p;if(h>0&&a>0)P.Y+=p;else P.N+=p;P.cs.push([h+'-'+a,p])}
+P.cs.sort(function(x,y){return y[1]-x[1]});return P}
+function od(p,m){return Math.max(1.01,Math.round(100/(p*m))/100)}
+function odds(sh,sa){var P=probs(sh,sa),o={};['H','D','A'].forEach(function(k){o[k]=od(P[k],MARG)});['O','U','Y','N'].forEach(function(k){o[k]=od(P[k],MARG)});o.cs=P.cs.slice(0,6).map(function(c){return[c[0],od(c[1],MARGCS)]});return o}
+function res(l){var T=[];T[l.h]=l.hn;T[l.a]=l.an;return API.play(l.s,l.md,l.h,l.a,T)}
+function win(l,r){var t=r.hs+r.as;switch(l.mk){case'1X2':return l.o=='H'?r.hs>r.as:l.o=='D'?r.hs==r.as:r.hs<r.as;case'OU':return l.o=='O'?t>=3:t<3;case'BTTS':return l.o=='Y'?(r.hs>0&&r.as>0):!(r.hs>0&&r.as>0);case'CS':return l.o==r.hs+'-'+r.as}return false}
+function lab(l){var m={H:l.hn+' to win',D:'Draw',A:l.an+' to win',O:'Over 2.5 goals',U:'Under 2.5 goals',Y:'Both teams to score',N:'Not both to score'};return l.mk=='CS'?'Score '+l.o.replace('-','–'):(m[l.o]||l.o)}
+// ---------- club helpers ----------
+function crest(name,size){var h=hs(name),c1='hsl('+(h%360)+',55%,45%)',c2='hsl('+((h>>3)%360)+',60%,28%)',ini=name.split(' ').slice(0,2).map(function(w){return w.charAt(0)}).join('').toUpperCase();
+return'<svg class="crest" width="'+size+'" height="'+size+'" viewBox="0 0 48 56" aria-hidden="true"><defs><linearGradient id="cg'+h+size+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="'+c1+'"/><stop offset="1" stop-color="'+c2+'"/></linearGradient></defs><path d="M24 2 L44 9 L44 28 Q44 46 24 54 Q4 46 4 28 L4 9Z" fill="url(#cg'+h+size+')" stroke="#f3d98b" stroke-width="2"/><text x="24" y="33" text-anchor="middle" font-size="17" font-weight="800" fill="#fff" font-family="system-ui,sans-serif">'+ini+'</text></svg>'}
+function stars(n){var s=Math.round((API.str(n)-.8)/.5*4)+1;return'★'.repeat(s)+'☆'.repeat(5-s)}
+function form(L,i,n){var o=[],md=L.md;for(var k=md;k>md-n&&k>=1;k--){var S=API.sched()[k-1],pr=S.filter(function(p){return p[0]==i||p[1]==i})[0];if(!pr)continue;var r=API.play(L.season,k,pr[0],pr[1],L.t),mine=pr[0]==i?r.hs:r.as,th=pr[0]==i?r.as:r.hs;o.unshift(mine>th?'W':mine==th?'D':'L')}return o}
+function myIdx(L){var s=sb();return s.team?L.t.indexOf(s.team):-1}
+function ordinal(n){return n+(n==1?'st':n==2?'nd':n==3?'rd':'th')}
+function loyal(){var s=sb();return Math.min(1.5,1+(G.day-s.since)/730)}
+function wk(){var s=sb(),w=Math.floor(G.day/7);if(s.wk.w!=w)s.wk={w:w,s:0,r:0,warn:0};return s.wk}
+function liquid(){return(G.bank||0)+(G.cash||0)}
+function maxStake(){return Math.max(1000,Math.round(liquid()*.1/100)*100)}
+// ---------- actions ----------
+window._sbSel=window._sbSel||[];window._sbMode=window._sbMode||'single';window._sbOpen=window._sbOpen||null;window._sbPick=false;window._sbStake=window._sbStake||5;
+window.lcSbSupport=function(n){var s=sb();s.team=n;s.since=G.day;s.fan=null;window._sbPick=false;try{log('You now support '+n+'.',0)}catch(e){}render()};
+window.lcSbSwitch=function(){window._sbPick=true;render()};
+window.lcSbPick=function(i,mk,o,odd){var L=lcLeague(),f=L.next&&L.next.fx[i];if(!f)return;var T=L.t,key=L.next.md+'|'+i+'|'+mk,sel=window._sbSel,ex=-1;sel.forEach(function(x,j){if(x.key==key)ex=j});
+if(ex>=0){var same=sel[ex].o==o;sel.splice(ex,1);if(same)return render()}
+sel.push({key:key,s:L.season,md:L.next.md,day:L.next.day,h:f.h,a:f.a,hn:T[f.h],an:T[f.a],mk:mk,o:o,odds:odd,sh:API.str(T[f.h]),sa:API.str(T[f.a])});render()};
+window.lcSbDel=function(j){window._sbSel.splice(j,1);render()};
+window.lcSbMode=function(m){window._sbMode=m;render()};
+window.lcSbStake=function(v){window._sbStake=parseFloat(v)||0};
+window.lcSbLim=function(v){sb().lim=v=='none'?0:parseInt(v,10);render()};
+window.lcSbOpen=function(i){window._sbOpen=window._sbOpen===i?null:i;render()};
+function slip(){var sel=window._sbSel,mode=window._sbMode,n=sel.length;if(n<2)mode='single';var tot=1;sel.forEach(function(x){tot*=x.odds});return{mode:mode,tot:Math.min(1000,Math.round(tot*100)/100),n:n}}
+window.lcSbPlace=function(){var s=sb(),sel=window._sbSel,sp=slip(),st=Math.round((window._sbStake||0)*100);
+if(!sel.length){tr='Pick a selection first.';return render()}
+if(st<100){tr='The minimum stake is '+mm(100)+'.';return render()}
+if(st>maxStake()){tr='Your maximum stake is '+mm(maxStake())+' (10% of your cash and bank).';return render()}
+if(sp.mode=='acca'){if(sel.length>MAXLEG){tr='Accumulators are limited to '+MAXLEG+' selections.';return render()}var seen={};for(var i=0;i<sel.length;i++){var k=sel[i].md+'|'+sel[i].h;if(seen[k]){tr='Accumulators allow one selection per match.';return render()}seen[k]=1}}
+var cnt=sp.mode=='acca'?1:sel.length,total=st*cnt,w=wk();
+if(s.lim&&w.s+total>s.lim){tr='That would take you over your weekly limit of '+mm(s.lim)+'. You have '+mm(Math.max(0,s.lim-w.s))+' left this week.';return render()}
+if(!spend(total,'Sportsbook: '+(sp.mode=='acca'?sel.length+'-fold accumulator':cnt+' single'+(cnt>1?'s':'')),'Gambling'))return render();
+w.s+=total;s.staked+=total;
+if(sp.mode=='acca'){s.n++;s.bets.unshift({id:s.n,d:G.day,legs:sel.map(function(x){return JSON.parse(JSON.stringify(x))}),stake:st,odds:sp.tot,mode:'acca',st:'open',ret:0})}
+else sel.forEach(function(x){s.n++;s.bets.unshift({id:s.n,d:G.day,legs:[JSON.parse(JSON.stringify(x))],stake:st,odds:x.odds,mode:'single',st:'open',ret:0})});
+if(s.bets.length>60)s.bets.length=60;window._sbSel=[];try{beep(520,.1)}catch(e){}tr='Bet placed. Good luck!';render()};
+function fanFx(){var s=sb();if(!s.team)return;var L=lcLeague(),i=L.t.indexOf(s.team);if(i<0||!L.last||L.last.day!=G.day)return;var key=L.season*100+L.last.md;if(s.fan==key)return;var f=L.last.fx.filter(function(x){return x.h==i||x.a==i})[0];if(!f)return;s.fan=key;
+var me=f.h==i?f.hs:f.as,th=f.h==i?f.as:f.hs,r=me>th?'W':me==th?'D':'L',k=loyal(),opp=L.t[f.h==i?f.a:f.h];
+if(r=='W'){G.st.happy=cl(G.st.happy+Math.round(3*k));G.st.stress=cl(G.st.stress-1)}else if(r=='L'){G.st.happy=cl(G.st.happy-Math.round(2*k));G.st.stress=cl(G.st.stress+1)}
+try{log(s.team+(r=='W'?' beat ':r=='D'?' drew with ':' lost to ')+opp+' '+f.hs+'–'+f.as+'.',0)}catch(e){}}
+function settle(){var s=sb();s.bets.forEach(function(b){if(b.st!='open')return;if(!b.legs.every(function(l){return l.day<=G.day}))return;
+b.legs.forEach(function(l){var r=res(l);l.r=r.hs+'–'+r.as;l.w=win(l,r)});var ok=b.legs.every(function(l){return l.w}),w=wk();
+if(ok){var ret=Math.min(CAP,Math.round(b.stake*b.odds));b.st='won';b.ret=ret;s.won+=ret;w.r+=ret;s.ls=0;s.wins++;if(b.mode=='acca'&&b.legs.length>=3)s.accaWin++;led('bank',ret,'Bet won','Gambling','deposit','Sportsbook');G.st.happy=cl(G.st.happy+2);try{log('Bet won! '+mm(ret)+' returned'+(b.mode=='acca'?' on your '+b.legs.length+'-fold accumulator':'')+'.',ret>=100000?1:0)}catch(e){}if(ret>=50000||b.mode=='acca'){try{beep(880,.25);note('Your bet won!','Returned '+mm(ret)+' on a '+mm(b.stake)+' stake at odds of '+b.odds.toFixed(2)+'.')}catch(e){}}}
+else{b.st='lost';s.ls++;G.st.stress=cl(G.st.stress+1);try{log('Bet lost: '+mm(b.stake)+' staked.',0)}catch(e){}if(s.ls>=3&&s.ls%3==0){G.st.stress=cl(G.st.stress+2);try{log('Chasing losses is taking a toll on you. Maybe take a break from betting.',0)}catch(e){}}}})}
+function weekly(){var s=sb(),w=wk();if(w.s>0&&w.warn!=1&&w.s>Math.max(20000,Math.round(liquid()*.25))){w.warn=1;try{note('A word on betting','You have staked '+mm(w.s)+' this week, a big slice of your savings. Remember the bookmaker always keeps a margin. Consider setting a lower weekly limit.')}catch(e){}}}
+function tkPrice(){var s=sb();return Math.round((2000+(API.str(s.team)-.8)*4000)/100)*100}
+window.lcSbAttend=function(){var s=sb(),L=lcLeague(),i=myIdx(L);if(i<0||!L.last||L.last.day!=G.day){tr='There is no match to attend today.';return render()}var f=L.last.fx.filter(function(x){return x.h==i})[0];if(!f){tr='Your club are away today.';return render()}
+if(s.attK==L.season*100+L.last.md){tr='You already went to this match.';return render()}if(slots()<=0){tr='No time slots left today.';return render()}
+var free=s.st==L.season,pr=free?0:tkPrice();if(pr&&!spend(pr,'Match ticket: '+s.team,'Sport'))return render();
+G.used++;G.st.energy=cl(G.st.energy-8);s.attK=L.season*100+L.last.md;s.att++;var k=loyal(),r=f.hs>f.as?'W':f.hs==f.as?'D':'L';
+G.st.happy=cl(G.st.happy+(r=='W'?Math.round(6*k):r=='D'?2:-1));try{beep(r=='W'?740:420,.2)}catch(e){}
+try{log('You watched '+s.team+' '+f.hs+'–'+f.as+' '+L.t[f.a]+' at the ground.'+(r=='W'?' What an atmosphere!':''),0)}catch(e){}tr='You went to the match.';render()};
+window.lcSbSeason=function(){var s=sb(),L=lcLeague();if(s.st==L.season){tr='You already have a season ticket.';return render()}if(!spend(40000,'Season ticket: '+s.team,'Sport'))return render();s.st=L.season;try{log('You bought a season ticket for '+s.team+'.',0)}catch(e){}tr='Season ticket bought. Home matches are free.';render()};
+// ---------- UI ----------
+function clubCard(L){var s=sb(),i=myIdx(L);
+if(!s.team||i<0||window._sbPick){var rows=L.table.map(function(r,p){return'<div class="cl">'+crest(r.t,34)+'<div class="bd"><div class="nm">'+esc(r.t)+(r.i==L.me?' · local':'')+'</div><div class="sb2">'+ordinal(p+1)+' · '+r.pts+' pts · '+stars(r.t)+'</div></div><button type="button" onclick="lcSbSupport(\''+esc(r.t).replace(/'/g,"\\'")+'\')">Support</button></div>'}).join('');
+return'<div class="c lcsb"><h3>Choose your club</h3><div class="m">Pick the team you support. Their results lift or lower your mood, and you can go to home matches.'+(s.team&&i<0?' Your old club is not in this league.':'')+'</div>'+rows+(window._sbPick?'<div class="bt"><button type="button" class="s" onclick="window._sbPick=false;render()">Cancel</button></div>':'')+'</div>'}
+var pos=L.table.map(function(r){return r.i}).indexOf(i),r=L.table[pos],fm=form(L,i,5),nx=null;if(L.next){nx=L.next.fx.filter(function(x){return x.h==i||x.a==i})[0]}
+var h='<div class="c lcsb"><h3>Your club</h3><div class="hero">'+crest(s.team,58)+'<div><div class="nm">'+esc(s.team)+'</div><div class="sb2">'+ordinal(pos+1)+' of '+L.t.length+' · '+r.pts+' pts · GD '+(r.gf-r.ga>0?'+':'')+(r.gf-r.ga)+'</div><div class="frm">'+fm.map(function(x){return'<i class="'+x+'">'+x+'</i>'}).join('')+'</div></div></div><div class="m" style="margin-top:8px">Fan since '+esc(fmt(s.since).slice(5))+' · loyalty bonus ×'+loyal().toFixed(2)+'</div>';
+if(nx){var home=nx.h==i,o=odds(API.str(L.t[nx.h]),API.str(L.t[nx.a]));h+='<div class="nx"><b>Next:</b> '+(home?esc(s.team)+' v '+esc(L.t[nx.a])+' (home)':esc(L.t[nx.h])+' v '+esc(s.team)+' (away)')+' · '+esc(fmt(L.next.day).slice(0,11))+'<br><span class="sm" style="opacity:.75">Odds: '+esc(L.t[nx.h])+' '+o.H.toFixed(2)+' · Draw '+o.D.toFixed(2)+' · '+esc(L.t[nx.a])+' '+o.A.toFixed(2)+'</span></div>'}
+h+='<div class="bt">';var today=L.last&&L.last.day==G.day&&L.last.fx.some(function(x){return x.h==i});
+if(today&&s.attK==L.season*100+L.last.md)h+='<div class="m" style="flex:1 1 100%">✅ You went to today’s match.</div>';else if(today)h+='<button type="button" onclick="lcSbAttend()">Go to the match · 1 slot · '+(s.st==L.season?'season ticket':mm(tkPrice()))+'</button>';
+if(s.st!=L.season)h+='<button type="button" class="s" onclick="lcSbSeason()">Season ticket '+mm(40000)+'</button>';
+h+='<button type="button" class="s" onclick="lcSbSwitch()">Switch club</button></div></div>';return h}
+function limitCard(){var s=sb(),w=wk(),pct=s.lim?Math.min(100,Math.round(w.s/s.lim*100)):0;
+return'<div class="c lcsb"><h3>Sportsbook</h3><div class="m">Odds include a bookmaker’s margin of about 7%, so over time bettors lose. Treat betting as entertainment and set a limit you can afford.</div><div class="m" style="margin-top:8px"><b>This week:</b> staked '+mm(w.s)+' · returned '+mm(w.r)+(s.lim?' · limit '+mm(s.lim):' · no limit set')+'</div>'+(s.lim?'<div class="lm"><i class="'+(pct>=80?'hot':'')+'" style="width:'+pct+'%"></i></div>':'')+'<select class="lim" aria-label="Weekly betting limit" onchange="lcSbLim(this.value)">'+[[2000,'£20'],[5000,'£50'],[10000,'£100'],[25000,'£250'],[100000,'£1,000'],['none','No limit']].map(function(o){return'<option value="'+o[0]+'"'+((o[0]=='none'?!s.lim:s.lim==o[0])?' selected':'')+'>Weekly limit: '+o[1]+'</option>'}).join('')+'</select><div class="m" style="margin-top:6px">Max stake per bet: '+mm(maxStake())+'</div></div>'}
+function slipCard(){var sel=window._sbSel;if(!sel.length)return'';var sp=slip(),st=Math.round((window._sbStake||0)*100);
+var lg=sel.map(function(x,j){return'<div class="lg"><span><b>'+esc(lab(x))+'</b><br><span class="sm" style="opacity:.7">'+esc(x.hn)+' v '+esc(x.an)+' · '+esc(fmt(x.day).slice(0,11))+'</span></span><span>'+x.odds.toFixed(2)+' <button type="button" class="s" onclick="lcSbDel('+j+')" aria-label="Remove">✕</button></span></div>'}).join('');
+var ret=sp.mode=='acca'?Math.min(CAP,Math.round(st*sp.tot)):0,tot=sp.mode=='acca'?st:st*sel.length;
+return'<div class="c lcsb sl"><h3>Bet slip ('+sel.length+')</h3>'+lg+(sel.length>1?'<label><input type="radio" name="sbm" '+(sp.mode=='single'?'checked':'')+' onchange="lcSbMode(\'single\')"> Singles (stake on each)</label><label><input type="radio" name="sbm" '+(sp.mode=='acca'?'checked':'')+' onchange="lcSbMode(\'acca\')"> Accumulator · odds '+sp.tot.toFixed(2)+'</label>':'')+'<label>Stake '+(sp.mode=='single'&&sel.length>1?'per bet ':'')+'(£)</label><input type="number" id="sbst" min="1" step="1" value="'+(window._sbStake||'')+'" oninput="lcSbStake(this.value)" inputmode="decimal"><div class="m" style="margin-top:6px">Total stake '+mm(tot)+(sp.mode=='acca'?' · to return '+mm(ret):sel.length==1?' · to return '+mm(Math.min(CAP,Math.round(st*sel[0].odds))):'')+'</div><div class="bt"><button type="button" onclick="lcSbPlace()">Place bet</button><button type="button" class="s" onclick="window._sbSel=[];render()">Clear slip</button></div></div>'}
+function fixtures(L){if(!L.next)return'<div class="c lcsb"><h3>Fixtures</h3><div class="m">The season is over. New fixtures arrive in August.</div></div>';var i=myIdx(L),sel=window._sbSel,order=L.next.fx.map(function(f,j){return{f:f,j:j}}).sort(function(a,b){var am=(a.f.h==i||a.f.a==i)?0:1,bm=(b.f.h==i||b.f.a==i)?0:1;return am-bm||a.j-b.j});
+function btn(j,mk,o,lbl,odd){var on=sel.some(function(x){return x.key==L.next.md+'|'+j+'|'+mk&&x.o==o});return'<button type="button" class="'+(on?'on':'')+'" onclick="lcSbPick('+j+',\''+mk+'\',\''+o+'\','+odd+')">'+lbl+'<b>'+odd.toFixed(2)+'</b></button>'}
+var h='<div class="c lcsb"><h3>Matchday '+L.next.md+' · '+esc(fmt(L.next.day).slice(0,11))+'</h3><div class="m">Bets are settled automatically when the match is played.</div>';
+order.forEach(function(x){var f=x.f,j=x.j,hn=L.t[f.h],an=L.t[f.a],o=odds(API.str(hn),API.str(an)),mine=f.h==i||f.a==i,open=window._sbOpen===j;
+h+='<div class="fx'+(mine?' mine':'')+'"><div class="tt"><span>'+esc(hn)+' v '+esc(an)+'</span><small>'+(mine?'your club':'')+'</small></div><div class="od">'+btn(j,'1X2','H','Home',o.H)+btn(j,'1X2','D','Draw',o.D)+btn(j,'1X2','A','Away',o.A)+'</div><button type="button" class="mx" onclick="lcSbOpen('+j+')">'+(open?'Fewer markets':'More markets')+'</button>';
+if(open)h+='<div class="mk">Total goals</div><div class="od two">'+btn(j,'OU','O','Over 2.5',o.O)+btn(j,'OU','U','Under 2.5',o.U)+'</div><div class="mk">Both teams to score</div><div class="od two">'+btn(j,'BTTS','Y','Yes',o.Y)+btn(j,'BTTS','N','No',o.N)+'</div><div class="mk">Correct score</div><div class="od cs">'+o.cs.map(function(c){return btn(j,'CS',c[0],c[0].replace('-','–'),c[1])}).join('')+'</div>';
+h+='</div>'});return h+'</div>'}
+function betsCard(){var s=sb();if(!s.bets.length)return'<div class="c lcsb"><h3>My bets</h3><div class="m">No bets yet. Pick a match above to get started.</div></div>';
+return'<div class="c lcsb"><h3>My bets</h3><div class="m">All time: staked '+mm(s.staked)+' · returned '+mm(s.won)+' · net '+(s.won-s.staked>=0?'+':'−')+mm(Math.abs(s.won-s.staked))+'</div>'+s.bets.slice(0,12).map(function(b){return'<div class="bet"><div class="hd"><span>'+(b.mode=='acca'?b.legs.length+'-fold accumulator':'Single')+' · '+mm(b.stake)+' @ '+b.odds.toFixed(2)+'</span><span class="'+(b.st=='won'?'won':b.st=='lost'?'lost':'open')+'">'+(b.st=='won'?'Won '+mm(b.ret):b.st=='lost'?'Lost':'Open')+'</span></div>'+b.legs.map(function(l){return'<div>'+(l.w===true?'✅ ':l.w===false?'❌ ':'⏳ ')+esc(lab(l))+' <span class="sm" style="opacity:.65">· '+esc(l.hn)+' v '+esc(l.an)+(l.r?' ('+l.r+')':'')+'</span></div>'}).join('')+'</div>'}).join('')+'</div>'}
+function tableCard(L){var i=L.me,mine=myIdx(L);return'<div class="c lcsb"><h3>League table</h3><div class="m">'+(L.done?'Final table · champions '+esc(L.champ):'After '+L.md+' of '+L.total+' matchdays')+'</div><table class="lt"><tr><th>#</th><th>Club</th><th>P</th><th>GD</th><th>Pts</th></tr>'+L.table.map(function(r,p){return'<tr'+(r.i==mine?' class="me"':'')+'><td>'+(p+1)+'</td><td>'+esc(r.t)+'</td><td>'+r.p+'</td><td>'+(r.gf-r.ga>0?'+':'')+(r.gf-r.ga)+'</td><td>'+r.pts+'</td></tr>'}).join('')+'</table></div>'}
+function page(){var L=lcLeague();return clubCard(L)+limitCard()+slipCard()+fixtures(L)+betsCard()+tableCard(L)}
+var _v80=view;view=function(){if(tab=='sport')return page();return _v80.apply(this,arguments)};
+SEC.splice(SEC.findIndex(function(s){return s[0]=='more'}),0,['sport','⚽','Sports & betting']);
+var _m80=morning;morning=function(){var r=_m80.apply(this,arguments);try{if(G){settle();fanFx();weekly();if(new Date(G.day*864e5).getUTCDay()==0){var w=wk()}}}catch(e){}return r};
+window.lcSbItems=function(A){try{var s=sb(),L=lcLeague(),i=myIdx(L);if(i>=0){var f=L.last&&L.last.fx.filter(function(x){return x.h==i||x.a==i})[0];if(f&&G.day-L.last.day<=5){var me=f.h==i?f.hs:f.as,th=f.h==i?f.as:f.hs;A('sb','YOUR CLUB',esc(s.team)+(me>th?' won ':me==th?' drew ':' lost ')+esc(f.hs+'–'+f.as)+' '+(f.h==i?'v '+esc(L.t[f.a]):'at '+esc(L.t[f.h])),'sport')}
+if(L.next){var n=L.next.fx.filter(function(x){return x.h==i||x.a==i})[0];if(n){var o=odds(API.str(L.t[n.h]),API.str(L.t[n.a]));A('sb','ODDS',esc(L.t[n.h])+' '+o.H.toFixed(2)+' · Draw '+o.D.toFixed(2)+' · '+esc(L.t[n.a])+' '+o.A.toFixed(2),'sport')}}}
+var op=s.bets.filter(function(b){return b.st=='open'}).length;if(op)A('sb','BETS','You have '+op+' open bet'+(op>1?'s':'')+' on the next matchday','sport')}catch(e){}};
+// newspaper: your club box
+var _r80=render;render=function(){_r80.apply(this,arguments);try{if(!G||tab!='paper')return;var cols=document.querySelector('.lcpap');if(!cols||cols.getAttribute('data-sb'))return;cols.setAttribute('data-sb','1');var s=sb(),L=lcLeague(),i=myIdx(L);
+if(i<0){cols.insertAdjacentHTML('afterbegin','<div class="bx" onclick="go(\'sport\')"><h4>Your club</h4><p>Choose a team to support and place a bet on the weekend’s football.</p><button type="button">Sports &amp; betting</button></div>');return}
+var pos=L.table.map(function(r){return r.i}).indexOf(i)+1,f=L.last&&L.last.fx.filter(function(x){return x.h==i||x.a==i})[0],n=L.next&&L.next.fx.filter(function(x){return x.h==i||x.a==i})[0];
+cols.insertAdjacentHTML('afterbegin','<div class="bx" onclick="go(\'sport\')"><h4>Your club</h4><p><b>'+esc(s.team)+'</b> · '+ordinal(pos)+' · '+L.table[pos-1].pts+' pts</p>'+(f?'<div class="rw"><span>Last</span><span><b>'+esc(L.t[f.h])+' '+f.hs+'–'+f.as+' '+esc(L.t[f.a])+'</b></span></div>':'')+(n?'<div class="rw"><span>Next</span><span>'+esc(L.t[n.h])+' v '+esc(L.t[n.a])+'</span></div>':'')+'<button type="button">Odds &amp; bets</button></div>')}catch(e){}};
 })();
 </script>
 <script>if('serviceWorker' in navigator){var had=navigator.serviceWorker.controller,rl=0;navigator.serviceWorker.addEventListener('controllerchange',function(){if(had&&!rl){rl=1;location.reload()}});window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').then(function(r){r.update()}).catch(function(){})})}</script></body></html>
