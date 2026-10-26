@@ -1690,13 +1690,13 @@ nav button{position:relative}nav .lcbd{position:absolute;top:2px;right:12%;min-w
 </style>
 <script>
 (function(){
-var H=[{n:'Life',i:'🏠',d:'home',t:['home','act','gym','edu','cal','inbox','hist','retire','legacy','ach']},
+var H=[{n:'Life',i:'🏠',d:'home',t:['home','goals','act','gym','health','pets','mini','edu','cal','inbox','hist','retire','legacy','ach']},
 {n:'Money',i:'💰',d:'bank',t:['bank','inv','wealth','loans','bank2','ins']},
-{n:'Career',i:'💼',d:'hub',t:['hub','jobs','skl','career','biz']},
-{n:'Assets',i:'🏡',d:'house',t:['house','prop','veh','lux','shop','surv']},
-{n:'People',i:'💞',d:'rel',t:['rel','family','social']},
-{n:'World',i:'🌍',d:'map',t:['map','paper','sport','racing','dogs','tennis','boxing','city','trav','legal','under','prison','more']}];
-var NM={home:'Home',act:'Activities',gym:'Fitness',edu:'Education',cal:'Calendar',inbox:'Inbox',hist:'History',retire:'Later life',legacy:'Legacy and will',ach:'Achievements',bank:'Banking',inv:'Investing',wealth:'Wealth',loans:'Loans',bank2:'Debt',ins:'Insights',hub:'Career hub',jobs:'Jobs',skl:'Skills',map:'World map',paper:'Newspaper',sport:'Sports & betting',racing:'Horse racing',dogs:'Greyhounds',tennis:'Tennis',boxing:'Boxing',career:'Growth',biz:'Business',house:'Rent',prop:'Property',veh:'Vehicles',lux:'Luxury',shop:'Shopping',surv:'Housing survival',rel:'Relationships',family:'Family',social:'Social media',city:'Cities',trav:'Travel and FX',legal:'Legal',under:'Underworld',prison:'Prison',more:'Settings'};
+{n:'Career',i:'💼',d:'hub',t:['hub','jobs','skl','career','work','biz','empire']},
+{n:'Assets',i:'🏡',d:'house',t:['house','prop','land','veh','lux','shop','surv']},
+{n:'People',i:'💞',d:'rel',t:['rel','family','tree','social']},
+{n:'World',i:'🌍',d:'map',t:['map','paper','sport','racing','dogs','tennis','boxing','city','trav','legal','under','prison','econ','saves','more']}];
+var NM={home:'Home',act:'Activities',gym:'Fitness',edu:'Education',cal:'Calendar',inbox:'Inbox',hist:'History',retire:'Later life',legacy:'Legacy and will',ach:'Achievements',bank:'Banking',inv:'Investing',wealth:'Wealth',loans:'Loans',bank2:'Debt',ins:'Insights',hub:'Career hub',jobs:'Jobs',skl:'Skills',map:'World map',paper:'Newspaper',sport:'Sports & betting',racing:'Horse racing',dogs:'Greyhounds',tennis:'Tennis',boxing:'Boxing',career:'Growth',biz:'Business',house:'Rent',prop:'Property',veh:'Vehicles',lux:'Luxury',shop:'Shopping',surv:'Housing survival',rel:'Relationships',family:'Family',social:'Social media',city:'Cities',trav:'Travel and FX',legal:'Legal',under:'Underworld',prison:'Prison',goals:'Goals',health:'Health',pets:'Pets & hobbies',mini:'Mini-games',work:'Workplace',empire:'Empire',land:'Landlord',tree:'Family tree',econ:'Economy',saves:'Saves',more:'Settings'};
 function hub(t){for(var i=0;i<H.length;i++)if(H[i].t.indexOf(t)>-1)return i;return t=='menu'?-1:5}
 window.lcHub=function(i){go(H[i].d)};
 function unread(){try{return(G.inbox||[]).filter(function(m){return!m.read}).length}catch(e){return 0}}
@@ -3288,4 +3288,533 @@ cols.insertAdjacentHTML('beforeend','<div class="bx" onclick="go(\'tennis\')"><h
 })();
 </script>
 <script>/*lcfirstpaint*/(function(){function r(){try{if(typeof render=='function')render()}catch(e){}}r();window.addEventListener('pageshow',function(e){if(e&&e.persisted)r()});document.addEventListener('visibilitychange',function(){if(!document.hidden&&!document.getElementById('lcb')&&typeof G!='undefined'&&G)r()})})();</script>
+<script id="lcx10">
+/* ===== LIFECRAFT 10-feature expansion (world, life, money, saves, mini-games) ===== */
+(function(){
+'use strict';
+var LX=window.LX={},V={},HK=[],ITEMS=[],RN=[],TABS=[];
+var E=function(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;')};
+var R=function(a){return a[Math.floor(rnd()*a.length)]};
+var ri=function(a,b){return a+Math.floor(rnd()*(b-a+1))};
+var cl2=function(v,a,b){return Math.max(a,Math.min(b,v))};
+var P=function(n){return Math.round(n*100)};
+var C=function(t,h,x){return '<div class="c"'+(x?' style="'+x+'"':'')+'><h3>'+t+'</h3>'+h+'</div>'};
+var B=function(l,f,s,d){return '<button'+(s?' class="s"':'')+(d?' disabled':'')+' onclick="'+f+'">'+l+'</button>'};
+var RW=function(a,b){return '<div class="r"><span>'+a+'</span><span>'+b+'</span></div>'};
+var MU=function(t){return '<div class="m">'+t+'</div>'};
+var BAR=function(l,v){return bar(l,Math.round(cl2(v,0,100)))};
+var yr=function(){return dt(G.day).getUTCFullYear()};
+var mo=function(){return dt(G.day).getUTCMonth()+1};
+var dm=function(){return dt(G.day).getUTCDate()};
+var md=function(){return mo()*100+dm()};
+var dow=function(d){return dt(d==null?G.day:d).getUTCDay()};
+var wid=function(d){return Math.floor(((d==null?G.day:d)-4)/7)};
+var ym=function(){var d=dt(G.day);return d.getUTCFullYear()*100+d.getUTCMonth()};
+var once=function(k){G.paid=G.paid||{};if(G.paid[k])return false;G.paid[k]=1;return true};
+var pAge=function(a0){return a0+Math.floor((G.day-G.d0)/365.25)};
+var use=function(n,en){n=n||1;if(slots()<n){say('No time slots left today – advance the day.');return false}
+ if(en&&G.st.energy<en){say('Too tired for that – rest first.');return false}G.used+=n;if(en)G.st.energy=cl(G.st.energy-en);return true};
+var pay$=function(a,d,c){return spend(a,d,c||'Leisure')};
+var gain=function(a,d,c,t){led('bank',a,d,c||'Income',t||'income','Game')};
+var st=function(o){for(var k in o)G.st[k]=cl(G.st[k]+o[k])};
+var ecoMul=function(){var e=X().eco,p=PH[e.ph];return p?(1+(p.sc/100)):1};
+var NAMEF=['Margaret','Susan','Carol','Janet','Linda','Helen','Sandra','Priya','Fatima','Ruth','Grace','Eileen','Joan'],
+ NAMEM=['David','Peter','Alan','Colin','Graham','Raj','Ahmed','Trevor','Keith','Neil','Brian','Gareth','Stuart'],
+ NAMEU=['Sam','Jo','Charlie','Robin','Alex','Jamie','Morgan','Kit','Ashley','Frankie'],
+ SUR=['Hughes','Patel','Clarke','Walker','Evans','Ahmed','Morgan','Bennett','Shah','Murray','Hall','Cooper'];
+var PH,X;
+/* ---- persistent namespace ---- */
+X=function(){
+ if(!G)return{};var x=G.x10;if(!x)x=G.x10={v:1};var d=function(k,v){if(x[k]==null)x[k]=v};
+ d('eco',{ph:'expansion',since:G.day,until:G.day+ri(180,320),wi:1,td:0,el:G.day+ri(300,900),hw:null,log:[],lastEl:null,fan:0});
+ d('sv',{});d('cnt',{soc:0,mini:0,work:0,pet:0,hob:0,calm:0,fresh:0,gig:0,fam:0});
+ d('wg',{w:-1,goals:[],snap:{},done:0,streak:0,bestStreak:0,total:0,lastAbs:0});
+ d('ci',{last:-99,streak:0,total:0});
+ d('q',[]);
+ d('hl',{dq:60,imm:60,ill:null,inj:null,plan:'none',since:0,ther:0,therYr:0,hs:0,bo:null,pm:0,sspDays:0,log:[]});
+ d('pets',[]);d('hb',{guitar:{lv:0,own:0,last:0},paint:{lv:0,own:0,last:0},garden:{lv:0,own:0,last:0,crop:0},photo:{lv:0,own:0,last:0},art:[],dem:3,demW:-1,gigs:0,earn:0});
+ d('w',{perf:50,boss:50,team:50,lvl:0,last:G.day,prom:-99,ext:0,cd:{},rev:[],bt:null,star:0,rate:''});
+ d('gg',{xp:{},board:[],bw:-1,yr:{},done:0,earn:0});
+ d('emp',{});d('riv',{rw:-1,l:[]});d('ld',{});
+ d('ms',{quiz:0,mem:0,cook:0,drive:0,plays:{},best:{},earn:0,day:-1,today:0});
+ d('sl',{bk:0,imp:0});
+ if(!x.fam&&typeof famMk=='function')x.fam=famMk();
+ return x};
+var ECO=function(){return X().eco};
+/* ---- tiny effects dsl for G.dec (JSON-safe) ---- */
+function fxApply(list){(list||[]).forEach(function(f){try{var p=f[0].split('.'),o=X();for(var i=0;i<p.length-1;i++)o=o[p[i]];var k=p[p.length-1];
+ if(f[2]=='set')o[k]=f[1];else o[k]=cl2((o[k]||0)+f[1],0,100)}catch(e){}})}
+function mkDec(t,opts){ /* opts: [label,cost,stEffects,cat,[[path,delta]...]] */
+ G.dec={t:t,o:opts.map(function(o){return[o[0],o[1]||0,o[2]||{},o[3]||'Other']}),x:opts.map(function(o){return o[4]||[]})}}
+var _dec=dec;dec=function(i){var d=G.dec,f=d&&d.x&&d.x[i];_dec(i);if(f&&G.dec!==d)fxApply(f)};
+/* ---- scheduler (own queue) ---- */
+function qAdd(d,t,r){X().q.push({d:d,t:t,r:r||{}})}
+var QH={};
+function qRun(){var x=X(),q=x.q;x.q=q.filter(function(e){if(e.d>G.day)return true;try{QH[e.t]&&QH[e.t](e.r)}catch(er){}return false})}
+/* ---- registration helpers ---- */
+function reg(id,icon,name,fn){TABS.push([id,icon,name]);V[id]=fn}
+LX.go=function(t){go(t)};
+LX.say=say;
+window.__lx={E:E,R:R,ri:ri,cl2:cl2,P:P,C:C,B:B,RW:RW,MU:MU,BAR:BAR,use:use,gain:gain,st:st,X:X,reg:reg,HK:HK,ITEMS:ITEMS,RN:RN,QH:QH,qAdd:qAdd,mkDec:mkDec,fxApply:fxApply,V:V,TABS:TABS};
+/* ---------- 1. ECONOMY & WORLD EVENTS ---------- */
+PH={
+ boom:{n:'Boom',ic:'🚀',s:.012,wi:1.07,rd:1.01,hp:.004,sc:6,rt:.25,red:0,h:'Hiring is brisk, wages are climbing and shares are rallying.'},
+ expansion:{n:'Steady growth',ic:'📈',s:.003,wi:1.025,rd:1.003,hp:.0015,sc:2,rt:0,red:.002,h:'A calm, growing economy. Jobs are fairly easy to find.'},
+ slowdown:{n:'Slowdown',ic:'📉',s:-.006,wi:1.005,rd:.998,hp:-.001,sc:-3,rt:-.25,red:.008,h:'Firms are pausing hiring and markets are nervous.'},
+ recession:{n:'Recession',ic:'🥶',s:-.014,wi:.985,rd:.985,hp:-.005,sc:-9,rt:-.5,red:.025,h:'Layoffs are spreading, jobs are scarce and house prices are falling.'},
+ recovery:{n:'Recovery',ic:'🌱',s:.008,wi:1.02,rd:1.006,hp:.002,sc:1,rt:0,red:.006,h:'Confidence is returning, slowly.'}};
+var NXT={expansion:['boom','slowdown','expansion','slowdown'],boom:['slowdown','slowdown','expansion'],slowdown:['recession','expansion','recession'],recession:['recovery'],recovery:['expansion','boom']},
+ LEN={boom:[150,280],expansion:[200,420],slowdown:[90,200],recession:[130,280],recovery:[120,240]},
+ HEAD={boom:'Boom! Economy surges as hiring jumps',expansion:'Economy settles into steady growth',slowdown:'Economists warn of a slowdown',recession:'Britain slips into recession',recovery:'Green shoots: recovery begins'};
+function eLog(t){var e=ECO();e.log.unshift({d:G.day,t:t});if(e.log.length>12)e.log.pop()}
+function setPhase(p){var e=ECO(),o=PH[p];e.ph=p;e.since=G.day;e.until=G.day+ri(LEN[p][0],LEN[p][1]);
+ if(G.mkt)G.mkt.s=cl2(G.mkt.s+(o.s>0?.25:-.4),-1,1);if(G.rate!=null)G.rate=cl2(G.rate+o.rt,1,8);
+ if(G.news){G.news.unshift({d:G.day,t:HEAD[p]});G.news.length=Math.min(G.news.length,8)}
+ eLog(HEAD[p]);note(o.ic+' '+HEAD[p],o.h+' This affects job applications, pay, rents, house prices, shares and crypto.')}
+var _pay=pay;pay=function(g){var r=_pay(g),t=X().eco?X().eco.td:0;if(t&&g>104800){var x=Math.round((g-104800)*t);return{tax:r.tax+x,ni:r.ni,net:r.net-x}}return r};
+var _score=score;score=function(a){return _score(a)+(PH[ECO().ph]||PH.expansion).sc};
+HK.push(function(){
+ var e=ECO(),p=PH[e.ph];if(G.day>=e.until)setPhase(R(NXT[e.ph]));p=PH[e.ph];
+ if(G.mkt)G.mkt.s=cl2(G.mkt.s+p.s,-1,1);
+ if(dm()==1&&once('eco:'+ym())){
+  e.wi=cl2(e.wi*Math.pow(p.wi,1/12),.9,1.9);
+  (G.vac||[]).forEach(function(v){v.r0=v.r0||v.r;v.r=Math.round(v.r0*e.wi)});
+  if(G.hpi)G.hpi=Math.max(60,G.hpi*(1+p.hp));if(G.rdem)G.rdem=cl2(G.rdem*p.rd,.8,1.3);
+  var j=G.job;if(j&&!j.cid&&!G.pr&&G.day>j.start+90){var pr=p.red*(1-(X().w.perf-50)/120);
+   if(rnd()<Math.max(0,pr)){var g=Math.round(G.worked*j.r),n=pay(g).net;if(n>0)led('bank',n,'Final pay – '+j.e,'Income','salary','Final payslip');
+    var sev=Math.round(j.r*j.h*2.1);G.worked=0;G.absM=0;G.job=null;led('bank',sev,'Redundancy pay – '+j.e,'Income','income','Redundancy');
+    st({stress:14,happy:-10});note('You were made redundant','Cutbacks at '+j.e+' (the economy is in a '+p.n.toLowerCase()+'). You receive '+M(sev)+' redundancy pay. Start applying soon.')}}
+  if(mo()==3){var ch=R(e.ph=='recession'?[-.02,-.01,0,0]:e.ph=='boom'?[0,.01,.01,.02]:[-.01,0,0,.01,.02]);e.td=cl2(e.td+ch,-.04,.06);
+   var tx=ch>0?'Taxes rise by '+(ch*100)+'p in the pound for earnings above the allowance.':ch<0?'Income tax is cut by '+(-ch*100)+'p in the pound.':'The Budget leaves tax rates unchanged.';
+   eLog('Budget: '+tx);if(G.news){G.news.unshift({d:G.day,t:'Budget: '+tx});G.news.length=Math.min(G.news.length,8)}note('Spring Budget',tx+' (Extra tax vs. normal: '+(e.td*100).toFixed(0)+'p.)')}}
+ /* election */
+ if(G.day==e.el-30)log('The general election campaign begins. Polling day is in 30 days.');
+ if(G.day>=e.el&&!G.dec&&!G.pr&&!e.pend){e.pend=G.day+1;
+  mkDec('General election day! Who gets your vote?',[['Prosperity Party (lower taxes, back business)',0,{},'Other',[['eco.vote','P','set']]],['Fairness Party (public services, higher taxes)',0,{},'Other',[['eco.vote','F','set']]],['Stay home',0,{},'Other',[['eco.vote','N','set']]]])}
+ if(e.pend&&G.day>=e.pend&&!G.dec){var wp=e.ph=='recession'?.4:e.ph=='boom'?.6:.5,win=rnd()<wp?'P':'F';e.pend=null;e.el=G.day+1460+ri(-60,60);e.lastEl={d:G.day,w:win};
+  var T=win=='P'?'Prosperity Party wins. Taxes fall and markets cheer.':'Fairness Party wins. Taxes rise to fund public services; support payments go out.';
+  if(win=='P'){e.td=cl2(e.td-.02,-.04,.06);if(G.mkt)G.mkt.s=cl2(G.mkt.s+.25,-1,1);G.rate=cl2((G.rate||4.5)+.25,1,8)}
+  else{e.td=cl2(e.td+.02,-.04,.06);if(G.mkt)G.mkt.s=cl2(G.mkt.s-.1,-1,1);if(!G.job||G.job.r<1250)gain(15000,'Cost-of-living support payment','Benefits','income')}
+  if(e.vote==win)st({happy:4});else if(e.vote&&e.vote!='N')st({stress:3});
+  eLog(T);if(G.news){G.news.unshift({d:G.day,t:T});G.news.length=Math.min(G.news.length,8)}note('Election result',T)}
+ /* heatwave */
+ if(!e.hw&&mo()>=6&&mo()<=8&&rnd()<.016){e.hw={s:G.day,end:G.day+ri(5,11)};eLog('Heatwave begins');(G.food||[]).forEach(function(b){b.exp--});note('🔥 Heatwave warning','Temperatures soar for about a week. You will feel drained'+(e.fan?' (your fan helps)':' – a fan (World tab) would help')+'. Food spoils faster.')}
+ if(e.hw){var k=e.fan?.5:1;st({energy:-5*k,stress:2*k});if(G.st.health<45||pAge(G.age)>70)st({health:-1});if(G.day>e.hw.end){e.hw=null;log('The heatwave breaks at last.')}}
+});
+ITEMS.push(function(A){var e=ECO(),p=PH[e.ph];
+ A('wo','ECONOMY',p.ic+' <b>'+p.n+'</b>: '+E(p.h),'econ');
+ if(e.ph=='recession'||e.ph=='slowdown')A('wo','JOBS','Employers are cutting back; applicants face tougher odds.','jobs');else if(e.ph=='boom')A('wo','JOBS','Vacancies are up and employers are raising pay offers.','jobs');
+ var d=e.el-G.day;if(d>0&&d<=60)A('ev','ELECTION','General election in '+d+' days. Campaigns heat up.','econ');
+ if(mo()==2&&dm()>=15||mo()==3&&dm()==1)A('wo','BUDGET','Chancellor poised to unveil the Spring Budget on 1 March.','econ');
+ if(e.hw)A('wo','HEATWAVE','🔥 Heatwave: stay cool and drink water.','econ')});
+V.econ=function(){var e=ECO(),p=PH[e.ph],dl=e.el-G.day,h='';
+ h+=C(p.ic+' The economy: '+p.n,MU(p.h)+RW('Phase ends in about',Math.max(0,e.until-G.day)+' days')+RW('Wage index (vs. start)','×'+e.wi.toFixed(2))+RW('Job application scores',(p.sc>=0?'+':'')+p.sc)+RW('Redundancy risk / month',(p.red*100).toFixed(1)+'%')+RW('Interest rate',(G.rate||0).toFixed(2)+'%')+RW('Extra income tax',(e.td>=0?'+':'')+(e.td*100).toFixed(0)+'p in the £')+RW('Market sentiment',G.mkt?(G.mkt.s>=0?'+':'')+G.mkt.s.toFixed(2):'–')+MU('Booms lift pay, rents, house prices, shares and crypto; recessions do the opposite and cost jobs. Cash buffers and diverse investments help you ride them out.'));
+ h+=C('Politics & seasons',RW('Next general election','in '+Math.max(0,dl)+' days ('+fmt(e.el).slice(5,16)+')')+(e.lastEl?RW('Last winner',e.lastEl.w=='P'?'Prosperity Party':'Fairness Party'):'')+RW('Budget','1 March each year')+RW('Heatwave',e.hw?'🔥 now, ends in '+Math.max(0,e.hw.end-G.day)+' days':'none')+(e.fan?MU('You own a fan.'):B('Buy a fan (£30)','LX.fan()')));
+ h+=C('Recent world events',e.log.map(function(x){return RW(fmt(x.d).slice(5,11),E(x.t))}).join('')||MU('Quiet so far.'));return h};
+LX.fan=function(){if(pay$(3000,'Electric fan','Shopping')){ECO().fan=1;say('You bought a fan.')}else render()};
+/* ---------- 2. SEASONAL EVENTS & WEEKLY GOALS ---------- */
+var SEV=[
+{id:'val',n:'Valentine’s week',ic:'💝',f:210,t:216,a:[['Plan a date night',3500,1,'date']]},
+{id:'spring',n:'Spring Fair',ic:'🎡',f:401,t:414,a:[['Go to the fair',1200,1,'fair']]},
+{id:'fest',n:'Summer Music Festival',ic:'🎶',f:710,t:722,a:[['Festival ticket',8500,1,'fest'],['Busk (needs guitar skill 10)',0,1,'busk']]},
+{id:'harv',n:'Harvest Market',ic:'🍎',f:920,t:1005,a:[['Buy a fresh produce box',1500,0,'box']]},
+{id:'hall',n:'Halloween',ic:'🎃',f:1024,t:1031,a:[['Go to a party',2000,1,'party']]},
+{id:'bf',n:'Black Friday',ic:'🛍️',f:1120,t:1130,a:[['Queue for a doorbuster (£100, resell)',10000,1,'flip']]},
+{id:'xm',n:'Christmas Market',ic:'🎄',f:1201,t:1223,a:[['Stroll the market',1000,1,'stroll'],['Buy Christmas gifts',6000,0,'gifts'],['Run a craft stall (£15 pitch)',1500,1,'stall']]},
+{id:'nye',n:'New Year’s Eve',ic:'🎆',f:1226,t:1231,a:[['Go to a party',2500,1,'party2']]}];
+function sevNow(){var m=md();return SEV.filter(function(s){return m>=s.f&&m<=s.t})}
+function partner(){return(G.ppl||[]).find(function(p){return['dating','exclusive','engaged','married'].indexOf(p.stage)>-1&&p.met})}
+LX.sev=function(i,a){var s=sevNow()[i];if(!s)return;var A=s.a[a],k=s.id+yr()+A[3];if(X().sv[k])return say('You already did that this year.');
+ if(A[3]=='busk'&&X().hb.guitar.lv<10)return say('You need guitar skill 10 to busk (see Pets & hobbies).');
+ if(A[3]=='date'&&!partner())return say('You need a partner for a date night.');
+ if(A[1]&&G.bank+G.cash<A[1])return say('Not enough money.');
+ if(A[2]&&!use(A[2]))return;if(A[1]&&!pay$(A[1],s.n+': '+A[0].split(' (')[0],'Leisure'))return render();
+ X().sv[k]=1;var x=X(),t='Done.';
+ ({fair:function(){st({happy:6,stress:-4});if(rnd()<.25){var w=P(ri(5,20));gain(w,'Fair tombola prize','Gift');t='You won a tombola prize of '+M(w)+'!'}else t='A lovely afternoon.'},
+ fest:function(){st({happy:14,stress:-10,energy:-15});G.st.rep=cl(G.st.rep+1);t='Unforgettable weekend of live music.'},
+ busk:function(){var l=x.hb.guitar.lv,w=P(ri(8,20)+l*.5);gain(w,'Busking tips','Income');st({happy:6,energy:-10});x.hb.guitar.lv=Math.min(100,l+1);t='You earned '+M(w)+' in tips.'},
+ box:function(){G.food.push({n:7,exp:G.day+8,hp:2,t:2});t='Fresh produce box: 7 healthy meals added.'},
+ party:function(){st({happy:7,stress:-3,energy:-12});t='Fun night out.'},
+ party2:function(){st({happy:8,stress:-4,energy:-10});t='Happy New Year!'},
+ flip:function(){qAdd(G.day+5,'flip',{c:A[1]});t='Deal bagged! You will resell it in about 5 days.'},
+ stroll:function(){st({happy:5,stress:-3});t='Mulled wine and twinkling lights.'},
+ gifts:function(){x.sv.gifts=Math.min(4,(x.sv.gifts||0)+1);t='Gifts bought ('+x.sv.gifts+'). They make Christmas happier.'},
+ stall:function(){var n=sellArt(3,1.5);if(!n){var w=P(ri(8,25));gain(w,'Craft stall sales','Income');t='Small craft sales: '+M(w)+'. (Paint pictures to sell more.)'}else t='You sold '+n+' artworks at the market!';st({happy:4,energy:-8})},
+ date:function(){var p=partner();p.sc=cl2(p.sc+6,0,100);st({happy:8,stress:-4});t='Romantic evening with '+p.n+'.'}})[A[3]]();
+ say(t)};
+QH.flip=function(r){var w=Math.round(r.c*(.9+rnd()*.8));gain(w,'Resold Black Friday deal','Income');log('You resold your doorbuster for '+M(w)+' ('+(w>=r.c?'profit':'loss')+').',1)};
+/* Christmas decision */
+HK.push(function(){if(md()==1224&&!G.dec&&once('xmas:'+yr())){var g=X().sv.gifts||0,p=X().fam&&X().fam.par||[];
+ mkDec('Christmas Eve. How will you spend Christmas?',[['Family Christmas (travel & food £80)',8000,{happy:8+g*2,stress:-6},'Family',[['fam.par.0.bond',6],['fam.par.1.bond',6]]],['Quiet Christmas at home (£25)',2500,{happy:3+g,stress:-2},'Leisure'],['Volunteer at a shelter (free)',0,{happy:7,rep:3,energy:-8},'Other']]);X().sv.gifts=0}});
+/* weekly goals */
+function liq(){return(G.bank||0)+(G.cash||0)+(G.sav||0)}
+function ws(){return 4+7*wid()}
+var GP=[
+{id:'gym',t:'Work out 3 times',n:3,rw:2200,m:function(){return G.fit?G.fit.log.filter(function(d){return d>=ws()}).length:0}},
+{id:'save',t:'Grow your savings by £50',n:5000,rw:2500,c:1,m:function(s){return Math.max(0,liq()-s.liq)}},
+{id:'job',t:'Send 2 job applications',n:2,rw:2000,u:function(){return!G.job},m:function(){return(G.apps||[]).filter(function(a){return a.d>=ws()}).length}},
+{id:'work',t:'Work 4 shifts',n:4,rw:3000,u:function(){return!!G.job},k:'work'},
+{id:'soc',t:'Socialise twice',n:2,rw:1500,k:'soc'},
+{id:'mini',t:'Play 2 mini-games',n:2,rw:1800,k:'mini'},
+{id:'calm',t:'Keep stress below 50 on 5 days',n:5,rw:2500,k:'calm'},
+{id:'fresh',t:'Eat 3 fresh, healthy meals',n:3,rw:2000,k:'fresh'},
+{id:'pet',t:'Care for your pet 3 times',n:3,rw:1800,u:function(){return X().pets.length>0},k:'pet'},
+{id:'hob',t:'Practise a hobby 3 times',n:3,rw:2000,u:function(){var h=X().hb;return h.guitar.own||h.paint.own||h.garden.own||h.photo.own},k:'hob'},
+{id:'gig',t:'Complete 2 freelance gigs',n:2,rw:2800,u:function(){return G.cv&&G.cv.sk.length>0},k:'gig'},
+{id:'fam',t:'Spend time with family',n:1,rw:1500,u:function(){return X().fam&&alive(X().fam.par).length>0},k:'fam'}];
+function gprog(g,s){var d=GP.find(function(x){return x.id==g.id});return d.k?(X().cnt[d.k]-(s[d.k]||0)):d.m(s)}
+function wkRoll(){var w=X().wg,x=X();if(w.w==wid())return;
+ if(w.w>=0&&w.goals.length){var dn=w.goals.filter(function(g){return gprog(g,w.snap)>=g.n}).length;w.done=dn;w.total+=dn;if(dn>=2){w.streak++;w.bestStreak=Math.max(w.bestStreak,w.streak);if(w.streak%4==0){gain(10000,'4-week streak bonus','Gift');note('🔥 '+w.streak+'-week streak!','You completed at least two weekly goals for '+w.streak+' weeks running. Bonus: £100.')}}else w.streak=0}
+ var pool=GP.filter(function(g){return!g.u||g.u()}),pick=[];while(pick.length<3&&pool.length){var i=Math.floor(rnd()*pool.length);pick.push({id:pool[i].id,n:pool[i].n,rw:pool[i].rw,c:0});pool.splice(i,1)}
+ w.w=wid();w.goals=pick;w.snap={liq:liq()};Object.keys(x.cnt).forEach(function(k){w.snap[k]=x.cnt[k]})}
+HK.push(function(){var x=X(),c=x.cnt;if(G.st.stress<50)c.calm++;
+ var j=G.job;if(j&&G.day-1>=j.start&&[0,6].indexOf(dow(G.day-1))<0&&(j.abs||0)==x.wg.lastAbs)c.work++;x.wg.lastAbs=j?(j.abs||0):0;wkRoll()});
+LX.claim=function(i){var g=X().wg.goals[i],d=GP.find(function(x){return x.id==g.id});if(g.c||gprog(g,X().wg.snap)<g.n)return;g.c=1;gain(g.rw,'Weekly goal: '+d.t,'Gift');st({happy:3});say('Goal complete! +'+M(g.rw))};
+LX.checkin=function(){var c=X().ci;if(c.last==G.day)return;c.streak=(G.day-c.last<=3)?c.streak+1:1;c.last=G.day;c.total++;var r=[200,200,300,300,500,500,1500][(c.streak-1)%7];gain(r,'Daily check-in reward','Gift');say('Check-in streak '+c.streak+': +'+M(r))};
+var _actn=actn;actn=function(k){var b=G.used;_actn(k);if(k=='soc'&&G.used>b)X().cnt.soc++};
+function goalsCard(){var w=X().wg;return w.goals.map(function(g,i){var d=GP.find(function(x){return x.id==g.id}),p=gprog(g,w.snap),ok=p>=g.n,money=d.c;return'<div style="margin:8px 0"><div class="r"><span>'+(g.c?'✅ ':ok?'🎯 ':'⬜ ')+d.t+'</span><span class="m">'+(money?M(Math.min(p,g.n))+'/'+M(g.n):Math.min(p,g.n)+'/'+g.n)+'</span></div><div class="bar"><i style="width:'+Math.min(100,p/g.n*100)+'%"></i></div>'+(g.c?'':B(ok?'Claim '+M(g.rw):'Reward '+M(g.rw),'LX.claim('+i+')',!ok,!ok))+'</div>'}).join('')}
+V.goals=function(){var x=X(),w=x.wg,c=x.ci,se=sevNow(),h='';
+ h+=C('📅 Daily check-in',RW('Streak',c.streak+' day'+(c.streak==1?'':'s'))+MU('Claim once per game day (a gap of up to 3 days keeps your streak). Day 7 pays £15.')+B(c.last==G.day?'Claimed today ✓':'Claim today’s reward','LX.checkin()',0,c.last==G.day));
+ h+=C('🎯 This week’s goals',goalsCard()+RW('Goal streak',w.streak+' week'+(w.streak==1?'':'s')+' (best '+w.bestStreak+')')+MU('Complete 2+ goals each week to build a streak; every 4th week pays a £100 bonus. New goals every Monday.'));
+ h+=C('🎪 Happening now',se.length?se.map(function(s,i){return'<div style="margin:6px 0"><b>'+s.ic+' '+s.n+'</b>'+s.a.map(function(a,j){var dn=X().sv[s.id+yr()+a[3]];return'<div class="r"><span>'+a[0]+(a[1]?' · '+M(a[1]):'')+'</span>'+B(dn?'Done':'Go','LX.sev('+i+','+j+')',0,dn)+'</div>'}).join('')+'</div>'}).join(''):MU('No festival right now.'));
+ var up=SEV.map(function(s){var d=Date.UTC(yr(),Math.floor(s.f/100)-1,s.f%100)/864e5;if(d<G.day)d=Date.UTC(yr()+1,Math.floor(s.f/100)-1,s.f%100)/864e5;return[s,d-G.day]}).filter(function(a){return a[1]>0}).sort(function(a,b){return a[1]-b[1]}).slice(0,4);
+ h+=C('Coming up',up.map(function(a){return RW(a[0].ic+' '+a[0].n,'in '+a[1]+' days')}).join('')+MU('Black Friday also gives 30% off the shop; the Christmas Market boosts art sales; Christmas Eve brings a family decision.'));return h};
+RN.push(function(){var a=document.getElementById('app'),b=document.getElementById('lcb');if(tab!='home'||!a||document.getElementById('lcx10h'))return;var e=ECO(),p=PH[e.ph],w=X().wg,ci=X().ci,se=sevNow(),done=w.goals.filter(function(g){return gprog(g,w.snap)>=g.n}).length;
+ var h='<div class="c" id="lcx10h"><div class="r"><b>'+p.ic+' '+p.n+'</b><span class="m">'+(e.hw?'🔥 heatwave · ':'')+(se.length?se[0].ic+' '+se[0].n:'')+'</span></div><div class="r"><span>🎯 Weekly goals</span><span><b>'+done+'/'+w.goals.length+'</b> done</span></div>'+
+ '<div>'+B(ci.last==G.day?'Check-in ✓':'🎁 Daily check-in','LX.checkin()',0,ci.last==G.day)+B('Goals & events','go(\'goals\')',1)+B('Economy','go(\'econ\')',1)+'</div></div>';
+ if(b)b.insertAdjacentHTML('afterend',h);else a.insertAdjacentHTML('afterbegin',h)});
+/* ---------- 3. FAMILY & RELATIONSHIPS ---------- */
+function famMk(){var sn=R(SUR),f={sn:sn,par:[],sib:[],nep:0,ev:[]},mk=function(sx,a){return{n:(sx=='f'?R(NAMEF):R(NAMEM))+' '+sn,sx:sx,a0:a,alive:1,bond:ri(35,70),w:P(ri(3000,160000)),called:-9,vis:-9}};
+ f.par.push(mk('f',G.age+ri(22,32)),mk('m',G.age+ri(23,34)));
+ for(var i=ri(0,2);i>0;i--)f.sib.push({n:R(NAMEU)+' '+sn,a0:G.age+ri(-6,6),alive:1,bond:ri(30,70),sp:0,kids:0});return f}
+function alive(a){return(a||[]).filter(function(x){return x.alive})}
+function fEv(t){var f=X().fam;f.ev.unshift({d:G.day,t:t});if(f.ev.length>12)f.ev.pop()}
+function dieP(p,kind,idx){p.alive=0;p.died=G.day;fEv(p.n+' passed away aged '+pAge(p.a0));var f=X().fam;
+ var other=kind=='par'?f.par.find(function(x){return x.alive&&x!==p}):null,fun=450000;
+ note('💐 '+p.n+' has died','Your '+(kind=='par'?(p.sx=='f'?'mother':'father'):'sibling')+' '+p.n+' passed away at '+pAge(p.a0)+'. We are so sorry.');st({happy:-14,stress:10});
+ qAdd(G.day+2,'fun',{n:p.n,i:idx,k:kind,sp:pAge(p.a0)});
+ if(kind=='par'){if(other){other.w+=p.w;p.w=0}else{var est=Math.max(0,p.w-fun),tax=Math.round(Math.max(0,est-32500000)*.4),net=est-tax,n=1+alive(f.sib).length,mine=Math.round(net/n);
+  if(p.bond<20&&rnd()<.35){mine=0}if(mine>0)qAdd(G.day+40,'inh',{w:mine,n:p.n,t:tax});p.w=0}}}
+QH.fun=function(r){if(G.dec||G.pr)return qAdd(G.day+1,'fun',r);var f=X().fam;
+ mkDec('Funeral for '+r.n+'. The service will cost about £4,500. How will you help?',[['Pay the full cost (£4,500)',450000,{happy:-2},'Family',[['fam.sib.0.bond',8]]],['Contribute £1,500',150000,{},'Family',[['fam.sib.0.bond',3]]],['I cannot contribute',0,{stress:6,happy:-4},'Other',[['fam.sib.0.bond',-8]]]])};
+QH.inh=function(r){gain(r.w,'Inheritance – '+r.n,'Gift','income');note('Inheritance received','You inherit '+M(r.w)+' from the estate of '+r.n+(r.t>0?' (after '+M(r.t)+' inheritance tax)':'')+'.')};
+HK.push(function(){var f=X().fam;if(!f)return;if(dm()!=1||!once('fam:'+ym()))return;
+ f.par.forEach(function(p,i){if(!p.alive)return;var a=pAge(p.a0);if(a>=40&&rnd()<.00025*Math.exp((a-50)/9)){dieP(p,'par',i);return}
+  if(a>=65&&!G.dec&&rnd()<.04){var w=p.sx=='f'?'Mum':'Dad',b='fam.par.'+i+'.bond';mkDec(w+' ('+p.n+') has been unwell and needs some help.',[['Visit and help out (£20 travel)',2000,{energy:-8,happy:2},'Family',[[b,10]]],['Pay for private care (£600)',60000,{},'Family',[[b,14]]],['Send flowers (£15)',1500,{},'Family',[[b,3]]],['Do nothing',0,{stress:2},'Other',[[b,-8]]]])}});
+ f.sib.forEach(function(s,i){if(!s.alive)return;var a=pAge(s.a0);if(a>=45&&rnd()<.0002*Math.exp((a-50)/9)){dieP(s,'sib',i);return}
+  if(!s.sp&&a>=24&&a<=45&&rnd()<.005&&!G.dec){s.sp=1;var b='fam.sib.'+i+'.bond';mkDec(s.n+' is getting married! You are invited to the wedding.',[['Attend with a gift & outfit (£150)',15000,{happy:8,stress:-3},'Family',[[b,8]]],['Send a gift only (£50)',5000,{},'Family',[[b,2]]],['Decline the invitation',0,{stress:2},'Other',[[b,-10]]]]);fEv(s.n+' got married')}
+  else if(s.sp&&a<=40&&rnd()<.004){s.kids++;f.nep++;fEv(s.n+' had a baby');note('New niece or nephew!',s.n+' has had a baby. You are an aunt or uncle!');st({happy:5})}});
+ if(G.age!=null&&rnd()<.02&&!G.dec&&alive(f.par).length){var p=R(alive(f.par)),w=p.sx=='f'?'Mum':'Dad',b='fam.par.'+f.par.indexOf(p)+'.bond';mkDec(w+'’s birthday is coming up.',[['Throw a surprise party (£60)',6000,{happy:5},'Family',[[b,8]]],['Send a card & call (£5)',500,{},'Family',[[b,3]]],['Forget it',0,{},'Other',[[b,-5]]]])}});
+LX.callp=function(i){var p=X().fam.par[i];if(!p||!p.alive||p.called==G.day)return;p.called=G.day;p.bond=cl2(p.bond+4,0,100);st({happy:2});X().cnt.fam++;say('You had a lovely chat with '+p.n+'.')};
+LX.visit=function(i){var p=X().fam.par[i];if(!p||!p.alive||p.vis==G.day)return;if(!use(1,8))return;if(!pay$(1500,'Travel to see '+p.n,'Travel'))return render();p.vis=G.day;p.bond=cl2(p.bond+10,0,100);st({happy:5,stress:-3});X().cnt.fam++;say('You spent the day with '+p.n+'.')};
+LX.sib=function(i){var s=X().fam.sib[i];if(!s||!s.alive||s.c==G.day)return;s.c=G.day;s.bond=cl2(s.bond+5,0,100);st({happy:3});X().cnt.fam++;say('You caught up with '+s.n+'.')};
+function bondW(b){return b>=70?'close':b>=40?'warm':b>=20?'distant':'estranged'}
+V.tree=function(){var f=X().fam,pt=partner(),h='',kids=[];try{kids=(G.kids||[]).filter(function(k){return!k.gone}).map(function(k){return'👶 '+E(k.n)+' ('+kAge(k)+')'}).concat((G.kg||[]).map(function(k){return'🧑 '+E(k.n)+' (adult)'}))}catch(e){}
+ var pr=f.par.map(function(p,i){return'<div class="r"><span>'+(p.alive?(p.sx=='f'?'👵 ':'👴 '):'🕯 ')+E(p.n)+' <span class="m">'+(p.alive?pAge(p.a0)+' · '+bondW(p.bond):'died '+fmt(p.died).slice(5,16))+'</span></span>'+(p.alive?'<span>'+B('Call','LX.callp('+i+')',1,p.called==G.day)+B('Visit £15','LX.visit('+i+')',1,p.vis==G.day)+'</span>':'')+'</div>'}).join(''),
+ sb=f.sib.map(function(s,i){return'<div class="r"><span>'+(s.alive?'🧑 ':'🕯 ')+E(s.n)+' <span class="m">'+(s.alive?pAge(s.a0)+(s.sp?' · married':'')+(s.kids?' · '+s.kids+' kid'+(s.kids>1?'s':''):'')+' · '+bondW(s.bond):'died')+'</span></span>'+(s.alive?B('Catch up','LX.sib('+i+')',1,s.c==G.day):'')+'</div>'}).join('')||MU('You have no siblings.');
+ h+=C('🌳 Your family tree','<b>Parents</b>'+pr+'<div style="height:6px"></div><b>You'+(pt?' &amp; partner':'')+'</b><div class="r"><span>⭐ '+E(G.name)+' ('+pAge(G.age)+')</span><span class="m">'+(pt?'💞 '+E(pt.n)+' · '+pt.stage:'single')+'</span></div><div style="height:6px"></div><b>Siblings</b>'+sb+(f.nep?MU('Nieces & nephews: '+f.nep):'')+'<div style="height:6px"></div><b>Children</b>'+(kids.length?kids.map(function(k){return'<div class="m">'+k+'</div>'}).join(''):MU('No children yet. See Family & children.')));
+ var inh=X().q.filter(function(e){return e.t=='inh'}).map(function(e){return RW('Inheritance pending','~'+M(e.r.w)+' on '+fmt(e.d).slice(5,16))}).join('');
+ h+=C('Family events',(f.ev.map(function(x){return RW(fmt(x.d).slice(5,11),E(x.t))}).join('')||MU('Nothing yet. Weddings, births, funerals and birthdays will appear here.'))+inh+MU('Strong bonds matter: estranged parents may leave you nothing. Dating, marriage and children are in Relationships and Family & children; your will is in Legacy.'));return h};
+/* ---------- 4. HEALTH & WELLBEING ---------- */
+var ILL={cold:{n:'a cold',d:[3,5],h:-1.5,e:-8},flu:{n:'flu',d:[6,10],h:-2.5,e:-12},bug:{n:'a stomach bug',d:[2,3],h:-3,e:-14}},
+ PLN={none:{n:'No cover',m:0,cov:0},basic:{n:'Basic cover',m:2200,cov:.5,th:0},prem:{n:'Premium cover',m:4800,cov:1,th:6}};
+function covOn(){var h=X().hl;return h.plan!='none'&&G.day>=h.since+30}
+function covPct(){return covOn()?PLN[X().hl.plan].cov:0}
+function immun(){var h=X().hl,f=G.fit||{str:10,sta:10,fit:10},fa=Math.min(100,(f.str+f.sta+f.fit)/3*1.6);return cl2(20+h.dq*.3+fa*.3+(100-G.st.stress)*.12+G.st.health*.12-Math.max(0,pAge(G.age)-65)*.6,5,100)}
+var _needs=needs;needs=function(w){var f=G.food&&G.food.length?G.food[0]:null,q=!f?0:(f.hp>=2?100:(f.t>=5?25:60)),h=X().hl;h.dq=h.dq*.9+q*.1;if(q==100)X().cnt.fresh++;_needs(w)};
+var _wk=wk;wk=function(k){var h=X().hl;if(h.inj&&['str','car','cls','run'].indexOf(k)>-1)return say('You are injured ('+h.inj.n+'). Rest up or see a physio before training.');var b=G.used;_wk(k);
+ if(G.used>b&&!h.inj&&rnd()<(G.fit&&G.fit.fat>70?.07:.012)){var t=R([['a pulled muscle',7,14],['a sprained ankle',12,21],['a back strain',10,18]]);h.inj={n:t[0],end:G.day+ri(t[1],t[2]),s:G.day,pt:0};note('Injury: '+t[0],'You hurt yourself training. No gym or running until you recover (about '+(h.inj.end-G.day)+' days). A physio can speed things up.')}};
+HK.push(function(){var h=X().hl;h.imm=immun();var j=G.job,wd=dow()>0&&dow()<6;
+ if(h.ill){var il=ILL[h.ill.k];st({health:il.h,energy:il.e,happy:-2});if(j)G.sick=true;if(j&&wd){h.sspDays++;if(h.ill.note)G.absM=Math.max(0,G.absM-1)}
+  if(G.day>=h.ill.end){if(j&&h.sspDays>3){var s=(h.sspDays-3)*2300;gain(s,'Statutory Sick Pay','Benefits');log('Statutory Sick Pay '+M(s)+' paid.')}h.ill=null;h.sspDays=0;log('You have recovered.',1)}}
+ else if(!h.bo&&rnd()<.006*((mo()<=2||mo()==12)?1.5:1)*(1.7-h.imm/100*1.3)){var k=R(['cold','cold','cold','cold','flu','flu','bug']),il2=ILL[k],d=ri(il2.d[0],il2.d[1]);h.ill={k:k,end:G.day+d,s:G.day,note:0,rem:0};h.sspDays=0;
+  note('🤒 You have '+il2.n,'About '+d+' days to recover. See the GP or a private doctor to recover faster'+(j?' (and get a sick note so absence is not held against you)':'')+'. Immunity was '+Math.round(h.imm)+'/100: fresh food, exercise and low stress keep it high.')}
+ if(h.inj){st({energy:-3,stress:1});if(G.day>=h.inj.end){h.inj=null;log('Your injury has healed.',1)}}
+ else if((mo()<=2||mo()==12)&&rnd()<.0006){h.inj={n:'a sprain after slipping on ice',end:G.day+ri(8,16),s:G.day,pt:0};note('Injury','You slipped on ice and sprained something. Training is off the menu for about '+(h.inj.end-G.day)+' days.')}
+ if(G.st.stress>80)h.hs++;else h.hs=Math.max(0,h.hs-1);
+ if(!h.bo&&h.hs>=12&&G.day>(h.boCd||0)){h.bo={end:G.day+14};st({health:-10,happy:-15});note('😵 Burnout','Months of high stress have caught up with you. You are signed off work for 2 weeks. Therapy sessions and rest help; so does lowering your workload.')}
+ if(h.bo){G.sick=true;st({stress:-3,energy:5});if(G.day>=h.bo.end){h.bo=null;h.hs=0;h.boCd=G.day+90;log('You are back on your feet after burnout.',1)}}
+ if(G.st.health<8&&once('er:'+ym())){st({health:25,stress:6});note('🚑 Emergency admission','You collapsed and were treated in hospital. Please look after your health: eat well, rest, and keep stress down.')}
+ if(dm()==1&&once('hlm:'+ym())){var p=PLN[h.plan];if(p.m)bill(p.m,'Health insurance – '+p.n,'Insurance');if(mo()==1)h.therYr=0}});
+function drCost(c){return Math.round(c*(1-covPct()))}
+LX.gp=function(){var h=X().hl;if(!h.ill&&!h.inj)return say('You are not ill or injured.');if(h.ill&&h.ill.note)return say('You already saw a doctor for this.');if(!use(1))return;
+ if(rnd()<.45)return say('No GP appointments available today. Try again tomorrow or go private.');if(h.ill){h.ill.note=1;h.ill.end=G.day+Math.max(1,Math.ceil((h.ill.end-G.day)*.65))}say('The GP gave advice and a sick note. Recovery will be quicker.')};
+LX.priv=function(){var h=X().hl;if(!h.ill)return say('You are not ill.');if(h.ill.priv)return say('You have already seen a private doctor.');var c=drCost(6500);if(!use(1))return;if(c&&!pay$(c,'Private doctor','Health'))return render();h.ill.priv=1;h.ill.note=1;h.ill.end=G.day+Math.max(1,Math.ceil((h.ill.end-G.day)*.5));say('Seen right away'+(covPct()?' (insurance covered '+Math.round(covPct()*100)+'%)':'')+'. Recovery will be much quicker.')};
+LX.pharm=function(){var h=X().hl;if(!h.ill||h.ill.rem)return say(h.ill?'You already took remedies.':'You are not ill.');if(!pay$(600,'Pharmacy remedies','Health'))return render();h.ill.rem=1;h.ill.end=Math.max(G.day+1,h.ill.end-1);say('The remedies help a little.')};
+LX.physio=function(){var h=X().hl;if(!h.inj)return say('No injury to treat.');if(h.inj.pt>=3)return say('You have had the maximum physio sessions for this injury.');var c=drCost(4500);if(!use(1))return;if(c&&!pay$(c,'Physiotherapy','Health'))return render();h.inj.pt++;h.inj.end=Math.max(G.day+1,h.inj.end-3);say('Physio session done. Recovery is 3 days closer.')};
+LX.ther=function(){var h=X().hl,p=PLN[h.plan],free=covOn()&&p.th&&h.therYr<p.th,c=free?0:drCost(6000);if(!use(1))return;if(c&&!pay$(c,'Therapy session','Health'))return render();h.therYr++;h.ther++;h.hs=Math.max(0,h.hs-6);st({stress:-18,happy:4});say('A helpful session'+(free?' (covered by your plan)':'')+'. Stress eased.')};
+LX.plan=function(k){var h=X().hl;if(h.plan==k)return;h.plan=k;h.since=G.day;say(k=='none'?'Cover cancelled.':PLN[k].n+' started. Claims open after a 30-day waiting period.')};
+LX.check=function(){var c=drCost(8000);if(!use(1))return;if(c&&!pay$(c,'Health check-up','Health'))return render();var h=X().hl,t=[];if(h.dq<55)t.push('eat more fresh food');if((G.fit.str+G.fit.sta+G.fit.fit)/3<25)t.push('exercise regularly');if(G.st.stress>55)t.push('reduce stress');if(G.st.energy<40)t.push('get more rest');st({health:3});say('Check-up complete (health +3). '+(t.length?'Doctor’s advice: '+t.join(', ')+'.':'You are in good shape!'))};
+V.health=function(){var h=X().hl,s=G.st,f=G.fit||{str:0,sta:0,fit:0},wb=Math.round((s.health+s.happy+(100-s.stress)+h.imm)/4),x='';
+ x+=C('❤️ Wellbeing '+wb+'/100',BAR('Health',s.health)+BAR('Happiness',s.happy)+BAR('Stress (lower is better)',s.stress)+BAR('Energy',s.energy)+BAR('Immunity',h.imm)+BAR('Diet quality',h.dq)+MU('Immunity is built from diet quality (fresh packs score highest; takeaways and skipped meals lower it), fitness from the gym, low stress and health. Low immunity means more illness.'));
+ x+=C('🩺 Status',(h.ill?RW('Illness',E(ILL[h.ill.k].n)+', ~'+Math.max(0,h.ill.end-G.day)+' days left')+MU(h.ill.note?'✔ Doctor’s note on file':'No doctor seen yet'):RW('Illness','none'))+(h.inj?RW('Injury',E(h.inj.n)+', ~'+Math.max(0,h.inj.end-G.day)+' days'):RW('Injury','none'))+(h.bo?RW('Burnout','signed off, '+Math.max(0,h.bo.end-G.day)+' days'):RW('Burnout risk',h.hs>=8?'⚠ high ('+h.hs+' stressful days)':h.hs>=4?'rising':'low'))+
+  '<div>'+B('NHS GP (free, 1 slot)','LX.gp()',1)+B('Private doctor '+M(drCost(6500)),'LX.priv()',1)+B('Pharmacy £6','LX.pharm()',1)+B('Physio '+M(drCost(4500)),'LX.physio()',1)+'</div>');
+ x+=C('🧠 Mind & check-ups',RW('Therapy sessions (total)',h.ther)+'<div>'+B('Therapy '+M(drCost(6000))+' (1 slot)','LX.ther()',1)+B('Health check-up '+M(drCost(8000)),'LX.check()',1)+'</div>'+MU('Therapy cuts stress and lowers burnout risk. With Premium cover, '+PLN.prem.th+' sessions a year are free.'));
+ x+=C('🛡 Health insurance',Object.keys(PLN).map(function(k){var p=PLN[k];return'<div class="r"><span>'+p.n+'<br><span class="m">'+(p.m?M(p.m)+'/month · covers '+Math.round(p.cov*100)+'% of private doctor, physio & therapy'+(p.th?' · '+p.th+' free therapy sessions/yr':''):'NHS only')+'</span></span>'+B(h.plan==k?'Current':'Choose','LX.plan(\''+k+'\')',h.plan==k,h.plan==k)+'</div>'}).join('')+MU(h.plan!='none'&&!covOn()?'Waiting period ends '+fmt(h.since+30).slice(5,16)+'.':'Cover starts 30 days after joining.'));return x};
+/* ---------- 5. PETS & HOBBIES ---------- */
+var SP={dog:{n:'Dog',ic:'🐶',fee:18000,mo:3800,life:[11,15],dec:6},cat:{n:'Cat',ic:'🐱',fee:12000,mo:2400,life:[13,18],dec:4},rab:{n:'Rabbit',ic:'🐰',fee:6000,mo:1400,life:[7,9],dec:3},fish:{n:'Fish tank',ic:'🐠',fee:3500,mo:600,life:[3,5],dec:1}},
+ PN=['Biscuit','Luna','Milo','Pepper','Bella','Ziggy','Mochi','Poppy','Teddy','Nova','Biscuit','Rocky'];
+function pAgeY(p){return(G.day-p.born)/365.25}
+LX.adopt=function(k){var x=X(),s=SP[k];if(G.pr)return say('Not while in custody.');if(x.pets.length>=2)return say('You can look after up to 2 pets.');if(!pay$(s.fee,s.n+' adoption','Shopping'))return render();
+ x.pets.push({sp:k,n:R(PN),born:G.day,joy:75,hp:90,bond:20,ins:0,gd:-1,old:0});note(s.ic+' Welcome home!','You adopted a '+s.n.toLowerCase()+' named '+x.pets[x.pets.length-1].n+'. Costs about '+M(s.mo)+'/month for food and care. Play, walk and bond to keep them happy.');render()};
+LX.pcare=function(i,k){var p=X().pets[i];if(!p)return;var s=SP[p.sp];
+ if(k=='walk'){if(p.sp!='dog')return say('Only dogs need walks.');if(!use(1,6))return;p.joy=cl2(p.joy+24,0,100);p.bond=cl2(p.bond+5,0,100);st({stress:-5,happy:2});G.fit.sta=Math.min(100,G.fit.sta+.2);G.fit.log.push(G.day)}
+ else if(k=='play'){if(!use(1,4))return;p.joy=cl2(p.joy+18,0,100);p.bond=cl2(p.bond+4,0,100);st({happy:3,stress:-2})}
+ else{if(p.gd==G.day)return say(p.n+' has had treats today.');if(!pay$(300,'Pet treats','Shopping'))return render();p.gd=G.day;p.joy=cl2(p.joy+8,0,100);p.bond=cl2(p.bond+1,0,100)}
+ X().cnt.pet++;say(p.n+' loves it!')};
+LX.pins=function(i){var p=X().pets[i];p.ins=p.ins?0:1;say(p.ins?'Pet insurance on (£14/month, pays 80% of vet bills).':'Pet insurance cancelled.')};
+HK.push(function(){var x=X();x.pets.slice().forEach(function(p,i){var s=SP[p.sp];p.joy=cl2(p.joy-s.dec,0,100);if(p.joy<15){p.bond=cl2(p.bond-.4,0,100);if(p.joy<8)p.hp-=.3}
+  if(p.joy>50&&rnd()<p.bond/100*.55)st({happy:1});if(p.hp<=0){x.pets.splice(i,1);note('💔 '+p.n+' has died','Neglect took its toll. Please look after future pets better.');st({happy:-18,stress:8});return}
+  if(dm()==1&&once('pet:'+i+p.born+':'+ym())){bill(s.mo,'Pet food & care – '+p.n,'Pets');if(p.ins)bill(1400,'Pet insurance – '+p.n,'Insurance');
+   var ag=pAgeY(p);if(ag>s.life[0]&&rnd()<.07+(ag-s.life[0])*.05){x.pets.splice(i,1);note('🌈 '+p.n+' has passed away','After a happy life together, '+p.n+' died peacefully of old age. You will miss them.');st({happy:-15,stress:6});return}
+   if(!G.dec&&rnd()<.07){var c=Math.round(P(ri(60,420))*(p.ins?.2:1));mkDec(p.n+' is unwell. Vet treatment will cost '+M(c)+(p.ins?' after insurance':'')+'.',[['Pay for treatment',c,{},'Pets',[['pets.'+i+'.hp',30]]],['Cannot afford it',0,{stress:6},'Other',[['pets.'+i+'.hp',-25]]]])}}})});
+var HB={guitar:{n:'Guitar',ic:'🎸',gear:12000},paint:{n:'Painting',ic:'🎨',gear:4000},garden:{n:'Gardening',ic:'🌱',gear:6000},photo:{n:'Photography',ic:'📷',gear:35000}},
+ TIER=[{n:'Open mic night',req:12,pay:[0,2000],sl:1},{n:'Pub gig',req:30,pay:[6000,12000],sl:1},{n:'Wedding band',req:50,pay:[15000,30000],sl:2},{n:'Festival slot',req:75,pay:[50000,120000],sl:2}];
+LX.hbuy=function(k){var h=X().hb[k];if(h.own)return;if(!pay$(HB[k].gear,HB[k].n+' starter kit','Shopping'))return render();h.own=1;say(HB[k].ic+' You are ready to start '+HB[k].n.toLowerCase()+'.')};
+LX.hprac=function(k,les){var h=X().hb[k];if(!h.own)return say('Buy the starter kit first.');if(!use(1,6))return;if(les&&!pay$(2500,HB[k].n+' lesson','Education'))return render();
+ var g=Math.max(.3,1.8-h.lv/60)*(les?3:1);h.lv=Math.min(100,h.lv+g);h.last=G.day;X().cnt.hob++;st({happy:3,stress:-4});
+ if(k=='garden'&&mo()>=4&&mo()<=10)h.crop=Math.min(12,h.crop+1+(h.lv>=30?1:0));say(HB[k].n+' practice done (skill '+h.lv.toFixed(1)+').')};
+LX.hgig=function(t){var h=X().hb.guitar,T=TIER[t];if(!h.own)return say('Buy a guitar first.');if(h.lv<T.req)return say('You need guitar skill '+T.req+' for a '+T.n.toLowerCase()+'.');if(!use(T.sl,12))return;
+ var d=h.lv+rnd()*30-T.req,w=P(ri(T.pay[0]/100,T.pay[1]/100))*ecoMul();w=Math.round(w);
+ if(d>=0){gain(w,T.n+' fee','Income');st({happy:8});G.st.rep=cl(G.st.rep+1);h.lv=Math.min(100,h.lv+.8);X().hb.gigs++;X().hb.earn+=w;say('Great show! You earned '+M(w)+'.')}
+ else if(d>-15){var hw=Math.round(w/2);gain(hw,T.n+' fee (rough night)','Income');st({stress:2});say('A shaky set. You still got '+M(hw)+'.')}else{st({stress:4,happy:-2});say('The gig flopped and nobody paid. Keep practising.')}};
+LX.hpaint=function(){var h=X().hb.paint,a=X().hb.art;if(!h.own)return say('Buy a painting kit first.');if(a.length>=12)return say('Your studio is full. Sell some pieces.');if(!use(1,8))return;if(!pay$(800,'Canvas & paint','Shopping'))return render();
+ var q=Math.round(h.lv+rnd()*25);a.push(q);a.sort(function(p,q2){return q2-p});h.lv=Math.min(100,h.lv+Math.max(.3,1.8-h.lv/60));h.last=G.day;X().cnt.hob++;st({happy:3,stress:-4});say('You finished a painting (quality '+q+').')};
+function sellArt(n,mult){var hb=X().hb;if(hb.demW!=wid()){hb.demW=wid();hb.dem=3+(mo()==12?2:0)}var k=Math.min(n,hb.dem,hb.art.length),tot=0;
+ for(var i=0;i<k;i++){var q=hb.art.shift();tot+=Math.round((q*q/90+8)*100*mult*ecoMul())}
+ if(k){hb.dem-=k;hb.earn+=tot;gain(tot,'Art sales ('+k+')','Income');if(mo()==12)X().cnt.hob+=0}return k}
+LX.hsell=function(){var n=sellArt(2,1);say(n?'Sold '+n+' piece'+(n>1?'s':'')+' online. Buyers are limited each week.':X().hb.art.length?'No buyers left this week.':'You have no paintings to sell.')};
+LX.hstall=function(){if(!X().hb.art.length)return say('You have no paintings to sell.');if(!use(1,8))return;if(!pay$(1000,'Market stall pitch','Business'))return render();var n=sellArt(3,1.25);say(n?'You sold '+n+' at the market stall!':'Quiet day at the stall.')};
+LX.harv=function(){var h=X().hb.garden;if(h.crop<1)return say('Nothing to harvest yet. Practise gardening in spring and summer.');G.food.push({n:h.crop,exp:G.day+8,hp:2,t:2});var n=h.crop;h.crop=0;say('Harvested '+n+' fresh home-grown meals!')};
+LX.hphoto=function(){var h=X().hb.photo;if(!h.own)return say('Buy a camera first.');if(!use(1,8))return;if(!pay$(1000,'Photo contest entry','Leisure'))return render();X().cnt.hob++;h.lv=Math.min(100,h.lv+.5);
+ if(rnd()<h.lv/150){var w=P(ri(100,500));gain(w,'Photo contest prize','Income');say('🏆 You placed in the contest and won '+M(w)+'!')}else say('No prize this time, but the experience helps.')};
+HK.push(function(){var hb=X().hb;['guitar','paint','garden','photo'].forEach(function(k){var h=hb[k];if(h.own&&h.lv>0&&G.day-h.last>60&&dm()==1&&once('hbd:'+k+ym()))h.lv=Math.max(0,h.lv-2)})});
+V.pets=function(){var x=X(),h='',hb=x.hb;
+ h+=C('🐾 Your pets',x.pets.length?x.pets.map(function(p,i){var s=SP[p.sp];return'<div style="margin:8px 0"><b>'+s.ic+' '+E(p.n)+'</b> <span class="m">'+s.n.toLowerCase()+', '+pAgeY(p).toFixed(1)+' yrs</span>'+BAR('Happiness',p.joy)+BAR('Health',p.hp)+BAR('Bond',p.bond)+'<div>'+(p.sp=='dog'?B('Walk (1 slot)','LX.pcare('+i+',\'walk\')',1):'')+B('Play (1 slot)','LX.pcare('+i+',\'play\')',1)+B('Treat £3','LX.pcare('+i+',\'treat\')',1,p.gd==G.day)+B(p.ins?'Insured ✓':'Insure £14/mo','LX.pins('+i+')',1)+'</div></div>'}).join(''):MU('No pets yet. A pet lifts your mood and, for dogs, your fitness.'))+MU('Pets cost monthly food and care. Neglect them and they become unhappy and unwell.');
+ h+=C('Adopt a pet',Object.keys(SP).map(function(k){var s=SP[k];return'<div class="r"><span>'+s.ic+' '+s.n+'<br><span class="m">'+M(s.fee)+' + '+M(s.mo)+'/month</span></span>'+B('Adopt','LX.adopt(\''+k+'\')',0,x.pets.length>=2)+'</div>'}).join(''));
+ h+=C('🎼 Hobbies',Object.keys(HB).map(function(k){var o=hb[k],b=HB[k];return'<div style="margin:8px 0"><b>'+b.ic+' '+b.n+'</b>'+(o.own?BAR('Skill',o.lv)+'<div>'+B('Practise (1 slot)','LX.hprac(\''+k+'\')',1)+B('Lesson £25 (×3)','LX.hprac(\''+k+'\',1)',1)+'</div>':'<div class="r"><span class="m">Starter kit '+M(b.gear)+'</span>'+B('Buy kit','LX.hbuy(\''+k+'\')')+'</div>')+'</div>'}).join('')+MU('Hobbies reduce stress and, with skill, earn money.'));
+ if(hb.guitar.own)h+=C('🎸 Play gigs',TIER.map(function(t,i){return'<div class="r"><span>'+t.n+'<br><span class="m">skill '+t.req+'+ · '+M(t.pay[0])+'–'+M(t.pay[1])+' · '+t.sl+' slot'+(t.sl>1?'s':'')+'</span></span>'+B('Play','LX.hgig('+i+')',0,hb.guitar.lv<t.req)+'</div>'}).join('')+MU('Gigs played: '+hb.gigs+' · earned '+M(hb.earn)));
+ if(hb.paint.own)h+=C('🎨 Studio & sales',RW('Paintings in stock',hb.art.length+(hb.art.length?' (best '+hb.art[0]+')':''))+RW('Online buyers this week',hb.demW==wid()?hb.dem:3)+'<div>'+B('Paint a piece (1 slot, £8)','LX.hpaint()',1)+B('Sell online','LX.hsell()',1)+B('Market stall (1 slot)','LX.hstall()',1)+'</div>'+MU('Better skill makes more valuable art. The Christmas Market stall pays 1.5×. Weekly demand is limited.'));
+ if(hb.garden.own)h+=C('🌱 Garden',RW('Crop ready',hb.garden.crop+' meals')+B('Harvest','LX.harv()',1,hb.garden.crop<1));
+ if(hb.photo.own)h+=C('📷 Photography',B('Enter a contest (£10, 1 slot)','LX.hphoto()',1));return h};
+/* ---------- 6. CAREER DEPTH & FREELANCING ---------- */
+var LVN=['','Senior ','Lead ','Principal '];
+function jobSk(){var j=G.job,v=j&&(G.vac||[]).find(function(x){return x.id==j.vid});return v&&v.sk}
+function promote(){var w=X().w,j=G.job;w.lvl++;j.t=LVN[w.lvl]+w.bt;j.r=Math.round(j.r*1.12);w.prom=G.day;w.boss=cl2(w.boss+5,0,100);st({happy:8});G.st.rep=cl(G.st.rep+2);note('🎉 Promotion!','You are now '+j.t+' at '+j.e+' on '+M(j.r)+'/hour.')}
+function review(){var w=X().w,j=G.job,e=ECO(),r=w.perf+(w.boss-50)*.15,q=r>=68?'Outstanding':r>=54?'Exceeds expectations':r>=42?'Meets expectations':'Below expectations';w.last=G.day;w.rate=q;w.rev.unshift({d:G.day,q:q});w.rev.length=Math.min(w.rev.length,8);
+ var pc={'Outstanding':6,'Exceeds expectations':3.5,'Meets expectations':1.5,'Below expectations':0}[q]+(e.ph=='boom'?1:0);if(e.ph=='recession'||e.ph=='slowdown')pc=Math.max(0,pc-2);
+ var t='Performance review: '+q+'.';if(pc>0){j.r=Math.round(j.r*(1+pc/100));t+=' Pay rise '+pc+'% (now '+M(j.r)+'/hour).'}else t+=' No pay rise'+((e.ph=='recession'||e.ph=='slowdown')?' (pay freeze in the downturn)':'')+'.';
+ var bo={'Outstanding':25000,'Exceeds expectations':10000}[q];if(bo&&e.ph!='recession'){var n=Math.round(bo*.72);gain(n,'Performance bonus – '+j.e,'Income');t+=' Bonus '+M(n)+' after tax.'}
+ if(q=='Below expectations'){w.below=(w.below||0)+1;if(w.below>=2){j.warn=(j.warn||0)+1;t+=' You received a formal warning.'}}else w.below=0;
+ note('📋 '+t,'Rating is based on how well you work: energy, stress, skills matching your job, and your standing with your boss and team (see Workplace).');
+ if((q=='Outstanding'||(q=='Exceeds expectations'&&e.ph!='recession'))&&w.lvl<3&&G.day-w.prom>150&&G.day>j.start+150)promote()}
+function promOdds(){var w=X().w,e=ECO();return cl2(.12+(w.perf-50)/220+(w.boss-50)/260+(e.ph=='boom'?.1:e.ph=='recession'?-.12:0),.02,.7)}
+LX.askprom=function(){var w=X().w,j=G.job;if(!j)return;if(w.lvl>=3)return say('You are at the top of this ladder.');if(G.day<j.start+120)return say('Wait until you have been in the job about 4 months.');if(G.day-(w.ask||-99)<60)return say('You asked recently. Wait about two months.');if(!use(1))return;w.ask=G.day;
+ if(rnd()<promOdds())promote();else{w.boss=cl2(w.boss-5,0,100);say('Your request was declined for now. Improve your performance and try again.')}};
+var POLX={coffee:['☕ Coffee with your boss',1,0,3,function(w){w.boss=cl2(w.boss+6,0,100);st({stress:-1});return'Your boss appreciates the chat.'}],
+ help:['🤝 Help a colleague',1,5,3,function(w){w.team=cl2(w.team+6,0,100);w.perf=cl2(w.perf+2,0,100);return'Your colleague is grateful.'}],
+ extra:['💪 Go the extra mile',1,12,2,function(w){w.perf=cl2(w.perf+5,0,100);st({stress:3});return'You impressed with extra effort.'}],
+ social:['🍻 Join work drinks (£12)',1,0,3,function(w){w.team=cl2(w.team+4,0,100);G.st.rep=cl(G.st.rep+1);st({happy:3});return'A fun evening with the team.'}],
+ credit:['🎭 Take credit for a team win',1,0,7,function(w){if(rnd()<.25){w.boss=cl2(w.boss-15,0,100);w.team=cl2(w.team-8,0,100);st({stress:8});return'You were found out. Your boss is not impressed.'}w.boss=cl2(w.boss+8,0,100);w.team=cl2(w.team-10,0,100);return'Your boss noticed you. The team did not like it.'}],
+ gossip:['🗣 Share office gossip',1,0,5,function(w){if(rnd()<.3){w.team=cl2(w.team-8,0,100);w.boss=cl2(w.boss-3,0,100);return'It got back to the wrong person.'}w.team=cl2(w.team+5,0,100);return'You bonded over a good story.'}]};
+LX.pol=function(k){var w=X().w,a=POLX[k];if(!G.job)return say('You need a job.');if(G.day-(w.cd[k]||-99)<a[3])return say('Give that a few days.');if(k=='social'&&!pay$(1200,'Work drinks','Social'))return render();if(!use(a[1],a[2]))return;w.cd[k]=G.day;say(a[4](w))};
+var OFE=[['A colleague takes credit for your idea.',[['Confront them politely',0,{stress:2},'Other',[['w.team',-3],['w.perf',2]]],['Tell your boss',0,{stress:1},'Other',[['w.boss',4],['w.team',-6]]],['Let it slide',0,{stress:4},'Other',[]]]],
+ ['Your boss offers you a stretch project.',[['Accept it',0,{stress:5,energy:-10},'Other',[['w.perf',7],['w.boss',6]]],['Politely decline',0,{},'Other',[['w.boss',-3]]]]],
+ ['A rival is spreading rumours about you.',[['Ignore it',0,{stress:4},'Other',[['w.team',-4]]],['Address it head-on',0,{stress:2},'Other',[['w.team',3],['w.boss',-2]]]]],
+ ['Rumours of a restructure are going round.',[['Keep your head down',0,{stress:3},'Other',[['w.perf',2]]],['Update your CV just in case',0,{stress:1},'Other',[]]]],
+ ['It is a colleague’s leaving party (£10 for a card & drink).',[['Go along',1000,{happy:4},'Social',[['w.team',6]]],['Skip it',0,{},'Other',[['w.team',-2]]]]]];
+HK.push(function(){var w=X().w,j=G.job;if(!j){w.bt=null;return}var key=j.vid+'|'+j.e;
+ if(w.btk!=key){w.bt=j.t.replace(/^(Senior|Lead|Principal) /,'');w.btk=key;w.lvl=0;w.last=G.day;w.prom=-99;w.perf=50;w.boss=50;w.team=50;w.below=0}
+ var sk=jobSk(),m=(sk&&G.cv.sk.indexOf(sk)>-1)?8:0,tg=45+m+(G.st.energy-50)*.12-(G.st.stress-40)*.25+(w.boss-50)*.12+(w.team-50)*.08-((j.abs||0)>3?6:0);
+ w.perf=cl2(w.perf+(tg-w.perf)*.025,0,100);w.boss=cl2(w.boss-(w.boss-50)*.01,0,100);w.team=cl2(w.team-(w.team-50)*.01,0,100);
+ if(G.day-w.last>=91&&G.day>j.start+60)review();
+ if(dm()==15&&once('office:'+ym())&&!G.dec&&rnd()<.4&&G.day>j.start+30){var o=R(OFE);mkDec(o[0],o[1])}});
+var GT=[{sk:'IT',n:'Fix a small business’s computers',b:7500,s:1,e:8},{sk:'IT',n:'Build a simple website',b:20000,s:2,e:12},{sk:'Cooking',n:'Cater a birthday party',b:12000,s:2,e:12},{sk:'Cooking',n:'Bake for a local café',b:5500,s:1,e:8},
+ {sk:'Driving',n:'Courier shift',b:6500,s:1,e:8},{sk:'Driving',n:'Airport run',b:9500,s:1,e:8},{sk:'Customer service',n:'Virtual assistant work',b:5000,s:1,e:6},{sk:'Customer service',n:'Event front-of-house',b:8500,s:1,e:8},
+ {sk:'Sales',n:'Commission-only sales',b:4000,s:1,e:8,v:1},{sk:'Admin',n:'Bookkeeping for a shop',b:7000,s:1,e:6},{sk:'Admin',n:'Data entry project',b:9000,s:2,e:8}];
+function gigPay(t,m){var g=X().gg,xp=g.xp[t.sk]||0,has=G.cv.sk.indexOf(t.sk)>-1;return Math.round(t.b*m*(.7+Math.min(xp,100)/100*.6+(has?.15:0))*ecoMul())}
+function canGig(t){return G.cv.sk.indexOf(t.sk)>-1||(X().gg.xp[t.sk]||0)>=5}
+HK.push(function(){var g=X().gg;if(g.bw!=wid()){g.bw=wid();g.board=[];var pool=GT.slice();for(var i=0;i<5;i++){var k=Math.floor(rnd()*pool.length);g.board.push({i:GT.indexOf(pool[k]),m:+(.85+rnd()*.35).toFixed(2)});pool.splice(k,1)}}
+ if(mo()==1&&dm()==31&&once('sa:'+yr())){var gr=g.yr[yr()-1]||0;if(gr>100000){var t=Math.round((gr-100000)*.2);bill(t,'Self-assessment tax (freelance income)','Tax');note('Self-assessment tax','Tax on '+M(gr)+' of freelance income last year (after the £1,000 allowance): '+M(t)+'.')}}});
+LX.gig=function(i){var g=X().gg,b=g.board[i];if(!b||b.d)return;var t=GT[b.i];if(!canGig(t))return say('You need the '+t.sk+' skill on your CV (or some experience) for that.');if(G.pr)return say('Not in custody.');if(!use(t.s,t.e))return;
+ var p=gigPay(t,b.m)*(t.v?(.2+rnd()*2):1);p=Math.round(p);b.d=1;g.xp[t.sk]=Math.min(100,(g.xp[t.sk]||0)+2);g.done++;g.earn+=p;g.yr[yr()]=(g.yr[yr()]||0)+p;X().cnt.gig++;led('bank',p,'Freelance – '+t.n,'Freelance','income','Client');st({stress:1});say('Gig done: you earned '+M(p)+'. (Freelance tax is settled each January.)')};
+V.work=function(){var w=X().w,j=G.job,g=X().gg,h='';
+ if(j){var nr=Math.max(0,91-(G.day-w.last));h+=C('💼 '+E(j.t)+' at '+E(j.e),RW('Pay',M(j.r)+'/hour')+BAR('Performance',w.perf)+BAR('Boss approval',w.boss)+BAR('Team approval',w.team)+RW('Last review',w.rate||'none yet')+RW('Next review','in about '+nr+' days')+RW('Career rung',w.lvl+'/3')+RW('Promotion odds if you ask',Math.round(promOdds()*100)+'%')+'<div>'+B('Ask for a promotion (1 slot)','LX.askprom()',1)+'</div>'+MU('Reviews every ~3 months decide raises, bonuses and promotions. In a downturn raises are frozen and promotions are rare.'));
+  h+=C('🏢 Office politics',Object.keys(POLX).map(function(k){var a=POLX[k];return B(a[0],'LX.pol(\''+k+'\')',1,G.day-(w.cd[k]||-99)<a[3])}).join('')+MU('Boss and team approval feed your performance score and promotion odds. Shortcuts like taking credit are risky.'))}
+ else h+=C('💼 Workplace',MU('You are not employed. Get a job to unlock reviews, promotions and office politics. Freelancing below works either way.'));
+ h+=C('🧰 Freelance gig board (this week)',g.board.map(function(b,i){var t=GT[b.i],ok=canGig(t);return'<div class="r"><span>'+E(t.n)+'<br><span class="m">'+t.sk+' · '+t.s+' slot'+(t.s>1?'s':'')+' · ~'+M(gigPay(t,b.m))+(t.v?' (commission varies)':'')+(ok?'':' · needs skill')+'</span></span>'+B(b.d?'Done':'Take it','LX.gig('+i+')',0,b.d||!ok)+'</div>'}).join('')+RW('Gigs completed',g.done)+RW('Earned this year',M(g.yr[yr()]||0))+MU('Pay grows with experience (+ your CV skills) and follows the economy. Add skills in Skills & CV. Freelance profit over £1,000 is taxed 20% each January.'));
+ h+=C('Experience',Object.keys(g.xp).length?Object.keys(g.xp).map(function(k){return BAR(k,g.xp[k])}).join(''):MU('Complete gigs to build experience.'));return h};
+/* ---------- 7. BUSINESS EMPIRE ---------- */
+var RL=['Assistant','Specialist','Supervisor','Technician','Associate'];
+function mkW(){return typeof wageB=='function'?wageB():160000}
+function ewage(e){return Math.round(mkW()*(.75+e.sk/200))}
+function newEmp(sk){var e={id:Math.floor(rnd()*1e9),n:R(NAMEF.concat(NAMEM))+' '+R(SUR),r:R(RL),sk:sk!=null?sk:ri(25,80),mor:ri(55,80),since:G.day};e.w=ewage(e);return e}
+function roster(b){var m=X().emp,a=m[b.id]||(m[b.id]=[]);while(a.length<b.staff)a.push(newEmp());while(a.length>b.staff){a.sort(function(p,q){return p.sk-q.sk});a.shift()}return a}
+function bcost(b,amt,d){if(amt<=0)return;var x=Math.min(G[b.acct],amt);if(x>0)led(b.acct,-x,d,'Business','expense','Staff');b.owed+=amt-x}
+function tev(b){return Math.round(bizEV(b)/Math.max(.05,b.own==null?1:b.own))}
+function avgRev(b){var h=b.h.slice(-3);return h.length?h.reduce(function(s,x){return s+x.rev},0)/h.length:0}
+LX.cand=function(bi){var b=G.bizs[bi];if(!b)return;var x=X();x.cand=x.cand||{};x.cand[b.id]=[newEmp(),newEmp(),newEmp()];render()};
+LX.hire=function(bi,ci){var b=G.bizs[bi],c=(X().cand||{})[b&&b.id];if(!c||!c[ci])return;if(b.staff>=10)return say('Maximum 10 staff per business.');var a=roster(b);a.push(c[ci]);b.staff=a.length;X().cand[b.id]=null;say('Hired '+c[ci].n+'.')};
+LX.fire=function(bi,ei){var b=G.bizs[bi],a=roster(b),e=a[ei];if(!e)return;ask('Let '+e.n+' go? Severance '+M(Math.round(e.w*(G.day-e.since>365?1:.5)))+'.',function(){bcost(b,Math.round(e.w*(G.day-e.since>365?1:.5)),'Severance – '+e.n);a.splice(ei,1);b.staff=a.length;render()})};
+LX.train=function(bi,ei){var b=G.bizs[bi],e=roster(b)[ei];if(!e||G[b.acct]<40000)return say('The business account needs £400 for training.');led(b.acct,-40000,'Staff training – '+e.n,'Business','expense','Staff');e.sk=Math.min(95,e.sk+8);e.mor=Math.min(100,e.mor+4);say(e.n+' completed training.')};
+LX.raise=function(bi,ei){var e=roster(G.bizs[bi])[ei];if(!e)return;e.w=Math.round(e.w*1.1);e.mor=Math.min(100,e.mor+10);say(e.n+' gets a 10% raise.')};
+LX.fran=function(bi){var b=G.bizs[bi];b.fr=b.fr||{u:[]};if(b.h.length<6)return say('Trade for 6 months before franchising.');if((b.brand||0)<20)return say('You need a brand score of at least 20 (create a brand and market it).');if(b.fr.u.length>=5)return say('Maximum 5 franchise units.');
+ var r=avgRev(b),fee=Math.round(r*3*(.5+b.brand/100)),tx=Math.round(fee*.19);led(b.acct,fee,'Franchise fee received','Business','income','Franchise');bcost(b,tx,'Corporation tax on franchise fee');
+ b.fr.u.push({n:R(SUR)+' '+R(['& Sons','Group','Partners','Trading'])+' ('+R(['Leeds','Bristol','York','Derby','Bath','Hull'])+')',roy:Math.round(r*.07*(.6+rnd()*.8)),q:ri(35,90)});note('Franchise sold','A new franchisee joins '+b.name+'. Fee '+M(fee)+'; royalties start next month.')};
+LX.ipo=function(bi,pct){var b=G.bizs[bi],own=b.own==null?1:b.own,T=tev(b);if(b.ipo)return say('Already listed.');if(b.h.length<12)return say('Trade for 12 months before listing.');if(T<5e7)return say('Listing needs a company value of at least '+M(5e7)+' (yours: '+M(T)+').');if(own-pct<.51)return say('You must keep at least 51% control.');
+ var pr=Math.round(T*pct*.94),tax=Math.round(.1*Math.min(pr,1e8)+.2*Math.max(0,pr-1e8));ask('List '+b.name+' on the stock market, selling '+Math.round(pct*100)+'% for about '+M(pr)+'? Fees 6%; CGT ~'+M(tax)+' (Business Asset Disposal Relief). You keep '+Math.round((own-pct)*100)+'%.',function(){
+  led('bank',pr,'IPO share sale – '+b.name,'Business','sale','IPO');led('bank',-tax,'Capital gains tax – IPO','Tax','tax','HMRC');G.tax=(G.tax||0)+tax;b.own=own-pct;b.ipo={px:100,pub:pct,h:[100],d:G.day,base:T};note('📈 '+b.name+' is now listed','Your company floats at an index price of 100. Public investors hold '+Math.round(pct*100)+'%. Shares move with the market and your profits.');render()})};
+LX.sec=function(bi){var b=G.bizs[bi],o=b.ipo,own=b.own==null?1:b.own;if(!o)return;if(own-.1<.51)return say('You must keep at least 51% control.');var T=tev(b),pr=Math.round(T*.1*(o.px/100)*.97),tax=Math.round(.2*pr);ask('Sell another 10% at price index '+Math.round(o.px)+' for '+M(pr)+' (tax ~'+M(tax)+')?',function(){led('bank',pr,'Secondary share sale – '+b.name,'Business','sale','Shares');led('bank',-tax,'Capital gains tax – share sale','Tax','tax','HMRC');G.tax=(G.tax||0)+tax;b.own=own-.1;o.pub+=.1;render()})};
+LX.buyb=function(bi){var b=G.bizs[bi],o=b.ipo,own=b.own==null?1:b.own;if(!o)return;var q=Math.min(.1,o.pub),T=tev(b),c=Math.round(T*q*(o.px/100)*1.03);if(G.bank<c)return say('You need '+M(c)+' in the bank to buy back shares.');ask('Buy back '+Math.round(q*100)+'% at price index '+Math.round(o.px)+' for '+M(c)+'?',function(){led('bank',-c,'Share buyback – '+b.name,'Business','purchase','Buyback');b.own=Math.min(1,own+q);o.pub=Math.max(0,o.pub-q);if(o.pub<.005){b.own=1;b.ipo=null;note('Delisted',b.name+' is private again.')}render()})};
+function mkRivals(){var r=X().riv;if(r.rw==wid())return;r.rw=wid();var e=ECO(),f=e.ph=='recession'?.75:e.ph=='slowdown'?.9:e.ph=='boom'?1.2:1;r.l=[];(G.bizs||[]).forEach(function(b){var i=IND2.find(function(z){return z.id==b.ind});if(!i||r.l.length>=3)return;var rev=Math.round(i.r*ri(25,90)/100),m=.1+rnd()*.15,pr=Math.round(rev*12*m*ri(4,9)*f);r.l.push({id:Math.floor(rnd()*1e9),n:R(['Harbour','Brightside','Northern','Crown','Redwood','Oakley','Summit'])+' '+R(['& Co','Ltd','Group','Works']),ind:b.ind,rev:rev,price:pr,f:f})})}
+LX.buy=function(ri2,bi){var r=X().riv.l[ri2],b=G.bizs[bi];if(!r||!b)return;if(b.ind!=r.ind)return say('Buy a rival in the same industry as your business.');if(G.bank<r.price)return say('You need '+M(r.price)+' in the bank.');
+ ask('Acquire '+r.n+' for '+M(r.price)+'? It merges into '+b.name+': +customers, a new location, brand and equipment, but integration disrupts staff for a while.',function(){var i=IND2.find(function(z){return z.id==b.ind}),tm=TIERM[b.tier||0]||1;
+  led('bank',-r.price,'Acquisition of '+r.n,'Business','purchase','Acquisition');b.cb=Math.min(3,b.cb+Math.min(.5,r.rev/(i.r*tm)));b.brand=Math.min(100,(b.brand||0)+10);b.locs.push({city:b.locs[0]?b.locs[0].city:G.city});b.eqv+=Math.round(r.price*.35);
+  var a=roster(b);if(b.staff<10){var e=newEmp();e.mor=40;a.push(e);b.staff=a.length}a.forEach(function(e){e.mor=Math.max(0,e.mor-10)});st({stress:6});X().riv.l=X().riv.l.filter(function(z){return z!==r});note('🤝 Acquisition complete',r.n+' is now part of '+b.name+'. Expect a few bumpy months.');render()})};
+HK.push(function(){(G.bizs||[]).forEach(function(b){
+ var last=b.h&&b.h[b.h.length-1];
+ if(b.ipo&&dow()==1&&once('ipo:'+b.id+':'+G.day)){var o=b.ipo,pv=b.h[b.h.length-2],g=last&&pv&&pv.profit?(last.profit-pv.profit)/Math.abs(pv.profit):0;o.px=Math.max(5,o.px*(1+cl2((G.mkt?G.mkt.s:0)*.004+gs()*.02+cl2(g,-.5,.5)*.01,-.12,.12)));o.h.push(Math.round(o.px));if(o.h.length>26)o.h.shift()}
+ if(last&&last.d==G.day&&dm()==1&&once('emp:'+b.id+':'+ym())){var a=roster(b),tm=TIERM[b.tier||0]||1,base=b.staff*mkW()*Math.pow(tm,.8),sum=a.reduce(function(s,e){return s+e.w},0)*Math.pow(tm,.8),delta=Math.round((sum-base)*1.16);
+  var avs=a.length?a.reduce(function(s,e){return s+e.sk},0)/a.length:50,avm=a.length?a.reduce(function(s,e){return s+e.mor},0)/a.length:50,f=a.length?cl2((avs-50)/50*.08+(avm-50)/50*.05,-.1,.12):0,bonus=Math.round(last.rev*f),net=bonus-delta;
+  if(net>0)led(b.acct,net,'Team performance (skills & morale)','Business','income','Staff');else if(net<0)bcost(b,-net,'Staff pay & productivity adjustment');last.profit+=net;
+  a.slice().forEach(function(e){var ratio=e.w/ewage(e);e.mor=cl2(e.mor+(ratio-1)*35+(b.owed>0?-8:1)-1+ri(-3,3),0,100);e.sk=Math.min(95,e.sk+.4);
+   if(e.mor<22&&rnd()<.35){a.splice(a.indexOf(e),1);b.staff=a.length;note('Staff resignation',e.n+' has quit '+b.name+' (morale was '+Math.round(e.mor)+').')}
+   else if(ECO().ph=='boom'&&e.sk>70&&rnd()<.04){a.splice(a.indexOf(e),1);b.staff=a.length;note('Staff poached',e.n+' was headhunted by a rival in the boom. A raise helps keep top talent.')}});
+  if(b.fr&&b.fr.u.length){var roy=0;b.fr.u.slice().forEach(function(u){u.q=cl2(u.q+ri(-8,7),0,100);if(u.q<20&&rnd()<.3){b.fr.u.splice(b.fr.u.indexOf(u),1);b.brand=Math.max(0,b.brand-4);note('Franchise unit closed',u.n+' failed and closed, hurting your brand.');return}if(u.q<35&&rnd()<.15){b.brand=Math.max(0,b.brand-2)}roy+=u.roy});
+   if(roy>0){led(b.acct,roy,'Franchise royalties','Business','income','Franchise');var tx=Math.round(roy*.19);bcost(b,tx,'Corporation tax on royalties');last.profit+=roy-tx}b.brand=Math.min(100,b.brand+.5*b.fr.u.length)}}})});
+V.empire=function(){var h='',bz=G.bizs||[];if(!bz.length)return C('🏭 Business empire',MU('You do not own a business yet. Start one in the Business tab; this page then lets you manage individual staff, franchise the brand, list on the stock market and buy out rivals.'));mkRivals();
+ bz.forEach(function(b,bi){var a=roster(b),T=tev(b),cd=(X().cand||{})[b.id];
+  h+=C('🏢 '+E(b.name),RW('Company value (100%)',M(T))+RW('Your stake',Math.round((b.own==null?1:b.own)*100)+'%')+RW('Staff',a.length+' · wages '+M(a.reduce(function(s,e){return s+e.w},0))+'/month')+RW('Franchise units',(b.fr?b.fr.u.length:0)+'/5')+(b.ipo?RW('Share price index',Math.round(b.ipo.px)+' ('+(b.ipo.px>=100?'+':'')+Math.round(b.ipo.px-100)+'% since IPO)'):RW('Listed','no')));
+  h+=C('👥 Team',(a.map(function(e,ei){return'<div style="margin:6px 0"><div class="r"><span><b>'+E(e.n)+'</b> <span class="m">'+e.r+' · skill '+Math.round(e.sk)+' · pay '+M(e.w)+'</span></span><span>'+B('Train £400','LX.train('+bi+','+ei+')',1)+B('Raise','LX.raise('+bi+','+ei+')',1)+B('Let go','LX.fire('+bi+','+ei+')',1)+'</span></div>'+BAR('Morale',e.mor)+'</div>'}).join('')||MU('No staff. Hire your first employee below.'))+(cd?cd.map(function(c,ci){return'<div class="r"><span>'+E(c.n)+'<br><span class="m">skill '+c.sk+' · asks '+M(c.w)+'/month</span></span>'+B('Hire','LX.hire('+bi+','+ci+')')+'</div>'}).join(''):'')+B(cd?'New candidates':'Find candidates','LX.cand('+bi+')',1)+MU('Skilled, happy staff lift sales; underpaid or unhappy staff quit. Wages above market keep morale up but cost more.'));
+  h+=C('🧩 Grow',B('Sell a franchise','LX.fran('+bi+')',1)+MU('Needs 6 months of trading and a brand of 20+. Earns an upfront fee and monthly royalties; badly run units can hurt your brand.')+(b.ipo?B('Sell 10% more','LX.sec('+bi+')',1)+B('Buy back 10%','LX.buyb('+bi+')',1):B('IPO: sell 20%','LX.ipo('+bi+',.2)',1)+B('IPO: sell 30%','LX.ipo('+bi+',.3)',1))+MU(b.ipo?'Price follows the market and your profit growth. Public shareholders do not receive dividends in this simplified model.':'Listing needs 12 months of trading and a company worth £500k+. You keep at least 51%.'))});
+ var rv=X().riv.l;h+=C('🤝 Rivals for sale (refreshes weekly)',rv.length?rv.map(function(r,i){var opts=bz.map(function(b,bi){return b.ind==r.ind?B('Buy into '+E(b.name),'LX.buy('+i+','+bi+')'):''}).join('');return'<div style="margin:6px 0"><div class="r"><span>'+E(r.n)+' <span class="m">'+r.ind+' · '+M(r.rev)+'/mo sales</span></span><span><b>'+M(r.price)+'</b></span></div>'+opts+'</div>'}).join('')+MU(ECO().ph=='recession'?'Distressed sellers: prices are 25% lower in the recession.':'Prices rise in a boom and fall in a recession.'):MU('No rivals in the same industry as your businesses right now.'));return h};
+/* ---------- 8. LANDLORD ---------- */
+function ld(p){var L=X().ld;return L[p.id]||(L[p.id]={gas:0,rgi:0,rq:null,tn:null,prj:null,lr:-999,h:[]})}
+function costs(p,T){var l=ld(p);return(p.loan?p.loan.pay:0)+(p.ins||0)+(p.agent&&T?Math.round(T.rent*.1):0)+(l.rgi&&T?Math.round(T.rent*.03):0)}
+LX.lgas=function(i){var p=G.props[i];if(!pay$(7000,'Gas safety certificate – '+p.n,'Property'))return render();ld(p).gas=G.day+365;say('Gas safety certificate valid for a year.')};
+LX.lrgi=function(i){var l=ld(G.props[i]);l.rgi=l.rgi?0:1;say(l.rgi?'Rent guarantee insurance on (3% of rent monthly; covers missed and bounced rent).':'Rent guarantee off.')};
+LX.lfix=function(i){var p=G.props[i],l=ld(p);if(!l.rq)return;if(!spend(l.rq.c,'Repair – '+p.n,'Property'))return render();p.cond=Math.min(100,p.cond+4);l.rq=null;say('Repair done. Your tenant is happy.')};
+LX.lrent=function(i){var p=G.props[i],l=ld(p),T=p.ten;if(!T)return say('No tenant.');if(G.day-l.lr<365)return say('You can only raise the rent once a year.');l.lr=G.day;var hi=T.rent>pRent(p)*1.08;
+ if(rnd()<.1+(hi?.25:0)){p.occ='listed';p.ten=null;l.tn=null;return say('Your tenant refused the increase and moved out. The flat is relisted.')}T.rent=Math.round(T.rent*1.05);say('Rent raised 5% to '+M(T.rent)+'/month.')};
+LX.lover=function(i){var p=G.props[i],L=p.loan,v=Math.round(+(document.getElementById('lo'+i)||{}).value*100);if(!L)return say('No mortgage.');if(!(v>=50000))return say('Overpay at least £500.');v=Math.min(v,L.bal);var erc=G.day-p.day<730?Math.round(v*.02):0;if(G.bank<v+erc)return say('You need '+M(v+erc)+' in the bank'+(erc?' (incl. '+M(erc)+' early-repayment charge)':'')+'.');
+ led('bank',-v,'Mortgage overpayment – '+p.n,'Property','loan repayment','Mortgage');if(erc)led('bank',-erc,'Early repayment charge','Property','fee','Mortgage');L.bal-=v;if(L.bal<=0){p.loan=null;note('Mortgage paid off',p.n+' is now mortgage-free!')}else L.pay=ann(L.bal,L.apr,L.term-L.paid);say('Overpaid '+M(v)+'. Monthly payment is now '+(p.loan?M(p.loan.pay):'nil')+'.')};
+LX.lremo=function(i){var p=G.props[i],L=p.loan;if(!L)return say('No mortgage.');var n=Math.round((G.rate+1.3)*10)/10;if(L.apr<=n+.2)return say('Your rate ('+L.apr.toFixed(1)+'%) is already competitive (best now ~'+n+'%).');if(!spend(99900,'Remortgage fee','Property'))return render();L.apr=n;L.pay=ann(L.bal,L.apr,L.term-L.paid);L.rev=1;say('Remortgaged at '+n+'%. New payment '+M(L.pay)+'/month.')};
+var PRJ={cos:['Cosmetic refresh',150000,0,6,.02,0],kit:['Kitchen & bathroom',900000,21,14,.07,1],full:['Full refurbishment',2200000,42,25,.12,1]};
+LX.lproj=function(i,k){var p=G.props[i],l=ld(p),j=PRJ[k];if(p.reno||p.sale)return say('Works already under way.');if(j[5]&&['home','let'].indexOf(p.occ)>-1)return say('Needs the property to be empty first.');if(!spend(j[1],j[0]+' – '+p.n,'Property'))return render();p.basis+=j[1];
+ if(!j[2]){p.cond=Math.min(100,p.cond+j[3]);p.rx=(p.rx||1)*(1+j[4]);return say('Refresh done: condition +'+j[3]+', rent +'+Math.round(j[4]*100)+'%.')}p.occ='vacant';p.reno={end:G.day+j[2],add:j[3],c:j[1],ov:0};l.prj={upl:j[4]};say(j[0]+' started; ready around '+fmt(p.reno.end).slice(5,16)+'.')};
+LX.levict=function(i){var p=G.props[i],l=ld(p),T=p.ten;if(!T)return say('No tenant.');if(!(T.miss>=1||(l.tn&&l.tn.q=='risky')))return say('You need a reason (missed rent or a problem tenant).');if(!spend(120000,'Eviction legal costs','Property'))return render();p.occ='listed';p.ten=null;l.tn=null;say('The tenancy has ended. The property is relisted.')};
+HK.push(function(){(G.props||[]).forEach(function(p){var l=ld(p),T=p.ten;
+ if(p.occ=='let'&&T&&(!l.tn||l.tn.st!=T.start))l.tn={n:R(NAMEF.concat(NAMEM))+' '+R(SUR),q:R(['good','good','good','ok','ok','risky']),st:T.start};if((p.occ!='let'||!T)&&l.tn)l.tn=null;
+ if(l.prj&&!p.reno){p.rx=(p.rx||1)*(1+l.prj.upl);note('Renovation complete',p.n+' now commands about '+Math.round(l.prj.upl*100)+'% more rent.');l.prj=null}
+ if(l.rq&&G.day>l.rq.due){if(rnd()<.5){p.occ='listed';p.ten=null;l.tn=null;note('Tenant left',p.n+': your tenant moved out after the repair was ignored.')}else{p.cond=Math.max(5,p.cond-4);note('Repair ignored',l.rq.desc+' at '+p.n+' got worse; the property lost condition.')}l.rq=null}
+ if(dm()==1&&G.day>p.day&&p.occ=='let'&&l.rgi&&T&&once('rgi:'+p.id+':'+ym()))bill(Math.round(T.rent*.03),'Rent guarantee insurance – '+p.n,'Property');
+ if(dm()==2&&once('ldm:'+p.id+':'+ym())){
+  if(l.rgi&&T&&(G.inbox||[]).some(function(m){return m.d==G.day-1&&m.t=='Tenant missed rent'&&m.b.indexOf(p.n)>-1})){led('bank',T.rent,'Rent guarantee claim – '+p.n,'Rental income','income','Insurer')}
+  if(p.occ=='let'&&T){if(l.tn&&l.tn.q=='risky'&&rnd()<.12){if(l.rgi)note('Rent bounced',p.n+': rent payment bounced; your rent guarantee insurance covered it.');else{led('bank',-T.rent,'Rent bounced – '+p.n,'Property','fee','Tenant');note('Rent bounced',p.n+': your tenant’s payment bounced. '+M(T.rent)+' was reversed.')}}
+   if(!l.rq&&rnd()<(p.cond<50?.22:.14)){l.rq={d:G.day,due:G.day+14,desc:R(['Boiler fault','Leaking tap','Broken window latch','Damp patch','Faulty oven','Thermostat failure']),c:Math.round(P(ri(80,600))*(p.cond<50?1.3:1))};note('🔧 Repair request',p.n+': '+l.rq.desc+'. Fix it within 14 days ('+M(l.rq.c)+') or the tenant may leave.')}
+   if(l.gas<G.day&&rnd()<.08){var f=P(ri(800,2500));bill(f,'Gas safety fine – '+p.n,'Property');note('Gas safety fine',p.n+' had no valid gas safety certificate. Fine '+M(f)+'. Get a certificate in Landlord.')}}
+  l.h.push({m:ym(),inc:(p.occ=='let'&&T?T.rent:0),exp:costs(p,T)});if(l.h.length>12)l.h.shift()}})});
+V.land=function(){var ps=G.props||[],h='';if(!ps.length)return C('🏘 Landlord',MU('You do not own any property yet. Buy a home or a buy-to-let in Buy & Own Property, then manage tenants, repairs, mortgages and renovations here.'));
+ var tv=0,td=0,tc=0;ps.forEach(function(p){var T=p.ten,rent=T?T.rent:0;tv+=pVal(p);td+=p.loan?p.loan.bal:0;tc+=(p.occ=='let'?rent:0)-costs(p,T)});
+ h+=C('📊 Portfolio',RW('Properties',ps.length)+RW('Total value',M(tv))+RW('Mortgage debt',M(td))+RW('Equity',M(tv-td))+RW('Monthly cash flow (let homes)',M(tc))+RW('Rental demand index',(G.rdem||1).toFixed(2))+RW('House price index',Math.round(G.hpi||100))+MU('The economy moves rents and prices: booms lift them, recessions cut them, and interest rates change mortgage costs.'));
+ ps.forEach(function(p,i){var l=ld(p),T=p.ten,v=pVal(p),rent=T?T.rent:pRent(p),yl=v?rent*12/v*100:0,cf=(p.occ=='let'?rent:0)-costs(p,T),st2={home:'🏠 Your home',vacant:'Vacant',listed:'Listed to let',let:'Let'}[p.occ]||p.occ;
+  h+=C('🏡 '+E(p.n),RW('Status',(p.reno?'🔨 Renovating':st2))+RW('Value / equity',M(v)+' / '+M(v-(p.loan?p.loan.bal:0)))+RW('Condition',Math.round(p.cond)+'/100')+RW('Rent (market)',M(rent)+'/month · yield '+yl.toFixed(1)+'%')+RW('Monthly costs',M(costs(p,T)))+RW('Cash flow',M(cf))+(p.loan?RW('Mortgage',M(p.loan.bal)+' at '+p.loan.apr.toFixed(1)+'% · '+M(p.loan.pay)+'/mo'):RW('Mortgage','none'))+
+   (T&&l.tn?RW('Tenant',E(l.tn.n)+' ('+({good:'reliable',ok:'average',risky:'risky'}[l.tn.q])+') · missed '+T.miss):'')+
+   (l.rq?'<div class="c" style="border-color:var(--bad)"><b>🔧 '+l.rq.desc+'</b> · '+M(l.rq.c)+' · fix by '+fmt(l.rq.due).slice(5,11)+B('Fix now','LX.lfix('+i+')')+'</div>':'')+
+   RW('Gas safety certificate',l.gas>G.day?'valid to '+fmt(l.gas).slice(5,16):'<span class="bad">none</span>')+
+   '<div>'+B('Gas cert £70','LX.lgas('+i+')',1)+B(l.rgi?'Rent guarantee ✓':'Rent guarantee','LX.lrgi('+i+')',1)+B('Raise rent 5%','LX.lrent('+i+')',1,!T)+B('Evict','LX.levict('+i+')',1,!T)+'</div>'+
+   (p.loan?'<div class="g"><input id="lo'+i+'" type="number" placeholder="Overpay £" value="1000">'+'<div>'+B('Overpay','LX.lover('+i+')')+B('Remortgage £999','LX.lremo('+i+')',1)+'</div></div>':'')+
+   '<div>'+Object.keys(PRJ).map(function(k){return B(PRJ[k][0]+' '+M(PRJ[k][1]),'LX.lproj('+i+',\''+k+'\')',1)}).join('')+'</div>'+MU('Kitchen/bathroom and full refurbs need the property empty, then raise condition and rent. Ignore repair requests and tenants leave.'))});return h};
+/* ---------- 9. SAVE SLOTS, BACKUP & TRANSFER ---------- */
+var SLOTS=5,skey=function(n){return'lifecraft_slot_'+n},mkey=function(n){return'lifecraft_slot_'+n+'_m'};
+function hash(s){var h=5381;for(var i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(i))|0;return(h>>>0).toString(16)}
+function meta(){var n=0;try{n=nw()}catch(e){}return{n:G.name,d:G.day,nw:n,at:Date.now()}}
+function lsGet(k){try{return localStorage.getItem(k)}catch(e){return null}}
+function slotMeta(n){try{return JSON.parse(lsGet(mkey(n)))}catch(e){return null}}
+function putSlot(n,g,m){try{localStorage.setItem(skey(n),g);localStorage.setItem(mkey(n),JSON.stringify(m));return true}catch(e){return false}}
+LX.sSave=function(n){var m=slotMeta(n),go=function(){if(!putSlot(n,JSON.stringify(G),meta()))return say('Storage is full on this device. Delete a slot or use a backup file instead.');say('Saved to slot '+n+'.')};if(m)ask('Overwrite slot '+n+' ('+E(m.n)+')?',go);else go()};
+LX.sLoad=function(n){var s=lsGet(skey(n));if(!s)return;ask('Load slot '+n+'? Your current game is backed up once, then replaced.',function(){try{localStorage.setItem('lifecraft_backup',JSON.stringify(G));localStorage.setItem('lc_tmp',s);if(!load('lc_tmp'))throw 0;localStorage.removeItem('lc_tmp');save();tab='home';tr='Slot '+n+' loaded.'}catch(e){tr='Could not load that slot.'}render()})};
+LX.sDel=function(n){ask('Delete slot '+n+'?',function(){try{localStorage.removeItem(skey(n));localStorage.removeItem(mkey(n))}catch(e){}render()})};
+function pack(all){var g=JSON.stringify(G),o={app:'LIFECRAFT',v:1,at:new Date().toISOString(),name:G.name,day:G.day,sum:hash(g),game:g};if(all){o.slots={};for(var i=1;i<=SLOTS;i++){var s=lsGet(skey(i));if(s)o.slots[i]={g:s,m:lsGet(mkey(i))}}}return JSON.stringify(o)}
+function dl(t,fn){var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:'application/json'}));a.download=fn;document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},1500)}
+LX.exp=function(all){X().sl.bk=G.day;save();var t=pack(all),fn='lifecraft-'+String(G.name||'save').replace(/[^\w-]+/g,'')+'-'+new Date().toISOString().slice(0,10)+'.json',f=null;try{f=new File([t],fn,{type:'application/json'})}catch(e){}
+ if(f&&navigator.canShare&&navigator.canShare({files:[f]}))navigator.share({files:[f],title:'LIFECRAFT backup'}).catch(function(){});else dl(t,fn);tr='Backup created. Keep the file somewhere safe (Files, iCloud, email to yourself).';render()};
+LX.expText=function(){X().sl.bk=G.day;save();var t=pack(0);try{navigator.clipboard.writeText(t).then(function(){say('Backup text copied. Paste it into Restore on your other device.')},function(){showTxt(t)})}catch(e){showTxt(t)}};
+function showTxt(t){var a=document.getElementById('lcx10t');if(a){a.value=t;a.select();tr='Copy the text from the box below.';render();var b=document.getElementById('lcx10t');if(b){b.value=t}}}
+LX.impf=function(inp){var f=inp.files&&inp.files[0];if(!f)return;var r=new FileReader();r.onload=function(){LX.impt(String(r.result))};r.readAsText(f)};
+LX.impTxt=function(){var a=document.getElementById('lcx10t');LX.impt(a?a.value:'')};
+LX.impt=function(txt){var o;try{o=JSON.parse(txt)}catch(e){return say('That is not a valid backup.')}
+ if(o&&o.app!='LIFECRAFT'&&o.led&&o.day!=null){var g0=JSON.stringify(o);o={app:'LIFECRAFT',game:g0,sum:hash(g0),name:o.name,day:o.day}}
+ if(!o||o.app!='LIFECRAFT'||typeof o.game!='string')return say('This does not look like a LIFECRAFT backup.');if(hash(o.game)!=o.sum)return say('The backup is damaged (checksum mismatch).');
+ ask('Restore “'+E(o.name)+'” (game date '+fmt(o.day).slice(5,16)+')? This replaces your current game on this device'+(o.slots?' and its save slots':'')+'. Your current game is backed up once first.',function(){try{localStorage.setItem('lifecraft_backup',JSON.stringify(G))}catch(e){}
+  try{if(o.slots)Object.keys(o.slots).forEach(function(i){putSlot(i,o.slots[i].g,JSON.parse(o.slots[i].m||'{}'))});localStorage.setItem('lc_tmp',o.game);if(!load('lc_tmp'))throw 0;localStorage.removeItem('lc_tmp');save();tab='home';tr='Backup restored.'}catch(e){tr='Restore failed (storage full or file damaged).'}render()})};
+HK.push(function(){if(dm()==1&&mo()%3==1&&once('auto:'+ym()))putSlot('auto',JSON.stringify(G),meta())});
+V.saves=function(){var kb=Math.round(JSON.stringify(G).length/1024),sl=X().sl,h='',late=G.day-sl.bk>60;
+ h+=C('💾 Current game',RW('Character',E(G.name)+' · '+fmt(G.day).slice(5,16))+RW('Save size',kb+' KB')+RW('Last backup file',sl.bk?'game date '+fmt(sl.bk).slice(5,16):'never')+(late?'<div class="bad m">You have not exported a backup for a while. Make one now so you can restore on another device or if the browser clears its data.</div>':'')+B('Save now','save();say(\'Saved.\')'));
+ var rows='';for(var n=1;n<=SLOTS;n++){var m=slotMeta(n);rows+='<div class="r"><span><b>Slot '+n+'</b><br><span class="m">'+(m?E(m.n)+' · '+fmt(m.d).slice(5,16)+' · NW '+M(m.nw):'empty')+'</span></span><span>'+B('Save','LX.sSave('+n+')',1)+(m?B('Load','LX.sLoad('+n+')',1)+B('✕','LX.sDel('+n+')',1):'')+'</span></div>'}
+ var am=slotMeta('auto');rows+='<div class="r"><span><b>Auto-save</b><br><span class="m">'+(am?E(am.n)+' · '+fmt(am.d).slice(5,16)+' · NW '+M(am.nw):'quarterly, none yet')+'</span></span>'+(am?B('Load','LX.sLoad(\'auto\')',1):'')+'</div>';
+ h+=C('🗂 Save slots',rows+MU('Slots live in this browser. Try several life paths side by side.'));
+ h+=C('📲 Backup & transfer',MU('Move your game between iPhone and laptop: make a backup file on one device, open it on the other.')+'<div>'+B('Backup file (share / download)','LX.exp(0)')+B('Backup incl. slots','LX.exp(1)',1)+B('Copy as text','LX.expText()',1)+'</div>'+
+  '<div style="margin-top:8px"><b>Restore</b></div><input type="file" accept=".json,application/json" onchange="LX.impf(this)"><textarea id="lcx10t" rows="3" placeholder="…or paste backup text here"></textarea>'+B('Restore from text','LX.impTxt()')+MU('Restoring checks the file for damage and keeps a one-time safety copy of your current game.'));return h};
+/* ---------- 10. MINI-GAMES THAT PAY ---------- */
+var MG={t:[]};
+function MGstop(){MG.t.forEach(clearTimeout);MG.t=[];if(MG.kd){document.removeEventListener('keydown',MG.kd);MG.kd=null}}
+function mgb(h){var b=document.getElementById('mgbox');if(b)b.innerHTML=h;return b}
+function mgPay(k,amt,boost){var m=X().ms;amt=Math.round(amt*(1+m[k]/200)*(boost||1));if(m.day!=G.day){m.day=G.day;m.today=0}m.today++;if(m.today>3)amt=Math.round(amt*.5);
+ if(amt>0)led('bank',amt,'Mini-game: '+{quiz:'Quiz show',mem:'Memory challenge',cook:'Cooking shift',drive:'Driving gig'}[k],'Mini-games','income','Game');m.earn+=amt;m.plays[k]=(m.plays[k]||0)+1;m[k]=Math.min(100,m[k]+1.5);X().cnt.mini++;return amt}
+function mgEnd(k,amt,txt,boost){var best=X().ms.best;best[k]=Math.max(best[k]||0,amt);var p=mgPay(k,amt,boost);MGstop();say(txt+' You earned '+M(p)+'.')}
+var shuf=function(a){return a.slice().sort(function(){return rnd()-.5})};
+var QB=[['Capital of Australia?',['Sydney','Melbourne','Canberra','Perth'],2],['Planet closest to the Sun?',['Venus','Mercury','Mars','Earth'],1],['Chemical symbol for gold?',['Au','Ag','Gd','Go'],0],['Who wrote Pride and Prejudice?',['Charlotte Brontë','Jane Austen','George Eliot','Mary Shelley'],1],
+ ['Largest ocean on Earth?',['Atlantic','Indian','Arctic','Pacific'],3],['Year of the Great Fire of London?',['1666','1588','1745','1812'],0],['Hardest natural substance?',['Quartz','Steel','Diamond','Granite'],2],['Sides on a hexagon?',['5','6','7','8'],1],
+ ['Gas plants absorb for photosynthesis?',['Oxygen','Nitrogen','Carbon dioxide','Helium'],2],['Currency of Japan?',['Won','Yen','Yuan','Baht'],1],['Who painted the Mona Lisa?',['Michelangelo','Raphael','Leonardo da Vinci','Botticelli'],2],['Capital of Canada?',['Toronto','Ottawa','Vancouver','Montreal'],1],
+ ['Smallest prime number?',['0','1','2','3'],2],['Continents on Earth?',['5','6','7','8'],2],['River flowing through London?',['Severn','Thames','Mersey','Trent'],1],['Largest mammal?',['African elephant','Blue whale','Giraffe','Polar bear'],1],
+ ['Boiling point of water at sea level (°C)?',['90','100','110','212'],1],['Square root of 144?',['10','11','12','14'],2],['Which planet is the Red Planet?',['Mars','Jupiter','Mercury','Saturn'],0],['First person on the Moon?',['Buzz Aldrin','Yuri Gagarin','Neil Armstrong','John Glenn'],2],
+ ['Chemical formula for water?',['CO2','H2O','O2','NaCl'],1],['Strings on a standard guitar?',['4','5','6','8'],2],['Tallest mountain above sea level?',['K2','Everest','Kilimanjaro','Mont Blanc'],1],['Marrakech is in which country?',['Egypt','Tunisia','Morocco','Spain'],2],
+ ['Roman numeral for 50?',['L','C','D','X'],0],['Which organ pumps blood?',['Liver','Lungs','Heart','Kidney'],2],['Who developed the theory of relativity?',['Newton','Einstein','Galileo','Darwin'],1],['Official language of Brazil?',['Spanish','Portuguese','French','English'],1],
+ ['Minutes in a day?',['1,240','1,440','1,640','2,400'],1],['Cheese traditionally in a Greek salad?',['Cheddar','Brie','Feta','Gouda'],2],['Longest river in Africa?',['Congo','Niger','Nile','Zambezi'],2],['Which country has the most people?',['USA','India','Brazil','Indonesia'],1],
+ ['What do bees make?',['Silk','Honey','Wax only','Nectar'],1],['Who wrote Romeo and Juliet?',['Dickens','Marlowe','Shakespeare','Wilde'],2],['Freezing point of water (°F)?',['0','32','100','-32'],1],['Largest planet in our solar system?',['Saturn','Neptune','Jupiter','Uranus'],2]];
+function quiz(){var qs=shuf(QB).slice(0,5),i=0,ok=0;
+ function show(){var q=qs[i],o=shuf(q[1].map(function(t,j){return[t,j==q[2]]}));mgb('<div class="c"><h3>Quiz show · question '+(i+1)+'/5</h3><div style="margin:8px 0"><b>'+E(q[0])+'</b></div>'+o.map(function(a,j){return'<button class="s" style="display:block;width:100%;text-align:left;margin:4px 0" data-o="'+j+'">'+E(a[0])+'</button>'}).join('')+'</div>');
+  var bs=document.querySelectorAll('#mgbox button'),done=0;[].forEach.call(bs,function(bt){bt.onclick=function(){if(done)return;done=1;var right=o[+bt.dataset.o][1];if(right)ok++;bt.style.background=right?'#2e9e6b':'#c0392b';bt.style.color='#fff';
+   MG.t.push(setTimeout(function(){i++;if(i<5)show();else mgEnd('quiz',ok*500+(ok==5?1000:0),'Quiz over: '+ok+'/5 correct.')},700))}})}
+ show()}
+function mem(){var cols=['#e74c3c','#3498db','#2ecc71','#f1c40f'],seq=[],lv=0;
+ function pads(on,act){return'<div class="c"><h3>Memory challenge · level '+lv+'</h3><div class="g">'+cols.map(function(c,i){return'<button data-p="'+i+'" style="min-height:76px;background:'+c+';opacity:'+(on===i?1:.45)+'"'+(act?'':' disabled')+'></button>'}).join('')+'</div><div class="m">'+(act?'Repeat the pattern':'Watch…')+'</div></div>'}
+ function round(){lv++;seq=[];for(var i=0;i<lv+2;i++)seq.push(Math.floor(rnd()*4));var k=0;
+  function flash(){if(!document.getElementById('mgbox'))return MGstop();if(k>=seq.length){mgb(pads(-1,1));return listen()}mgb(pads(seq[k],0));MG.t.push(setTimeout(function(){mgb(pads(-1,0));k++;MG.t.push(setTimeout(flash,160))},420))}
+  mgb(pads(-1,0));MG.t.push(setTimeout(flash,600))}
+ function listen(){var pos=0;[].forEach.call(document.querySelectorAll('#mgbox button'),function(bt){bt.onclick=function(){var p=+bt.dataset.p;if(p!=seq[pos]){return mgEnd('mem',(lv-1)*300,'Wrong pad! You cleared '+(lv-1)+' level'+(lv==2?'':'s')+'.')}pos++;if(pos>=seq.length){if(lv>=10)return mgEnd('mem',lv*300+1000,'Perfect memory! All 10 levels.');mgb(pads(-1,0));MG.t.push(setTimeout(round,700))}}})}
+ round()}
+var DISH=[['Spaghetti bolognese',['Boil the pasta','Fry mince & onions','Add tomato sauce','Plate & serve']],['Full English',['Heat the pan','Fry bacon & sausage','Fry the eggs','Plate with toast']],['Veg curry',['Chop vegetables','Fry the spices','Simmer in coconut milk','Serve with rice']],['Pancakes',['Mix the batter','Heat the pan','Flip and cook','Stack & serve']],['Roast chicken',['Season the chicken','Roast for 90 minutes','Rest the meat','Carve & serve']],['Burger',['Grill the patty','Toast the bun','Add toppings','Wrap & serve']]];
+function cook(){var ds=shuf(DISH).slice(0,3),n=0,tot=0,got=0;
+ function order(){var d=ds[n],steps=shuf(d[1].map(function(t,i){return[t,i]})),pos=0,mist=0,t0=Date.now(),lim=20000;
+  mgb('<div class="c"><h3>Order '+(n+1)+'/3 · '+E(d[0])+'</h3><div class="bar"><i id="mgt" style="width:100%"></i></div><div class="m">Tap the steps in the right order, fast!</div>'+steps.map(function(s,j){return'<button class="s" style="display:block;width:100%;text-align:left;margin:4px 0" data-i="'+s[1]+'">'+E(s[0])+'</button>'}).join('')+'</div>');
+  function nxt(pay){tot+=pay;if(pay>0)got++;n++;if(n<3)MG.t.push(setTimeout(order,500));else mgEnd('cook',tot,'Shift over: '+got+'/3 orders served.',G.cv.sk.indexOf('Cooking')>-1?1.25:1)}
+  [].forEach.call(document.querySelectorAll('#mgbox button'),function(bt){bt.onclick=function(){if(bt.disabled)return;if(+bt.dataset.i==pos){bt.disabled=true;bt.style.background='#2e9e6b';bt.style.color='#fff';pos++;if(pos>=4){var left=Math.max(0,lim-(Date.now()-t0))/lim;nxt(Math.max(0,500+Math.round(left*400)-mist*150))}}else{mist++;bt.style.background='#c0392b';bt.style.color='#fff'}}});
+  (function tk(){var el=document.getElementById('mgt');if(!el)return MGstop();var f=1-(Date.now()-t0)/lim;if(pos>=4)return;if(f<=0){return nxt(0)}el.style.width=f*100+'%';MG.t.push(setTimeout(tk,200))})()}
+ order()}
+function drive(){var W=3,H=7,lane=1,rows=[],score=0,tk=0,max=30;for(var i=0;i<H;i++)rows.push(-1);
+ function draw(){if(!document.getElementById('mgbox'))return MGstop();var s='';for(var r=0;r<H;r++){for(var c=0;c<W;c++){s+=(r==H-1&&c==lane)?'🚗':(rows[r]==c?'🚧':'⬜')}s+='<br>'}mgb('<div class="c"><h3>Driving gig · score '+score+'/'+max+'</h3><div style="font-size:30px;line-height:1.15;text-align:center;letter-spacing:8px">'+s+'</div><div class="g"><button id="mgl" style="min-height:56px">◀</button><button id="mgr" style="min-height:56px">▶</button></div><div class="m">Dodge the roadworks. Arrow keys work too.</div></div>');
+  document.getElementById('mgl').onclick=function(){lane=Math.max(0,lane-1);draw()};document.getElementById('mgr').onclick=function(){lane=Math.min(W-1,lane+1);draw()}}
+ MG.kd=function(e){if(e.key=='ArrowLeft'){lane=Math.max(0,lane-1);draw()}if(e.key=='ArrowRight'){lane=Math.min(W-1,lane+1);draw()}};document.addEventListener('keydown',MG.kd);
+ function tick(){if(!document.getElementById('mgbox'))return MGstop();rows.pop();rows.unshift(rnd()<.7?Math.floor(rnd()*W):-1);tk++;
+  if(rows[H-1]==lane)return mgEnd('drive',score*80,'Crash! You made it '+score+' steps.',G.cv.sk.indexOf('Driving')>-1?1.25:1);score++;if(score>=max)return mgEnd('drive',score*80+400,'Delivery complete with no crashes!',G.cv.sk.indexOf('Driving')>-1?1.25:1);draw();MG.t.push(setTimeout(tick,Math.max(260,480-tk*6)))}
+ draw();MG.t.push(setTimeout(tick,700))}
+LX.mg=function(k){MGstop();if(!use(1,6))return;var m=X().ms;({quiz:quiz,mem:mem,cook:cook,drive:drive})[k]()};
+V.mini=function(){var m=X().ms,g=[['quiz','🎤','Quiz show','5 questions · up to £35'],['mem','🧠','Memory challenge','Repeat growing patterns · up to £40'],['cook','🍳','Cooking shift','3 timed orders · up to ~£30 (+25% with Cooking skill)'],['drive','🚗','Driving gig','Dodge roadworks · up to ~£28 (+25% with Driving skill)']];
+ return C('🎮 Mini-games that pay',g.map(function(x){return'<div class="r"><span>'+x[1]+' <b>'+x[2]+'</b><br><span class="m">'+x[3]+'<br>skill '+Math.round(m[x[0]])+' (×'+(1+m[x[0]]/200).toFixed(2)+' pay) · played '+(m.plays[x[0]]||0)+' · best '+M(m.best[x[0]]||0)+'</span></span>'+B('Play (1 slot)','LX.mg(\''+x[0]+'\')')+'</div>'}).join('')+MU('Each play uses 1 time slot and some energy. Pay grows with your skill and score; after 3 plays in a day pay halves. Total earned: '+M(m.earn)))+'<div id="mgbox"></div>'};
+/* ---------- wiring ---------- */
+reg('econ','🌍','Economy & world',V.econ);reg('goals','🎯','Goals & events',V.goals);reg('tree','🌳','Family tree',V.tree);reg('health','❤️','Health & wellbeing',V.health);reg('pets','🐾','Pets & hobbies',V.pets);
+reg('work','🏢','Workplace & freelance',V.work);reg('empire','🏭','Business empire',V.empire);reg('land','🏘','Landlord',V.land);reg('saves','💾','Saves & backup',V.saves);reg('mini','🎮','Mini-games',V.mini);
+TABS.forEach(function(t){if(!SEC.some(function(s){return s[0]==t[0]}))SEC.splice(Math.max(0,SEC.findIndex(function(s){return s[0]=='more'})),0,[t[0],t[1],t[2]])});
+var _view=view;view=function(){if(G&&!G.pr&&V[tab]){try{return V[tab]()}catch(e){console.error(e);return'<div class="c">Something went wrong in this tab: '+E(e.message)+'</div>'}}return _view.apply(this,arguments)};
+var _mo=morning;morning=function(){var r=_mo.apply(this,arguments);try{if(G&&!G.dead){X();qRun();HK.forEach(function(f){try{f()}catch(e){console.error(e)}})}}catch(e){console.error(e)}return r};
+var _li=window.lcSvItems;window.lcSvItems=function(A){if(_li)_li(A);ITEMS.forEach(function(f){try{f(A)}catch(e){}})};
+RN.push(function(){if(!document.getElementById('mgbox'))MGstop();var a=document.getElementById('app');if(!a)return;
+ if(tab=='home'&&G.day-X().sl.bk>90&&G.day>G.d0+30&&!document.getElementById('lcx10b')){var h=document.getElementById('lcx10h');if(h)h.insertAdjacentHTML('afterend','<div class="c" id="lcx10b"><b>💾 Back up your game</b><div class="m">No backup file in a while. One tap saves it to Files or AirDrop, so you can restore on any device.</div>'+B('Open Saves & backup','go(\'saves\')')+'</div>')}
+ if(tab=='more'&&!document.getElementById('lcx10s'))a.insertAdjacentHTML('afterbegin','<div class="c" id="lcx10s"><b>💾 Save slots, backup file & device transfer</b><div>'+B('Open Saves & backup','go(\'saves\')')+'</div></div>')});
+var _r=render;render=function(){_r.apply(this,arguments);try{if(G)RN.forEach(function(f){try{f()}catch(e){console.error(e)}})}catch(e){}};
+})();
+
+</script>
 <script>if('serviceWorker' in navigator){var had=navigator.serviceWorker.controller,rl=0;navigator.serviceWorker.addEventListener('controllerchange',function(){if(had&&!rl){rl=1;location.reload()}});window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').then(function(r){r.update()}).catch(function(){})})}</script></body></html>
