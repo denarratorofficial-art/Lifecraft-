@@ -1,0 +1,76 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LIFECRAFT Admin · Colour scheme</title>
+<style>
+:root{--b:#10131c;--p:#181d2b;--l:#2a3146;--t:#e9edf7;--m:#8d98b3;--a:#e2c275}
+*{box-sizing:border-box}body{margin:0;background:var(--b);color:var(--t);font:15px/1.4 system-ui,-apple-system,sans-serif}
+header{padding:14px 18px;border-bottom:1px solid var(--l);display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+header h1{font-size:17px;margin:0}header .tag{font-size:12px;background:#3b2f12;color:var(--a);padding:3px 9px;border-radius:999px}
+.wrap{display:grid;grid-template-columns:minmax(300px,440px) 1fr;gap:18px;padding:18px;align-items:start}
+@media(max-width:900px){.wrap{grid-template-columns:1fr}}
+.card{background:var(--p);border:1px solid var(--l);border-radius:14px;padding:14px;margin-bottom:14px}
+.card h2{font-size:13px;text-transform:uppercase;letter-spacing:.07em;color:var(--m);margin:0 0 10px}
+.row{display:grid;grid-template-columns:1fr 54px 92px;gap:8px;align-items:center;margin:7px 0}
+.row small{display:block;color:var(--m);font-size:12px}
+input[type=color]{width:54px;height:36px;border:1px solid var(--l);border-radius:8px;background:none;padding:2px;cursor:pointer}
+input[type=text],textarea{width:100%;background:#0d1019;color:var(--t);border:1px solid var(--l);border-radius:8px;padding:8px;font:13px ui-monospace,monospace}
+button{background:var(--a);color:#1a1405;border:0;border-radius:9px;padding:9px 13px;font-weight:700;cursor:pointer;margin:3px 4px 3px 0}
+button.s{background:#262d44;color:var(--t)}button:disabled{opacity:.5}
+.chips{display:flex;flex-wrap:wrap;gap:8px}.chip{display:flex;align-items:center;gap:8px;background:#222a40;border:1px solid var(--l);border-radius:999px;padding:6px 12px 6px 8px;cursor:pointer;color:var(--t);font-weight:600}
+.chip i{width:18px;height:18px;border-radius:50%;display:inline-block}
+.chk{display:flex;gap:10px;align-items:center;margin:8px 0}.ok{color:#58d99b}.bad{color:#ff8a80}
+.frame{position:sticky;top:12px}.phone{width:402px;max-width:100%;height:820px;border:8px solid #262d44;border-radius:34px;background:#000;overflow:hidden;margin:0 auto}
+.phone iframe{width:100%;height:100%;border:0;background:#000}
+.note{color:var(--m);font-size:13px}ol{padding-left:20px;margin:6px 0}li{margin:4px 0}
+</style></head><body>
+<header><h1>🎨 LIFECRAFT Admin</h1><span class="tag">Owner tool · do not upload this file for players</span></header>
+<div class="wrap">
+<div>
+ <div class="card"><h2>Game address (for the preview)</h2><input type="text" id="gu" placeholder="index.html  or  https://YOURNAME.github.io/YOURREPO/"><div class="note" style="margin-top:6px">Leave as <b>index.html</b> if this file sits next to the game. Or paste your live GitHub Pages address to preview the real game.</div></div>
+ <div class="card"><h2>Presets</h2><div class="chips" id="presets"></div></div>
+ <div class="card"><h2>Colours</h2><div id="fields"></div>
+  <label class="chk"><input type="checkbox" id="auto" checked> Work out accent light/dark shades automatically</label></div>
+ <div class="card"><h2>Readability check</h2><div id="checks"></div></div>
+ <div class="card"><h2>Save &amp; publish</h2>
+  <button id="dl">⬇ Download config.json</button><button class="s" id="cp">Copy JSON</button><button class="s" id="rs">Reset to Gold Classic</button>
+  <div style="margin:8px 0"><b class="note">Import an existing config.json</b><br><input type="file" id="imp" accept=".json,application/json"></div>
+  <ol class="note"><li>Pick colours and check the preview on the right.</li><li>Download <b>config.json</b>.</li><li>Upload it to your website next to <b>index.html</b> (replace the old one).</li><li>Players get the new look next time they open the game online. Offline players keep the last version they received.</li></ol>
+  <p class="note">Keep this admin page on your own computer, or on a private/password-protected folder. It is not linked from the game, but anyone who finds the file could edit their own copy (it can't change your live config without your server access).</p></div>
+</div>
+<div class="frame"><div class="phone"><iframe id="pv" src="index.html?preview=1" title="Game preview"></iframe></div>
+ <p class="note" style="text-align:center">Live preview. Start a new game inside it to see every screen. Colours update instantly.</p></div>
+</div>
+<script>
+var FIELDS=[['accent','Accent','Buttons, highlights, active tabs'],['accentLight','Accent light','Gradients and bright highlights'],['accentDark','Accent dark','Gradient shadow side'],
+['background','Background','Page background'],['card','Cards','Panels and cards'],['text','Text','Main text'],['muted','Muted text','Labels and hints'],['border','Borders','Lines and outlines'],
+['positive','Positive','Gains, success'],['negative','Negative','Losses, warnings'],['glowA','Glow 1','Soft background light (top left)'],['glowB','Glow 2','Soft background light (top right)']];
+var PRE={
+'Gold Classic':{accent:'#d4b46a',accentLight:'#f3d98b',accentDark:'#c9a24a',background:'#0a0f1e',card:'#1a2646',text:'#eef1f8',muted:'#97a2bb',border:'#243049',positive:'#4fe0a8',negative:'#ff7a7a',glowA:'#5840c8',glowB:'#149682'},
+'Emerald':{accent:'#3ddc9a',background:'#07171a',card:'#12332f',text:'#eafff6',muted:'#8fb8a8',border:'#1d4a3a',positive:'#7cfc9a',negative:'#ff8a8a',glowA:'#0f766e',glowB:'#14532d'},
+'Ocean':{accent:'#5bb8ff',background:'#07121f',card:'#10294a',text:'#eef6ff',muted:'#93aecb',border:'#1c3a5e',positive:'#4fe0a8',negative:'#ff7a7a',glowA:'#1d4ed8',glowB:'#0e7490'},
+'Ruby':{accent:'#ff6b8a',background:'#160a12',card:'#3a1530',text:'#fff0f4',muted:'#c19aaa',border:'#4d2340',positive:'#6ee7b7',negative:'#ffb4a8',glowA:'#9d174d',glowB:'#7c2d12'},
+'Violet':{accent:'#b69cff',background:'#0d0a1e',card:'#241a4a',text:'#f3efff',muted:'#a99cc9',border:'#33275e',positive:'#4fe0a8',negative:'#ff8a9a',glowA:'#6d28d9',glowB:'#0e7490'},
+'Sunset':{accent:'#ff9b4a',background:'#160d0a',card:'#3a2012',text:'#fff3ea',muted:'#c9a58c',border:'#4d2f1c',positive:'#a3e635',negative:'#ff7a7a',glowA:'#b45309',glowB:'#9f1239'}};
+var DEF=PRE['Gold Classic'],cur=JSON.parse(localStorage.getItem('lc_admin_draft')||'null')||Object.assign({},DEF);
+var $=function(i){return document.getElementById(i)};
+function h2r(h){h=String(h||'').replace('#','');if(h.length==3)h=h.replace(/./g,'$&$&');var n=parseInt(h,16);return(h.length==6&&!isNaN(n))?[n>>16&255,n>>8&255,n&255]:null}
+function lum(r){var f=r.map(function(v){v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4)});return .2126*f[0]+.7152*f[1]+.0722*f[2]}
+function cr(a,b){var x=lum(h2r(a)),y=lum(h2r(b)),hi=Math.max(x,y),lo=Math.min(x,y);return(hi+.05)/(lo+.05)}
+function theme(){var t=Object.assign({},cur);if($('auto').checked){delete t.accentLight;delete t.accentDark}return t}
+function push(){var t=theme();localStorage.setItem('lc_admin_draft',JSON.stringify(cur));var w=$('pv').contentWindow;try{w.postMessage({lcCfg:{theme:t}},'*')}catch(e){}checks()}
+function build(){$('fields').innerHTML=FIELDS.map(function(f){return'<div class="row"><div>'+f[1]+'<small>'+f[2]+'</small></div><input type="color" data-k="'+f[0]+'" value="'+(cur[f[0]]||DEF[f[0]])+'"><input type="text" data-t="'+f[0]+'" value="'+(cur[f[0]]||DEF[f[0]])+'"></div>'}).join('');
+ document.querySelectorAll('input[data-k]').forEach(function(i){i.oninput=function(){cur[i.dataset.k]=i.value;document.querySelector('[data-t="'+i.dataset.k+'"]').value=i.value;push()}});
+ document.querySelectorAll('input[data-t]').forEach(function(i){i.oninput=function(){if(h2r(i.value)){cur[i.dataset.t]=(i.value[0]=='#'?i.value:'#'+i.value);document.querySelector('[data-k="'+i.dataset.t+'"]').value=cur[i.dataset.t];push()}}})}
+function checks(){var c=Object.assign({},DEF,cur),on=lum(h2r(c.accent))>.35?'#10162b':'#ffffff',rows=[['Main text on cards',cr(c.text,c.card),4.5],['Muted text on cards',cr(c.muted,c.card),3],['Button text on accent',cr(on,c.accent),4.5],['Accent on background',cr(c.accent,c.background),3],['Card vs background (shape)',cr(c.card,c.background),1.1]];
+ $('checks').innerHTML=rows.map(function(r){var ok=r[1]>=r[2];return'<div class="row" style="grid-template-columns:1fr auto"><span>'+r[0]+'</span><span class="'+(ok?'ok':'bad')+'">'+(ok?'✓ ':'⚠ ')+r[1].toFixed(1)+':1</span></div>'}).join('')+'<div class="note">Aim for the ✓ marks so text stays easy to read, especially on small phone screens.</div>'}
+function presets(){$('presets').innerHTML=Object.keys(PRE).map(function(n){return'<div class="chip" data-p="'+n+'"><i style="background:'+PRE[n].accent+'"></i>'+n+'</div>'}).join('');
+ document.querySelectorAll('.chip').forEach(function(e){e.onclick=function(){cur=Object.assign({},DEF,PRE[e.dataset.p]);if(!PRE[e.dataset.p].accentLight){$('auto').checked=true}else $('auto').checked=false;build();push()}})}
+function out(){var t=theme();t.name=t.name||'Custom';return JSON.stringify({version:Date.now(),updated:new Date().toISOString().slice(0,10),theme:t},null,2)}
+$('auto').onchange=push;
+$('dl').onclick=function(){var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([out()],{type:'application/json'}));a.download='config.json';a.click()};
+$('cp').onclick=function(){navigator.clipboard.writeText(out()).then(function(){$('cp').textContent='Copied ✓';setTimeout(function(){$('cp').textContent='Copy JSON'},1500)})};
+$('rs').onclick=function(){cur=Object.assign({},DEF);$('auto').checked=false;build();push()};
+$('imp').onchange=function(){var f=this.files[0];if(!f)return;var r=new FileReader();r.onload=function(){try{var j=JSON.parse(r.result);if(!j.theme)throw 0;cur=Object.assign({},DEF,j.theme);$('auto').checked=!j.theme.accentLight;build();push()}catch(e){alert('That does not look like a LIFECRAFT config.json')}};r.readAsText(f)};
+function setUrl(){var u=($('gu').value||'index.html').trim();localStorage.setItem('lc_admin_url',u);$('pv').src=u+(u.indexOf('?')>-1?'&':'?')+'preview=1'}
+$('gu').value=localStorage.getItem('lc_admin_url')||'index.html';$('gu').onchange=setUrl;if($('gu').value!='index.html')setUrl();
+$('pv').onload=push;build();presets();checks();
+</script></body></html>
