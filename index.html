@@ -1690,20 +1690,21 @@ nav button{position:relative}nav .lcbd{position:absolute;top:2px;right:12%;min-w
 </style>
 <script>
 (function(){
-var H=[{n:'Life',i:'🏠',d:'home',t:['home','goals','act','gym','health','pets','mini','edu','cal','inbox','hist','retire','legacy','ach']},
-{n:'Money',i:'💰',d:'bank',t:['bank','inv','wealth','loans','bank2','ins']},
-{n:'Career',i:'💼',d:'hub',t:['hub','jobs','skl','career','work','biz','empire']},
-{n:'Assets',i:'🏡',d:'house',t:['house','prop','land','veh','lux','shop','surv']},
-{n:'People',i:'💞',d:'rel',t:['rel','family','tree','social']},
-{n:'World',i:'🌍',d:'map',t:['map','paper','sport','racing','dogs','tennis','boxing','city','trav','legal','under','prison','econ','saves','more']}];
-var NM={home:'Home',act:'Activities',gym:'Fitness',edu:'Education',cal:'Calendar',inbox:'Inbox',hist:'History',retire:'Later life',legacy:'Legacy and will',ach:'Achievements',bank:'Banking',inv:'Investing',wealth:'Wealth',loans:'Loans',bank2:'Debt',ins:'Insights',hub:'Career hub',jobs:'Jobs',skl:'Skills',map:'World map',paper:'Newspaper',sport:'Sports & betting',racing:'Horse racing',dogs:'Greyhounds',tennis:'Tennis',boxing:'Boxing',career:'Growth',biz:'Business',house:'Rent',prop:'Property',veh:'Vehicles',lux:'Luxury',shop:'Shopping',surv:'Housing survival',rel:'Relationships',family:'Family',social:'Social media',city:'Cities',trav:'Travel and FX',legal:'Legal',under:'Underworld',prison:'Prison',goals:'Goals',health:'Health',pets:'Pets & hobbies',mini:'Mini-games',work:'Workplace',empire:'Empire',land:'Landlord',tree:'Family tree',econ:'Economy',saves:'Saves',more:'Settings'};
+var H=[{n:'Today',i:'🏠',d:'home',t:['home','goals','act','mini','inbox','cal']},
+{n:'Money',i:'💰',d:'bank',t:['bank','inv','loans','wealth','bank2','ins','econ']},
+{n:'Work',i:'💼',d:'hub',t:['hub','jobs','work','skl','edu','biz','empire','career']},
+{n:'Assets',i:'🏡',d:'house',t:['house','prop','land','veh','shop','lux','surv']},
+{n:'Me & Us',i:'💞',d:'rel',t:['rel','family','tree','health','gym','pets','social']},
+{n:'World',i:'🌍',d:'map',t:['map','paper','city','trav','sport','ach','saves','store','more','racing','dogs','tennis','boxing','legal','under','prison','hist','retire','legacy']}];
+
+var NM={home:'Home',act:'Activities',gym:'Fitness',edu:'Education',cal:'Calendar',inbox:'Inbox',hist:'History',retire:'Later life',legacy:'Legacy',ach:'Achievements',bank:'Banking',inv:'Investing',wealth:'Wealth',loans:'Loans',bank2:'Debt',ins:'Insights',hub:'Career hub',jobs:'Jobs',skl:'Skills',map:'World map',paper:'Newspaper',sport:'Sports & betting',racing:'Horse racing',dogs:'Greyhounds',tennis:'Tennis',boxing:'Boxing',career:'Growth',biz:'Business',house:'Rent',prop:'Property',veh:'Vehicles',lux:'Luxury',shop:'Shopping',surv:'Survival',rel:'Relationships',family:'Family',social:'Social media',city:'Cities',trav:'Travel and FX',legal:'Legal',under:'Underworld',prison:'Prison',goals:'Goals',health:'Health',pets:'Pets & hobbies',mini:'Mini-games',work:'Workplace',empire:'Empire',land:'Landlord',tree:'Family tree',econ:'Economy',saves:'Saves',store:'Store',more:'Settings'};
 function hub(t){for(var i=0;i<H.length;i++)if(H[i].t.indexOf(t)>-1)return i;return t=='menu'?-1:5}
-window.lcHub=function(i){go(H[i].d)};
+window.lcHub=function(i){go(H[i].d)};window.lcHubs=H;window.lcNM=NM;
 function unread(){try{return(G.inbox||[]).filter(function(m){return!m.read}).length}catch(e){return 0}}
 var _r16=render;render=function(){_r16.apply(this,arguments);try{if(!G)return;var cur=hub(tab),u=unread(),nav=document.querySelector('nav');
 if(nav)nav.innerHTML=H.map(function(h,i){return'<button style="font-size:11px" class="'+(i==cur?'on':'')+'" onclick="lcHub('+i+')" aria-label="'+h.n+'">'+h.i+'<br>'+h.n+(i==0&&u?'<span class="lcbd">'+u+'</span>':'')+'</button>'}).join('');
 var a=document.getElementById('app');if(!a||cur<0||document.getElementById('lchub'))return;
-var ids=H[cur].t.filter(function(t){return SEC.some(function(s){return s[0]==t})}),row='<div class="lchub" id="lchub" role="tablist" aria-label="'+H[cur].n+' sections">'+ids.map(function(t){return'<button type="button" role="tab" aria-selected="'+(t==tab)+'" class="'+(t==tab?'on':'')+'" onclick="go(\''+t+'\')">'+NM[t]+(t=='inbox'&&u?'<span class="n">'+u+'</span>':'')+'</button>'}).join('')+'</div>';
+var ids=(window.lcNavIds?window.lcNavIds(cur,H[cur].t,tab):H[cur].t).filter(function(t){return SEC.some(function(s){return s[0]==t})}),row='<div class="lchub" id="lchub" role="tablist" aria-label="'+H[cur].n+' sections">'+ids.map(function(t){return'<button type="button" role="tab" aria-selected="'+(t==tab)+'" class="'+(t==tab?'on':'')+'" onclick="go(\''+t+'\')">'+NM[t]+(t=='inbox'&&u?'<span class="n">'+u+'</span>':'')+'</button>'}).join('')+(window.lcNavChip?window.lcNavChip(cur,H[cur].t,tab):'')+'</div>';
 a.insertAdjacentHTML('afterbegin',row);var r=document.getElementById('lchub'),c=r&&r.querySelector('.on');if(c)r.scrollLeft=c.offsetLeft-r.clientWidth/2+c.clientWidth/2}catch(e){}};
 })();
 </script>
@@ -3726,7 +3727,7 @@ V.land=function(){var ps=G.props||[],h='';if(!ps.length)return C('🏘 Landlord'
    (p.loan?'<div class="g"><input id="lo'+i+'" type="number" placeholder="Overpay £" value="1000">'+'<div>'+B('Overpay','LX.lover('+i+')')+B('Remortgage £999','LX.lremo('+i+')',1)+'</div></div>':'')+
    '<div>'+Object.keys(PRJ).map(function(k){return B(PRJ[k][0]+' '+M(PRJ[k][1]),'LX.lproj('+i+',\''+k+'\')',1)}).join('')+'</div>'+MU('Kitchen/bathroom and full refurbs need the property empty, then raise condition and rent. Ignore repair requests and tenants leave.'))});return h};
 /* ---------- 9. SAVE SLOTS, BACKUP & TRANSFER ---------- */
-var SLOTS=5,skey=function(n){return'lifecraft_slot_'+n},mkey=function(n){return'lifecraft_slot_'+n+'_m'};
+function slotsN(){return window.lcEnt&&window.lcEnt('supporter')?10:5}var skey=function(n){return'lifecraft_slot_'+n},mkey=function(n){return'lifecraft_slot_'+n+'_m'};
 function hash(s){var h=5381;for(var i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(i))|0;return(h>>>0).toString(16)}
 function meta(){var n=0;try{n=nw()}catch(e){}return{n:G.name,d:G.day,nw:n,at:Date.now()}}
 function lsGet(k){try{return localStorage.getItem(k)}catch(e){return null}}
@@ -3735,7 +3736,7 @@ function putSlot(n,g,m){try{localStorage.setItem(skey(n),g);localStorage.setItem
 LX.sSave=function(n){var m=slotMeta(n),go=function(){if(!putSlot(n,JSON.stringify(G),meta()))return say('Storage is full on this device. Delete a slot or use a backup file instead.');say('Saved to slot '+n+'.')};if(m)ask('Overwrite slot '+n+' ('+E(m.n)+')?',go);else go()};
 LX.sLoad=function(n){var s=lsGet(skey(n));if(!s)return;ask('Load slot '+n+'? Your current game is backed up once, then replaced.',function(){try{localStorage.setItem('lifecraft_backup',JSON.stringify(G));localStorage.setItem('lc_tmp',s);if(!load('lc_tmp'))throw 0;localStorage.removeItem('lc_tmp');save();tab='home';tr='Slot '+n+' loaded.'}catch(e){tr='Could not load that slot.'}render()})};
 LX.sDel=function(n){ask('Delete slot '+n+'?',function(){try{localStorage.removeItem(skey(n));localStorage.removeItem(mkey(n))}catch(e){}render()})};
-function pack(all){var g=JSON.stringify(G),o={app:'LIFECRAFT',v:1,at:new Date().toISOString(),name:G.name,day:G.day,sum:hash(g),game:g};if(all){o.slots={};for(var i=1;i<=SLOTS;i++){var s=lsGet(skey(i));if(s)o.slots[i]={g:s,m:lsGet(mkey(i))}}}return JSON.stringify(o)}
+function pack(all){var g=JSON.stringify(G),o={app:'LIFECRAFT',v:1,at:new Date().toISOString(),name:G.name,day:G.day,sum:hash(g),game:g};if(all){o.slots={};for(var i=1;i<=slotsN();i++){var s=lsGet(skey(i));if(s)o.slots[i]={g:s,m:lsGet(mkey(i))}}}return JSON.stringify(o)}
 function dl(t,fn){var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:'application/json'}));a.download=fn;document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},1500)}
 LX.exp=function(all){X().sl.bk=G.day;save();var t=pack(all),fn='lifecraft-'+String(G.name||'save').replace(/[^\w-]+/g,'')+'-'+new Date().toISOString().slice(0,10)+'.json',f=null;try{f=new File([t],fn,{type:'application/json'})}catch(e){}
  if(f&&navigator.canShare&&navigator.canShare({files:[f]}))navigator.share({files:[f],title:'LIFECRAFT backup'}).catch(function(){});else dl(t,fn);tr='Backup created. Keep the file somewhere safe (Files, iCloud, email to yourself).';render()};
@@ -3751,7 +3752,7 @@ LX.impt=function(txt){var o;try{o=JSON.parse(txt)}catch(e){return say('That is n
 HK.push(function(){if(dm()==1&&mo()%3==1&&once('auto:'+ym()))putSlot('auto',JSON.stringify(G),meta())});
 V.saves=function(){var kb=Math.round(JSON.stringify(G).length/1024),sl=X().sl,h='',late=G.day-sl.bk>60;
  h+=C('💾 Current game',RW('Character',E(G.name)+' · '+fmt(G.day).slice(5,16))+RW('Save size',kb+' KB')+RW('Last backup file',sl.bk?'game date '+fmt(sl.bk).slice(5,16):'never')+(late?'<div class="bad m">You have not exported a backup for a while. Make one now so you can restore on another device or if the browser clears its data.</div>':'')+B('Save now','save();say(\'Saved.\')'));
- var rows='';for(var n=1;n<=SLOTS;n++){var m=slotMeta(n);rows+='<div class="r"><span><b>Slot '+n+'</b><br><span class="m">'+(m?E(m.n)+' · '+fmt(m.d).slice(5,16)+' · NW '+M(m.nw):'empty')+'</span></span><span>'+B('Save','LX.sSave('+n+')',1)+(m?B('Load','LX.sLoad('+n+')',1)+B('✕','LX.sDel('+n+')',1):'')+'</span></div>'}
+ var rows='';for(var n=1;n<=slotsN();n++){var m=slotMeta(n);rows+='<div class="r"><span><b>Slot '+n+'</b><br><span class="m">'+(m?E(m.n)+' · '+fmt(m.d).slice(5,16)+' · NW '+M(m.nw):'empty')+'</span></span><span>'+B('Save','LX.sSave('+n+')',1)+(m?B('Load','LX.sLoad('+n+')',1)+B('✕','LX.sDel('+n+')',1):'')+'</span></div>'}
  var am=slotMeta('auto');rows+='<div class="r"><span><b>Auto-save</b><br><span class="m">'+(am?E(am.n)+' · '+fmt(am.d).slice(5,16)+' · NW '+M(am.nw):'quarterly, none yet')+'</span></span>'+(am?B('Load','LX.sLoad(\'auto\')',1):'')+'</div>';
  h+=C('🗂 Save slots',rows+MU('Slots live in this browser. Try several life paths side by side.'));
  h+=C('📲 Backup & transfer',MU('Move your game between iPhone and laptop: make a backup file on one device, open it on the other.')+'<div>'+B('Backup file (share / download)','LX.exp(0)')+B('Backup incl. slots','LX.exp(1)',1)+B('Copy as text','LX.expText()',1)+'</div>'+
@@ -3814,6 +3815,116 @@ RN.push(function(){if(!document.getElementById('mgbox'))MGstop();var a=document.
  if(tab=='home'&&G.day-X().sl.bk>90&&G.day>G.d0+30&&!document.getElementById('lcx10b')){var h=document.getElementById('lcx10h');if(h)h.insertAdjacentHTML('afterend','<div class="c" id="lcx10b"><b>💾 Back up your game</b><div class="m">No backup file in a while. One tap saves it to Files or AirDrop, so you can restore on any device.</div>'+B('Open Saves & backup','go(\'saves\')')+'</div>')}
  if(tab=='more'&&!document.getElementById('lcx10s'))a.insertAdjacentHTML('afterbegin','<div class="c" id="lcx10s"><b>💾 Save slots, backup file & device transfer</b><div>'+B('Open Saves & backup','go(\'saves\')')+'</div></div>')});
 var _r=render;render=function(){_r.apply(this,arguments);try{if(G)RN.forEach(function(f){try{f()}catch(e){console.error(e)}})}catch(e){}};
+})();
+
+</script>
+<script id="lcstore">
+/* ===== LIFECRAFT store: phone-only in-app purchases (mock checkout until real billing is connected) ===== */
+(function(){
+'use strict';
+var K='lc_iap',L=window.__lx;
+function plat(){try{var q=new URLSearchParams(location.search).get('platform');if(q)localStorage.setItem('lc_platform',q)}catch(e){}
+ try{var s=localStorage.getItem('lc_platform');if(s)return{p:s,ov:1}}catch(e){}
+ try{if(window.Capacitor&&Capacitor.getPlatform)return{p:Capacitor.getPlatform(),ov:0}}catch(e){}return{p:'web',ov:0}}
+var PL=plat(),ON=PL.p=='ios'||PL.p=='android',MOCK=ON&&!window.LC_BILLING&&PL.ov;
+window.LC_PLATFORM=PL.p;window.lcStoreOn=ON;
+function ld(){try{return JSON.parse(localStorage.getItem(K))||{tx:{},ent:{},heir:0,theme:'gold'}}catch(e){return{tx:{},ent:{},heir:0,theme:'gold'}}}
+function sv(o){try{localStorage.setItem(K,JSON.stringify(o))}catch(e){}}
+window.lcEnt=function(k){return ON&&!!ld().ent[k]};
+var THEMES={gold:['Gold (default)',null,0],emerald:['Emerald','#3ddc9a','supporter'],rose:['Rose','#ff7aa8','supporter'],sky:['Sky','#6cc4ff','supporter'],violet:['Violet','#b69cff','supporter'],neon:['Neon green','#39ff14','theme_neon'],cyan:['Cyan','#00e5ff','theme_neon']};
+function applyTheme(){var t=THEMES[ld().theme],st=document.getElementById('lcstheme');if(!st){st=document.createElement('style');st.id='lcstheme';document.head.appendChild(st)}st.textContent=(ON&&t&&t[1]&&(window.lcEnt(t[2])))?'html:root,html:root:not([data-theme="x"]){--ac:'+t[1]+'}':''}
+var PR=[{id:'rescue_s',n:'Rescue Fund S',d:'£500 game cash',p:'£0.99',cash:50000},{id:'rescue_m',n:'Rescue Fund M',d:'£2,000 game cash',p:'£2.99',cash:200000},{id:'rescue_l',n:'Rescue Fund L',d:'£10,000 game cash',p:'£4.99',cash:1000000},
+ {id:'fresh',n:'Fresh Start',d:'Clears all arrears and overdue bills, plus a £250 buffer and a calmer mind',p:'£1.99'},{id:'heir',n:'Heir’s Head Start',d:'Your next generation begins with £5,000',p:'£2.99'},
+ {id:'supporter',n:'Supporter Pack',d:'10 save slots, supporter badge, 4 accent themes',p:'£4.99',e:1},{id:'theme_neon',n:'Neon theme pack',d:'Two bright accent colours',p:'£0.99',e:1}];
+window.lcProducts=PR;
+function liquid(){return G.bank+G.cash+(G.sav||0)}
+function S(){var x=L.X();x.store=x.store||{lastRescue:-999,lastPrompt:-999,spent:0};return x.store}
+function elig(id){if(!G)return'No game loaded.';
+ if(id.indexOf('rescue')==0){if(G.day-S().lastRescue<30)return'Available once every 30 game days (next '+fmt(S().lastRescue+30).slice(5,16)+').';if(liquid()>=15000)return'Only available when you are genuinely short of money (under £150).'}
+ if(id=='fresh'&&!G.arrears.length)return'You have no overdue bills.';if(id=='fresh'&&G.pr)return'Not available in custody.';
+ if(PR.find(function(p){return p.id==id}).e&&ld().ent[id])return'Owned';return''}
+function grant(id,txid){var o=ld();if(txid&&o.tx[txid])return false;if(txid)o.tx[txid]=Date.now();var p=PR.find(function(x){return x.id==id}),m='';
+ if(p.e){o.ent[id]=1;m=p.n+' unlocked.'}
+ else if(id=='heir'){o.heir=(o.heir||0)+1;m='Heir’s Head Start saved for your next generation.'}
+ else if(id=='fresh'){G.arrears=[];L.st({stress:-20,happy:5});L.gain(25000,'Fresh Start buffer','Gift');S().spent+=1;m='Your overdue bills are cleared. Fresh start!'}
+ else{L.gain(p.cash,p.n+' (purchase)','Gift');S().lastRescue=G.day;m=p.d+' added to your bank.'}
+ sv(o);try{save()}catch(e){}return m}
+var MOCKB={buy:function(id){return new Promise(function(res){var p=PR.find(function(x){return x.id==id});
+  if(confirm('TEST PURCHASE (no real charge)\n'+p.n+' – '+p.p+'\nConfirm?'))res({ok:true,transactionId:'mock-'+Date.now()+'-'+id});else res({ok:false,cancelled:true})})},restore:function(){return Promise.resolve([])}};
+function billing(){return window.LC_BILLING||(MOCK?MOCKB:null)}
+window.LCStore={buy:function(id){var why=elig(id);if(why)return L.say?say(why):0;var b=billing();if(!b)return say('Purchases are not available right now.');
+ b.buy(id).then(function(r){if(!r||!r.ok){if(r&&!r.cancelled)say('Purchase failed. You were not charged.');return}var m=grant(id,r.transactionId);applyTheme();say(m||'Done.')}).catch(function(){say('Purchase failed. You were not charged.')})},
+ restore:function(){var b=billing();if(!b)return say('Nothing to restore.');b.restore().then(function(ids){var n=0,o=ld();(ids||[]).forEach(function(id){var p=PR.find(function(x){return x.id==id});if(p&&p.e&&!o.ent[id]){o.ent[id]=1;n++}});sv(o);applyTheme();say(n?'Restored '+n+' purchase'+(n>1?'s':'')+'.':'Purchases checked. Nothing new to restore.')}).catch(function(){say('Could not reach the store.')})},
+ theme:function(k){var t=THEMES[k];if(t[2]&&!window.lcEnt(t[2]))return say('Unlock this theme first.');var o=ld();o.theme=k;sv(o);applyTheme();say('Theme applied.')}};
+if(!ON)return;
+var E=L.E,C=L.C,B=L.B,RW=L.RW,MU=L.MU;
+function item(p){var w=elig(p.id),own=p.e&&ld().ent[p.id];return'<div class="r"><span><b>'+p.n+'</b><br><span class="m">'+p.d+(w&&!own?'<br>'+w:'')+'</span></span>'+B(own?'Owned ✓':p.p,'LCStore.buy(\''+p.id+'\')',0,!!w)+'</div>'}
+L.V.store=function(){var o=ld(),h='';
+ if(MOCK)h+='<div class="c" style="border-color:var(--bad)"><b>Test mode</b><div class="m">Purchases here are simulated and charge nothing. Real billing is connected when the app is packaged for the stores.</div></div>';
+ h+=C('🛟 When you get stuck',MU('Short of money? Free options first: claim Jobseeker’s Allowance, apply for jobs, cook cheap meals, take freelance gigs. If you want a hand, these help.')+PR.slice(0,3).map(item).join('')+item(PR[3]));
+ h+=C('🧬 Legacy',item(PR[4])+(o.heir?MU('You have '+o.heir+' Heir’s Head Start waiting.'):''));
+ h+=C('⭐ Supporters',item(PR[5])+item(PR[6])+(o.ent.supporter?'<div style="margin-top:6px"><b>Accent theme</b></div><div>'+Object.keys(THEMES).map(function(k){var t=THEMES[k],ok=!t[2]||window.lcEnt(t[2]);return B(t[0],'LCStore.theme(\''+k+'\')',o.theme!=k,!ok)}).join('')+'</div>':'')+MU('Supporter and theme purchases belong to your store account and are not stored in save files.'));
+ h+=C('Restore & info',B('Restore purchases','LCStore.restore()',1)+MU('Game money has no real-world value. Purchases are never required to finish the game and never fund betting, lottery or other gambling. Cash purchases can be used only when you are short of money. Refunds follow the App Store / Google Play policies.'));return h};
+try{var SC=SEC,i=SC.findIndex(function(s){return s[0]=='more'});SC.splice(i,0,['store','🛒','Store'])}catch(e){console.error(e)}
+/* heir bonus */
+if(typeof L_heir=='function'){var _lh=L_heir;L_heir=function(i){var o=ld(),n=o.heir||0;_lh(i);try{if(n>0&&G&&!G.dead){o.heir=n-1;sv(o);G.bank+=0;L.gain(500000,'Heir’s Head Start','Gift');L.say&&0}}catch(e){}}}
+/* stuck prompts & promos */
+L.RN.push(function(){var a=document.getElementById('app');applyTheme();if(!a||tab!='home'||document.getElementById('lcstk'))return;var s=S(),h=document.getElementById('lcx10h'),html='';
+ if(G.dead){html='<div class="c" id="lcstk"><b>🧬 Give your heir a head start</b><div class="m">Heir’s Head Start gives your next generation £5,000 to begin with.</div>'+B('Get it '+PR[4].p,'LCStore.buy(\'heir\')')+'</div>'}
+ else if(liquid()<15000&&(G.arrears.length||!G.food.length)&&G.day-s.lastPrompt>=14&&G.day>G.d0+20){html='<div class="c" id="lcstk" style="border-color:var(--ac)"><b>Having a tough time?</b><div class="m">You are short of cash'+(G.arrears.length?' and have overdue bills':'')+'. Free ways out: claim Jobseeker’s Allowance, apply for jobs, take a freelance gig or cook cheap meals. Or get a hand:</div>'+(!elig('fresh')&&G.arrears.length?B('Fresh Start '+PR[3].p,'LCStore.buy(\'fresh\')'):'')+(!elig('rescue_s')?B('Rescue Fund '+PR[0].p,'LCStore.buy(\'rescue_s\')'):'')+B('See all','go(\'store\')',1)+B('Not now','__lx.X().store.lastPrompt=G.day;render()',1)+'</div>'}
+ if(html){if(h)h.insertAdjacentHTML('afterend',html);else a.insertAdjacentHTML('afterbegin',html)}
+});
+L.RN.push(function(){var a=document.getElementById('app');if(a&&tab=='more'&&!document.getElementById('lcstm'))a.insertAdjacentHTML('afterbegin','<div class="c" id="lcstm"><b>🛒 Store</b><div>'+B('Open store','go(\'store\')')+'</div></div>')});
+})();
+
+</script>
+<script id="lcnav">
+/* ===== LIFECRAFT navigation tidy-up: progressive menus, start guide, grouped Menu ===== */
+(function(){
+'use strict';
+var L=window.__lx,E=L.E,C=L.C,B=L.B,X=L.X;
+var NOW={0:'Today',1:'Money',2:'Work',3:'Assets',4:'Me & Us',5:'World'};
+/* essentials shown by default per hub; everything else sits behind "More" */
+var CORE={
+ 0:['home','goals','act','mini','inbox','cal'],
+ 1:['bank','inv','loans'],
+ 2:['hub','jobs','work','skl','edu','biz'],
+ 3:['house','prop','veh','shop'],
+ 4:['rel','family','tree','health','gym','pets'],
+ 5:['map','paper','city','trav','sport','ach','saves','store','more']};
+var D={home:'Your day at a glance',goals:'Weekly goals, festivals and daily reward',act:'Things to do with your time',mini:'Quick games that pay',inbox:'Messages and news for you',cal:'Dates, bills and plans',
+ bank:'Accounts and spending',inv:'Shares, crypto and funds',loans:'Borrow money',wealth:'Net worth and assets',bank2:'Debts and arrears',ins:'Stats and insights',econ:'Booms, recessions, elections and tax',
+ hub:'Career overview',jobs:'Find and apply for jobs',work:'Reviews, promotions and freelance gigs',skl:'CV and skills',edu:'Study and qualifications',career:'Career paths and growth',biz:'Run your own business',empire:'Staff, franchising, IPO and buyouts',
+ house:'Rent or move home',prop:'Buy property',land:'Tenants, repairs and mortgages',veh:'Cars and bikes',lux:'Luxury purchases',shop:'Groceries and shopping',surv:'Housing emergencies',
+ rel:'Dating and partners',family:'Children and parenting',tree:'Family tree, weddings and funerals',social:'Social media',health:'Illness, doctors, insurance and therapy',gym:'Workouts and fitness',pets:'Pets and hobbies',
+ map:'The world map',paper:'The newspaper',city:'Move to another city',trav:'Travel and exchange rates',sport:'Sports and betting',racing:'Horse racing',dogs:'Greyhounds',tennis:'Tennis',boxing:'Boxing',legal:'Courts and the law',under:'The underworld',prison:'Prison',
+ hist:'Your life story so far',retire:'Later life and retirement',legacy:'Your will and legacy',ach:'Achievements',saves:'Save slots and backups',store:'Store',more:'Settings'};
+var NM2={legacy:'Legacy',surv:'Survival',econ:'Economy',more:'Settings'};
+function age(){return G.age+Math.floor((G.day-G.d0)/365.25)}
+function unlocked(t){try{
+ if(t=='empire')return G.bizs&&G.bizs.length>0;if(t=='land')return G.props&&G.props.some(function(p){return p.occ!='home'||true})&&G.props.length>0;
+ if(t=='prison')return!!G.pr;if(t=='retire'||t=='legacy')return age()>=55||G.dead;if(t=='store')return!!window.lcStoreOn;if(t=='career')return!!G.job;
+ if(t=='hist')return G.day-G.d0>365}catch(e){}return false}
+function visible(i,t,cur){return t==cur||CORE[i].indexOf(t)>-1&&(t!='store'||window.lcStoreOn)||unlocked(t)}
+var open={};
+window.lcNavIds=function(i,ts,cur){return open[i]?ts:ts.filter(function(t){return visible(i,t,cur)})};
+window.lcNavChip=function(i,ts,cur){var hid=ts.filter(function(t){return SEC.some(function(s){return s[0]==t})&&!visible(i,t,cur)}).length;if(!hid)return'';
+ return'<button type="button" class="s" style="white-space:nowrap" onclick="lcNavToggle('+i+')">'+(open[i]?'− Less':'＋ More ('+hid+')')+'</button>'};
+window.lcNavToggle=function(i){open[i]=!open[i];render()};
+/* grouped, searchable Menu */
+window.lcMenuFilter=function(q){q=(q||'').toLowerCase();[].forEach.call(document.querySelectorAll('#lcmenu .mi'),function(e){e.style.display=e.textContent.toLowerCase().indexOf(q)>-1?'':'none'})};
+L.V.menu=function(){var q=window.__lxHubs,h='<input type="search" placeholder="Find a section… (e.g. jobs, pets, tax)" oninput="lcMenuFilter(this.value)" style="width:100%;margin-bottom:8px"><div id="lcmenu">';
+ (window.lcHubs||[]).forEach(function(hb,i){var ids=hb.t.filter(function(t){return SEC.some(function(s){return s[0]==t})});if(!ids.length)return;
+  h+=C(hb.i+' '+NOW[i],ids.map(function(t){var nm=(window.lcNM||{})[t]||t;return'<div class="r mi"><span><b>'+E(NM2[t]||nm)+'</b><br><span class="m">'+E(D[t]||'')+'</span></span><button class="s" onclick="go(\''+t+'\')">Open</button></div>'}).join(''))});return h+'</div>'};
+/* new-player guide */
+var STEPS=[['💼','Find a job','jobs',function(x){return G.job||(G.apps&&G.apps.length)||x.nav.seen.jobs&&G.day>G.d0+1}],
+ ['🛒','Stock up on food','shop',function(x){return x.nav.seen.shop}],['🎯','Check your weekly goals','goals',function(x){return x.nav.seen.goals}],
+ ['🎮','Try a mini-game for cash','mini',function(x){return x.cnt.mini>0}],['💾','Make a backup','saves',function(x){return x.sl.bk>0}]];
+L.RN.push(function(){if(!G)return;var x=X();x.nav=x.nav||{seen:{},off:0};x.nav.seen[tab]=1;
+ var a=document.getElementById('app');if(!a||tab!='home'||x.nav.off||document.getElementById('lcgd')||G.dead)return;
+ var done=STEPS.filter(function(s){return s[3](x)}).length;if(done>=STEPS.length){x.nav.off=1;return}
+ var h='<div class="c" id="lcgd" style="border-color:var(--ac)"><b>🧭 Start here</b> <span class="m">'+done+'/'+STEPS.length+' done</span>'+STEPS.map(function(s){var d=s[3](x);return'<div class="r"><span>'+(d?'✅ ':'⬜ ')+s[0]+' '+s[1]+'</span>'+(d?'':'<button class="s" onclick="go(\''+s[2]+'\')">Go</button>')+'</div>'}).join('')+'<div class="m">Everything else is under each bottom tab; tap “＋ More” for advanced sections, or Menu for a full map.</div><button class="s" onclick="__lx.X().nav.off=1;render()">Hide guide</button></div>';
+ var b=document.getElementById('lcb');if(b)b.insertAdjacentHTML('afterend',h);else a.insertAdjacentHTML('afterbegin',h)});
 })();
 
 </script>
