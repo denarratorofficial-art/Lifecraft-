@@ -3480,7 +3480,7 @@ V.goals=function(){var x=X(),w=x.wg,c=x.ci,se=sevNow(),h='';
  h+=C('🎪 Happening now',se.length?se.map(function(s,i){return'<div style="margin:6px 0"><b>'+s.ic+' '+s.n+'</b>'+s.a.map(function(a,j){var dn=X().sv[s.id+yr()+a[3]];return'<div class="r"><span>'+a[0]+(a[1]?' · '+M(a[1]):'')+'</span>'+B(dn?'Done':'Go','LX.sev('+i+','+j+')',0,dn)+'</div>'}).join('')+'</div>'}).join(''):MU('No festival right now.'));
  var up=SEV.map(function(s){var d=Date.UTC(yr(),Math.floor(s.f/100)-1,s.f%100)/864e5;if(d<G.day)d=Date.UTC(yr()+1,Math.floor(s.f/100)-1,s.f%100)/864e5;return[s,d-G.day]}).filter(function(a){return a[1]>0}).sort(function(a,b){return a[1]-b[1]}).slice(0,4);
  h+=C('Coming up',up.map(function(a){return RW(a[0].ic+' '+a[0].n,'in '+a[1]+' days')}).join('')+MU('Black Friday also gives 30% off the shop; the Christmas Market boosts art sales; Christmas Eve brings a family decision.'));return h};
-RN.push(function(){var a=document.getElementById('app'),b=document.getElementById('lcb');if(tab!='home'||!a||document.getElementById('lcx10h'))return;var e=ECO(),p=PH[e.ph],w=X().wg,ci=X().ci,se=sevNow(),done=w.goals.filter(function(g){return gprog(g,w.snap)>=g.n}).length;
+RN.push(function(){var a=document.getElementById('app'),b=document.getElementById('lcb');if(tab!='home'||!a||document.getElementById('lcx10h'))return;var e=ECO(),p=PH[e.ph],w=X().wg,ci=X().ci,se=sevNow();if(!w.goals.length)wkRoll();w=X().wg;var _u=0,done=w.goals.filter(function(g){return gprog(g,w.snap)>=g.n}).length;
  var h='<div class="c" id="lcx10h"><div class="r"><b>'+p.ic+' '+p.n+'</b><span class="m">'+(e.hw?'🔥 heatwave · ':'')+(se.length?se[0].ic+' '+se[0].n:'')+'</span></div><div class="r"><span>🎯 Weekly goals</span><span><b>'+done+'/'+w.goals.length+'</b> done</span></div>'+
  '<div>'+B(ci.last==G.day?'Check-in ✓':'🎁 Daily check-in','LX.checkin()',0,ci.last==G.day)+B('Goals & events','go(\'goals\')',1)+B('Economy','go(\'econ\')',1)+'</div></div>';
  if(b)b.insertAdjacentHTML('afterend',h);else a.insertAdjacentHTML('afterbegin',h)});
@@ -3916,15 +3916,30 @@ window.lcMenuFilter=function(q){q=(q||'').toLowerCase();[].forEach.call(document
 L.V.menu=function(){var q=window.__lxHubs,h='<input type="search" placeholder="Find a section… (e.g. jobs, pets, tax)" oninput="lcMenuFilter(this.value)" style="width:100%;margin-bottom:8px"><div id="lcmenu">';
  (window.lcHubs||[]).forEach(function(hb,i){var ids=hb.t.filter(function(t){return SEC.some(function(s){return s[0]==t})});if(!ids.length)return;
   h+=C(hb.i+' '+NOW[i],ids.map(function(t){var nm=(window.lcNM||{})[t]||t;return'<div class="r mi"><span><b>'+E(NM2[t]||nm)+'</b><br><span class="m">'+E(D[t]||'')+'</span></span><button class="s" onclick="go(\''+t+'\')">Open</button></div>'}).join(''))});return h+'</div>'};
-/* new-player guide */
-var STEPS=[['💼','Find a job','jobs',function(x){return G.job||(G.apps&&G.apps.length)||x.nav.seen.jobs&&G.day>G.d0+1}],
- ['🛒','Stock up on food','shop',function(x){return x.nav.seen.shop}],['🎯','Check your weekly goals','goals',function(x){return x.nav.seen.goals}],
- ['🎮','Try a mini-game for cash','mini',function(x){return x.cnt.mini>0}],['💾','Make a backup','saves',function(x){return x.sl.bk>0}]];
-L.RN.push(function(){if(!G)return;var x=X();x.nav=x.nav||{seen:{},off:0};x.nav.seen[tab]=1;
- var a=document.getElementById('app');if(!a||tab!='home'||x.nav.off||document.getElementById('lcgd')||G.dead)return;
- var done=STEPS.filter(function(s){return s[3](x)}).length;if(done>=STEPS.length){x.nav.off=1;return}
- var h='<div class="c" id="lcgd" style="border-color:var(--ac)"><b>🧭 Start here</b> <span class="m">'+done+'/'+STEPS.length+' done</span>'+STEPS.map(function(s){var d=s[3](x);return'<div class="r"><span>'+(d?'✅ ':'⬜ ')+s[0]+' '+s[1]+'</span>'+(d?'':'<button class="s" onclick="go(\''+s[2]+'\')">Go</button>')+'</div>'}).join('')+'<div class="m">Everything else is under each bottom tab; tap “＋ More” for advanced sections, or Menu for a full map.</div><button class="s" onclick="__lx.X().nav.off=1;render()">Hide guide</button></div>';
- var b=document.getElementById('lcb');if(b)b.insertAdjacentHTML('afterend',h);else a.insertAdjacentHTML('afterbegin',h)});
+})();
+
+</script>
+<script id="lchome">
+/* ===== LIFECRAFT Home declutter: one panel + collapsible sections ===== */
+(function(){
+'use strict';
+var ovOpen=false,gsOpen=false,_r=render;
+render=function(){_r.apply(this,arguments);try{
+ if(!G||tab!='home')return;var a=document.getElementById('app');if(!a||document.getElementById('lcov'))return;
+ /* one panel: goals + economy + check-in + backup + help */
+ var p=document.getElementById('lcx10h');
+ if(p){['lcx10b','lcstk'].forEach(function(id){var e=document.getElementById(id);if(e){e.className='';e.style.cssText='border-top:1px solid rgba(255,255,255,.12);margin-top:8px;padding-top:8px';p.appendChild(e)}});
+  var gd=document.getElementById('lcgd');if(gd)gd.remove()}
+ /* Getting started -> collapsed */
+ var g=document.getElementById('lcgs');
+ if(g&&!document.getElementById('lcgsd')){var m=/(\d+)\s*of\s*(\d+)\s*done/i.exec(g.textContent),d=document.createElement('details');d.className='c';d.id='lcgsd';d.open=gsOpen;
+  d.innerHTML='<summary style="cursor:pointer"><b>🚀 Getting started</b> <span class="m">'+(m?m[1]+' of '+m[2]+' done':'')+' · tap to open</span></summary>';
+  g.parentNode.insertBefore(d,g);g.style.cssText='border:0;background:none;box-shadow:none;margin:6px 0 0;padding:0';d.appendChild(g);d.addEventListener('toggle',function(){gsOpen=d.open})}
+ /* overview cards -> one collapsible */
+ var re=/^\s*(MONEY|ASSETS|LIFE|CAREER|COMING UP|NOTIFICATIONS|GOALS\s*&|RECENT)/i,els=[].slice.call(a.children).filter(function(e){return(e.classList.contains('c')&&!e.id&&re.test(e.innerText))||e.id=='lcn'});
+ if(els.length){var ov=document.createElement('details');ov.className='c';ov.id='lcov';ov.open=ovOpen;ov.innerHTML='<summary style="cursor:pointer"><b>📊 Overview</b> <span class="m">money, assets, life, career, news · tap to open</span></summary>';
+  els[0].parentNode.insertBefore(ov,els[0]);els.forEach(function(e){e.style.margin='8px 0 0';ov.appendChild(e)});ov.addEventListener('toggle',function(){ovOpen=ov.open})}
+}catch(e){console.error(e)}};
 })();
 
 </script>
