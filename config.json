@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "updated": "2026-10-31",
+  "theme": {
+    "name": "Gold Classic",
+    "accent": "#d4b46a",
+    "accentLight": "#f3d98b",
+    "accentDark": "#c9a24a",
+    "background": "#0a0f1e",
+    "card": "#1a2646",
+    "text": "#eef1f8",
+    "muted": "#97a2bb",
+    "border": "#243049",
+    "positive": "#4fe0a8",
+    "negative": "#ff7a7a",
+    "glowA": "#5840c8",
+    "glowB": "#149682"
+  }
+}
