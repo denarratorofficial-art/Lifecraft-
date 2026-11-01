@@ -1,19 +1,19 @@
 {
-  "version": 1793521147592,
-  "updated": "2026-11-01",
+  "version": 1,
+  "updated": "2026-10-31",
   "theme": {
-    "accent": "#36D6A5",
-    "accentLight": "#8AF0D0",
-    "accentDark": "#159B75",
-    "background": "#0A0F1E",
-    "card": "#17243D",
-    "text": "#F0F3FA",
-    "muted": "#A4B0C8",
-    "border": "#293751",
-    "positive": "#36D6A5",
-    "negative": "#FF747C",
-    "glowA": "#5840C8",
-    "glowB": "#149682",
-    "name": "Custom"
+    "name": "Gold Classic",
+    "accent": "#d4b46a",
+    "accentLight": "#f3d98b",
+    "accentDark": "#c9a24a",
+    "background": "#0a0f1e",
+    "card": "#1a2646",
+    "text": "#eef1f8",
+    "muted": "#97a2bb",
+    "border": "#243049",
+    "positive": "#4fe0a8",
+    "negative": "#ff7a7a",
+    "glowA": "#5840c8",
+    "glowB": "#149682"
   }
 }
