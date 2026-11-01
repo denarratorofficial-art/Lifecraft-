@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><style id="lcvars">html:root{--ac-hi:#f3d98b;--ac-lo:#c9a24a;--ac-rgb:212,180,106;--ac-hi-rgb:243,217,139;--ac-lo-rgb:201,162,74;--ok:#4fe0a8;--ok2:#1fd1a0;--on-ac:#10162b;--bg-deep:#070b16;--bg-rgb:10,15,30;--glow1-rgb:88,64,200;--glow2-rgb:20,150,130;--cd-hi-rgb:26,38,70;--cd-lo-rgb:14,21,40}</style><script id="lccfg-js">
+<!DOCTYPE html><html lang="en"><head><style id="lcvars">html:root{--ac-hi:#f3d98b;--ac-lo:#c9a24a;--ac-rgb:212,180,106;--ac-hi-rgb:243,217,139;--ac-lo-rgb:201,162,74;--ok:#4fe0a8;--ok2:#1fd1a0;--on-ac:#10162b;--bg-deep:#070b16;--bg-rgb:10,15,30;--glow1-rgb:88,64,200;--glow2-rgb:20,150,130;--cd-hi-rgb:26,38,70;--cd-lo-rgb:14,21,40}#lcb .t .spk{position:static;display:block;margin:4px 0 0 auto}</style><script id="lccfg-js">
 /* ===== LIFECRAFT remote config: colour scheme (and room for more) =====
    Players load config.json (network first, cached for offline). The owner edits it with admin.html. */
 (function(){
@@ -3499,18 +3499,16 @@ function wkRoll(){var w=X().wg,x=X();if(w.w==wid())return;
 HK.push(function(){var x=X(),c=x.cnt;if(G.st.stress<50)c.calm++;
  var j=G.job;if(j&&G.day-1>=j.start&&[0,6].indexOf(dow(G.day-1))<0&&(j.abs||0)==x.wg.lastAbs)c.work++;x.wg.lastAbs=j?(j.abs||0):0;wkRoll()});
 LX.claim=function(i){var g=X().wg.goals[i],d=GP.find(function(x){return x.id==g.id});if(g.c||gprog(g,X().wg.snap)<g.n)return;g.c=1;gain(g.rw,'Weekly goal: '+d.t,'Gift');st({happy:3});say('Goal complete! +'+M(g.rw))};
-LX.checkin=function(){var c=X().ci;if(c.last==G.day)return;c.streak=(G.day-c.last<=3)?c.streak+1:1;c.last=G.day;c.total++;var r=[200,200,300,300,500,500,1500][(c.streak-1)%7];gain(r,'Daily check-in reward','Gift');say('Check-in streak '+c.streak+': +'+M(r))};
 var _actn=actn;actn=function(k){var b=G.used;_actn(k);if(k=='soc'&&G.used>b)X().cnt.soc++};
 function goalsCard(){var w=X().wg;return w.goals.map(function(g,i){var d=GP.find(function(x){return x.id==g.id}),p=gprog(g,w.snap),ok=p>=g.n,money=d.c;return'<div style="margin:8px 0"><div class="r"><span>'+(g.c?'✅ ':ok?'🎯 ':'⬜ ')+d.t+'</span><span class="m">'+(money?M(Math.min(p,g.n))+'/'+M(g.n):Math.min(p,g.n)+'/'+g.n)+'</span></div><div class="bar"><i style="width:'+Math.min(100,p/g.n*100)+'%"></i></div>'+(g.c?'':B(ok?'Claim '+M(g.rw):'Reward '+M(g.rw),'LX.claim('+i+')',!ok,!ok))+'</div>'}).join('')}
-V.goals=function(){var x=X(),w=x.wg,c=x.ci,se=sevNow(),h='';
- h+=C('📅 Daily check-in',RW('Streak',c.streak+' day'+(c.streak==1?'':'s'))+MU('Claim once per game day (a gap of up to 3 days keeps your streak). Day 7 pays £15.')+B(c.last==G.day?'Claimed today ✓':'Claim today’s reward','LX.checkin()',0,c.last==G.day));
+V.goals=function(){var x=X(),w=x.wg,se=sevNow(),h='';
  h+=C('🎯 This week’s goals',goalsCard()+RW('Goal streak',w.streak+' week'+(w.streak==1?'':'s')+' (best '+w.bestStreak+')')+MU('Complete 2+ goals each week to build a streak; every 4th week pays a £100 bonus. New goals every Monday.'));
  h+=C('🎪 Happening now',se.length?se.map(function(s,i){return'<div style="margin:6px 0"><b>'+s.ic+' '+s.n+'</b>'+s.a.map(function(a,j){var dn=X().sv[s.id+yr()+a[3]];return'<div class="r"><span>'+a[0]+(a[1]?' · '+M(a[1]):'')+'</span>'+B(dn?'Done':'Go','LX.sev('+i+','+j+')',0,dn)+'</div>'}).join('')+'</div>'}).join(''):MU('No festival right now.'));
  var up=SEV.map(function(s){var d=Date.UTC(yr(),Math.floor(s.f/100)-1,s.f%100)/864e5;if(d<G.day)d=Date.UTC(yr()+1,Math.floor(s.f/100)-1,s.f%100)/864e5;return[s,d-G.day]}).filter(function(a){return a[1]>0}).sort(function(a,b){return a[1]-b[1]}).slice(0,4);
  h+=C('Coming up',up.map(function(a){return RW(a[0].ic+' '+a[0].n,'in '+a[1]+' days')}).join('')+MU('Black Friday also gives 30% off the shop; the Christmas Market boosts art sales; Christmas Eve brings a family decision.'));return h};
 RN.push(function(){var a=document.getElementById('app'),b=document.getElementById('lcb');if(tab!='home'||!a||document.getElementById('lcx10h'))return;var e=ECO(),p=PH[e.ph],w=X().wg,ci=X().ci,se=sevNow();if(!w.goals.length)wkRoll();w=X().wg;var _u=0,done=w.goals.filter(function(g){return gprog(g,w.snap)>=g.n}).length;
  var h='<div class="c" id="lcx10h"><div class="r"><b>'+p.ic+' '+p.n+'</b><span class="m">'+(e.hw?'🔥 heatwave · ':'')+(se.length?se[0].ic+' '+se[0].n:'')+'</span></div><div class="r"><span>🎯 Weekly goals</span><span><b>'+done+'/'+w.goals.length+'</b> done</span></div>'+
- '<div>'+B(ci.last==G.day?'Check-in ✓':'🎁 Daily check-in','LX.checkin()',0,ci.last==G.day)+B('Goals & events','go(\'goals\')',1)+B('Economy','go(\'econ\')',1)+'</div></div>';
+ '<div>'+B('Goals & events','go(\'goals\')',1)+B('Economy','go(\'econ\')',1)+'</div></div>';
  if(b)b.insertAdjacentHTML('afterend',h);else a.insertAdjacentHTML('afterbegin',h)});
 /* ---------- 3. FAMILY & RELATIONSHIPS ---------- */
 function famMk(){var sn=R(SUR),f={sn:sn,par:[],sib:[],nep:0,ev:[]},mk=function(sx,a){return{n:(sx=='f'?R(NAMEF):R(NAMEM))+' '+sn,sx:sx,a0:a,alive:1,bond:ri(35,70),w:P(ri(3000,160000)),called:-9,vis:-9}};
@@ -3920,7 +3918,7 @@ var CORE={
  3:['house','prop','veh','shop'],
  4:['rel','family','tree','health','gym','pets'],
  5:['map','paper','city','trav','sport','ach','saves','store','more']};
-var D={home:'Your day at a glance',goals:'Weekly goals, festivals and daily reward',act:'Things to do with your time',mini:'Quick games that pay',inbox:'Messages and news for you',cal:'Dates, bills and plans',
+var D={home:'Your day at a glance',goals:'Weekly goals and seasonal events',act:'Things to do with your time',mini:'Quick games that pay',inbox:'Messages and news for you',cal:'Dates, bills and plans',
  bank:'Accounts and spending',inv:'Shares, crypto and funds',loans:'Borrow money',wealth:'Net worth and assets',bank2:'Debts and arrears',ins:'Stats and insights',econ:'Booms, recessions, elections and tax',
  hub:'Career overview',jobs:'Find and apply for jobs',work:'Reviews, promotions and freelance gigs',skl:'CV and skills',edu:'Study and qualifications',career:'Career paths and growth',biz:'Run your own business',empire:'Staff, franchising, IPO and buyouts',
  house:'Rent or move home',prop:'Buy property',land:'Tenants, repairs and mortgages',veh:'Cars and bikes',lux:'Luxury purchases',shop:'Groceries and shopping',surv:'Housing emergencies',
